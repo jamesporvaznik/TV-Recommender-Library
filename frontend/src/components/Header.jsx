@@ -37,7 +37,7 @@ const Header = ({
 
             {/* Center: navigation buttons */}
             <div className="w-full md:w-3/5 flex justify-center">
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-6">
                     {NAVIGATION_PAGES.map(page => (
                         <button
                             key={page}
@@ -62,13 +62,13 @@ const Header = ({
             <div className="w-full md:w-1/5 flex justify-end gap-2 pr-4 md:pr-0">
                 <button
                     onClick={() => onLogin?.()}
-                    className="px-3 py-1 text-sm border rounded"
+                    className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold"
                 >
                     Login
                 </button>
                 <button
                     onClick={() => onSignup?.()}
-                    className="px-3 py-1 text-sm bg-indigo-600 text-white rounded"
+                    className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold"
                 >
                     Sign up
                 </button>
