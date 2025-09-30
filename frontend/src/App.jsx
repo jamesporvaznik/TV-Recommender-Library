@@ -3,7 +3,6 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import NavBar from "./components/navbar";
-import NavBar from "./components/Search";
 
 // const DUMMY_SHOWS = [
 //   { id: 's101', title: 'Mind Hunters', description: 'A psychological thriller following two FBI agents as they interview convicted serial killers to understand their motives.', rating: 8.6, genres: ['Crime', 'Drama', 'Thriller'], seasons: 2, posterUrl: 'https://placehold.co/300x450/1f2937/ffffff?text=Mind+Hunters', whereToWatch: 'Netflix', year: 2017 },
