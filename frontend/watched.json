@@ -1,0 +1,34 @@
+[
+  {
+    "id": 101,
+    "title": "Cosmic Drift",
+    "genre": "Sci-Fi",
+    "type": "TV Series",
+    "seasons": 3,
+    "episodes": 32,
+    "year_started": 2021,
+    "is_airing": true,
+    "rating": 8.5
+  },
+  {
+    "id": 205,
+    "title": "The Emerald Blade",
+    "genre": "Fantasy",
+    "type": "Movie",
+    "runtime_minutes": 145,
+    "year_released": 2023,
+    "is_airing": false,
+    "rating": 9.1
+  },
+  {
+    "id": 312,
+    "title": "Bakers' Battle Royale",
+    "genre": "Reality Competition",
+    "type": "TV Series",
+    "seasons": 7,
+    "episodes": 78,
+    "year_started": 2018,
+    "is_airing": true,
+    "rating": 7.9
+  }
+]
