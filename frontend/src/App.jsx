@@ -11,7 +11,9 @@ import allShowsData from '../shows.json';
 
 // Pre-process data to be reactive (even if you ignore the status flags for now)
 const allShows = allShowsData.map(show => ({
-    ...show
+    ...show,
+    // isWatched: false, 
+    // isWatchLater: false 
 }));
 
 function App() {
