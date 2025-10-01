@@ -47,9 +47,9 @@ const Search = ({ searchTerm: controlledTerm, setSearchTerm: setControlledTerm, 
         setIsAiring(false);
     }
 
-    const genres = ['All', 'Drama', 'Comedy', 'Sci-Fi', 'Documentary', 'Action'];
+    const genres = ['All', 'Drama', 'Comedy', 'Sci-Fi', 'Documentary', 'Action', 'Horror', 'Romance', 'Thriller', 'Fantasy', 'Animation', 'Mystery', 'Crime', 'Adventure', 'Biography', 'Family', 'History', 'Music', 'Musical', 'Sport', 'War', 'Western'];
     const types = ['All', 'TV', 'Movie'];
-    const streamingOptions = ['Any', 'Netflix', 'Hulu', 'Disney+', 'Amazon Prime'];
+    const streamingOptions = ['Any', 'Netflix', 'Hulu', 'Disney+', 'Amazon Prime', 'HBO Max', 'Apple TV+', 'Peacock', 'Paramount+', 'YouTube', 'Crunchyroll', 'Tubi', 'Vudu', 'Sling TV', 'FuboTV', 'Philo', 'Acorn TV', 'BritBox', 'Shudder', 'Starz', 'Cinemax', 'Epix', 'Mubi', 'CuriosityStream', 'Kanopy', 'Plex', 'Xumo', 'Pluto TV', 'Roku Channel'];
 
     return (
         <form className="w-full max-w-3xl mx-auto p-2" onSubmit={handleSubmit}>
