@@ -1,18 +1,5 @@
 import React from 'react';
 
-// // Define the functional component
-// function Header() ({
-//   // The component's logic goes here (state, effects, handlers, etc.)
-//     }) => {
-//   // Return the JSX (the component's UI)
-//   return (
-//     // <header className="p-4 text-center text-sm">
-//     //   <div>© 2025 TV Recommender</div>
-//     //   {/* <div>Built with </div> */}
-//     // </header>
-//   );
-// };
-
 const Header = ({ 
     searchTerm, setSearchTerm, 
     currentPage, setCurrentPage,
