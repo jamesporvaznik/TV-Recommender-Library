@@ -51,5 +51,164 @@
     "year_released": 2022,
     "is_airing": false,
     "rating": 7.5
+  },
+  {
+    "id": 621,
+    "title": "The Quantum Key",
+    "genre": "Sci-Fi",
+    "type": "Movie",
+    "runtime_minutes": 112,
+    "year_released": 2024,
+    "is_airing": false,
+    "rating": 8.7
+  },
+  {
+    "id": 708,
+    "title": "Midnight Alley",
+    "genre": "Thriller",
+    "type": "TV Series",
+    "seasons": 2,
+    "episodes": 18,
+    "year_started": 2023,
+    "is_airing": true,
+    "rating": 8.1
+  },
+  {
+    "id": 884,
+    "title": "Chronicles of Aethelred",
+    "genre": "Fantasy",
+    "type": "TV Series",
+    "seasons": 5,
+    "episodes": 50,
+    "year_started": 2019,
+    "is_airing": false,
+    "rating": 9.2
+  },
+  {
+    "id": 903,
+    "title": "Rhythm City Beat",
+    "genre": "Musical Drama",
+    "type": "TV Series",
+    "seasons": 4,
+    "episodes": 40,
+    "year_started": 2022,
+    "is_airing": true,
+    "rating": 7.6
+  },
+  {
+    "id": 110,
+    "title": "Deep Sea Discovery: The Mariana Trench",
+    "genre": "Nature Documentary",
+    "type": "Movie",
+    "runtime_minutes": 55,
+    "year_released": 2024,
+    "is_airing": false,
+    "rating": 8.9
+  },
+  {
+    "id": 125,
+    "title": "The Last Blockbuster",
+    "genre": "Comedy",
+    "type": "TV Series",
+    "seasons": 1,
+    "episodes": 6,
+    "year_started": 2025,
+    "is_airing": true,
+    "rating": 7.4
+  },
+  {
+    "id": 158,
+    "title": "Heist on 5th Avenue",
+    "genre": "Crime Drama",
+    "type": "Movie",
+    "runtime_minutes": 130,
+    "year_released": 2021,
+    "is_airing": false,
+    "rating": 8.3
+  },
+  {
+    "id": 234,
+    "title": "Viking Shores",
+    "genre": "Historical Epic",
+    "type": "TV Series",
+    "seasons": 6,
+    "episodes": 60,
+    "year_started": 2017,
+    "is_airing": false,
+    "rating": 9.0
+  },
+  {
+    "id": 305,
+    "title": "Starlight Express",
+    "genre": "Romance",
+    "type": "Movie",
+    "runtime_minutes": 95,
+    "year_released": 2023,
+    "is_airing": false,
+    "rating": 7.7
+  },
+  {
+    "id": 418,
+    "title": "Global Grills: Street Food Challenge",
+    "genre": "Reality Competition",
+    "type": "TV Series",
+    "seasons": 3,
+    "episodes": 24,
+    "year_started": 2022,
+    "is_airing": false,
+    "rating": 7.8
+  },
+  {
+    "id": 555,
+    "title": "Echoes of the Void",
+    "genre": "Horror",
+    "type": "TV Series",
+    "seasons": 1,
+    "episodes": 8,
+    "year_started": 2024,
+    "is_airing": true,
+    "rating": 8.4
+  },
+  {
+    "id": 670,
+    "title": "The Mechanical Heart",
+    "genre": "Steampunk Adventure",
+    "type": "Movie",
+    "runtime_minutes": 155,
+    "year_released": 2020,
+    "is_airing": false,
+    "rating": 8.6
+  },
+  {
+    "id": 777,
+    "title": "High School Hype",
+    "genre": "Teen Comedy",
+    "type": "TV Series",
+    "seasons": 2,
+    "episodes": 26,
+    "year_started": 2023,
+    "is_airing": false,
+    "rating": 7.2
+  },
+  {
+    "id": 810,
+    "title": "Operation Redline",
+    "genre": "Action",
+    "type": "Movie",
+    "runtime_minutes": 105,
+    "year_released": 2025,
+    "is_airing": true,
+    "rating": 8.0
+  },
+  {
+    "id": 999,
+    "title": "Forgotten Worlds",
+    "genre": "Sci-Fi",
+    "type": "TV Series",
+    "seasons": 3,
+    "episodes": 30,
+    "year_started": 2020,
+    "is_airing": false,
+    "rating": 8.8
   }
 ]
