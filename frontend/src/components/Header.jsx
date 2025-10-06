@@ -34,7 +34,7 @@ const Header = ({
                                 shadow-sm whitespace-nowrap
                                 ${
                                     currentPage === page 
-                                        ? 'bg-indigo-600 text-white shadow-md hover:bg-indigo-700' 
+                                        ? 'bg-cyan-600 text-white shadow-md hover:bg-cyan-700' 
                                         : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                                 }
                             `}
@@ -46,7 +46,7 @@ const Header = ({
             </div>
 
             {/* Right: login / signup */}
-            <div className="w-full md:w-1/5 flex justify-end gap-2 pr-4 md:pr-0">
+            {/* <div className="w-full md:w-1/5 flex justify-end gap-2 pr-4 md:pr-0">
                 <button
                     onClick={() => onLogin?.()}
                     className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold"
@@ -59,7 +59,29 @@ const Header = ({
                 >
                     Sign up
                 </button>
+            </div> */}
+
+
+            {/* Right: login / signup - ***UPDATED LOGIC HERE*** */}
+            <div className="w-full md:w-1/5 flex justify-end gap-2 pr-4 md:pr-0">
+                <button
+                    // 🔑 Change: Call setCurrentPage('Login')
+                    onClick={() => setCurrentPage?.('Login')}
+                    className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold"
+                >
+                    Login
+                </button>
+                <button
+                    // 🔑 Change: Call setCurrentPage('Signup')
+                    onClick={() => setCurrentPage?.('Signup')}
+                    className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold"
+                >
+                    Sign up
+                </button>
             </div>
+
+
+
         </nav>
     );
 };

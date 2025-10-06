@@ -9,6 +9,8 @@ import Search from './components/Search';
 import AllShows from './components/AllShows';
 import Watched from './components/Watched';
 import Watchlist from './components/Watchlist';
+import Login from './components/Login';
+import Signup from './components/Signup';   
 
 // Data Imports
 import allShowsData from '../shows.json'; 
@@ -72,9 +74,11 @@ function App() {
                 {currentPage === 'Home' ? (
                     <Landing />
                 ) : (
-                    <>
-                        {/* Search component appears on all content pages (except Home) */}
-                        <Search onSearch={handleSearch} />
+                    <>  
+                        {/* Search bar is hidden on Login/Signup pages */}
+                        {currentPage !== 'Login' && currentPage !== 'Signup' && currentPage !== 'Recommendations' && (
+                                <Search onSearch={handleSearch} />
+                            )}
                         
                         {/* Page Rendering based on currentPage state */}
                         
@@ -114,6 +118,15 @@ function App() {
                             <div className="p-6">
                                 <h2 className="text-2xl font-semibold">Recommendations</h2>
                                 <p className="mt-2 text-gray-600">Placeholder content for Recommendations.</p>
+                            </div>
+                        )}
+                        {currentPage === 'Login' && (
+                            <Login />
+                        )}
+                        
+                        {currentPage === 'Signup' && (
+                            <div>
+                                <Signup />
                             </div>
                         )}
                     </>

@@ -12,7 +12,7 @@ function Footer() {
         <div className="w-full md:w-auto flex justify-center md:justify-end">
           <a
             href="mailto:support@tvrecommender.example"
-            className="inline-block px-4 py-2 bg-indigo-600 text-white rounded shadow hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            className="inline-block px-4 py-2 bg-cyan-600 text-white rounded shadow hover:bg-cyan-700 focus:outline-none focus:ring-2 focus:ring-indigo-300"
             aria-label="Contact us via email"
           >
             Contact Us
