@@ -21,7 +21,7 @@ function Watched() {
         <div className="all-shows-grid-container mt-10">
             {/* Produce these rows maxing out at 3 rows */}
             {groupedRows.slice(0, 3).map((row, rowIndex) => (
-            // 1. Outer map: Creates one row (a div) for every chunk of 5 shows
+            // Creates one row (a div) for every chunk of 5 shows
             // Use a className that supports a 5-column grid or flex layout
             <div key={rowIndex} className="grid grid-cols-5 gap-4 mb-8" >
             {row.map((show) => (
@@ -44,5 +44,5 @@ function Watched() {
     );
 }
 
-// Export the footer
+// Export the component
 export default Watched;

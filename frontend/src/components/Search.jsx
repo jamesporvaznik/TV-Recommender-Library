@@ -16,12 +16,14 @@ const Search = ({ searchTerm: controlledTerm, setSearchTerm: setControlledTerm, 
 
     const term = typeof controlledTerm === 'string' ? controlledTerm : localTerm;
 
+    // Handles text input changes
     function handleTermChange(e) {
         const v = e.target.value;
         if (typeof setControlledTerm === 'function') setControlledTerm(v);
         else setLocalTerm(v);
     }
 
+    //Handles form submission
     function handleSubmit(e) {
         e.preventDefault();
         const payload = {
@@ -37,6 +39,8 @@ const Search = ({ searchTerm: controlledTerm, setSearchTerm: setControlledTerm, 
         else console.log('search payload', payload);
     }
 
+
+    //Handles clearing the form
     function handleClear() {
         if (typeof setControlledTerm === 'function') setControlledTerm('');
         else setLocalTerm('');
@@ -47,12 +51,17 @@ const Search = ({ searchTerm: controlledTerm, setSearchTerm: setControlledTerm, 
         setIsAiring(false);
     }
 
+    // Options for dropdowns
     const genres = ['All', 'Drama', 'Comedy', 'Sci-Fi', 'Documentary', 'Action', 'Horror', 'Romance', 'Thriller', 'Fantasy', 'Animation', 'Mystery', 'Crime', 'Adventure', 'Biography', 'Family', 'History', 'Music', 'Musical', 'Sport', 'War', 'Western'];
     const types = ['All', 'TV', 'Movie'];
     const streamingOptions = ['Any', 'Netflix', 'Hulu', 'Disney+', 'Amazon Prime', 'HBO Max', 'Apple TV+', 'Peacock', 'Paramount+', 'YouTube', 'Crunchyroll', 'Tubi', 'Vudu', 'Sling TV', 'FuboTV', 'Philo', 'Acorn TV', 'BritBox', 'Shudder', 'Starz', 'Cinemax', 'Epix', 'Mubi', 'CuriosityStream', 'Kanopy', 'Plex', 'Xumo', 'Pluto TV', 'Roku Channel'];
 
+    // Render the form
     return (
+        // Entire form
         <form className="w-full max-w-3xl mx-auto p-2" onSubmit={handleSubmit}>
+
+            {/* Search bar and clear burton */}
             <div className="flex flex-col sm:flex-row gap-2 items-center">
                 <input
                     type="search"
@@ -65,6 +74,7 @@ const Search = ({ searchTerm: controlledTerm, setSearchTerm: setControlledTerm, 
                 <button type="button" onClick={handleClear} className="px-3 py-2 bg-gray-100 rounded">Clear</button>
             </div>
 
+            {/* Dropdown filters */}
             <div className="mt-3 grid grid-cols-1 sm:grid-cols-4 gap-2 text-sm">
                 <label className="flex flex-col">
                     <span className="text-xs text-gray-500">Genre</span>
@@ -93,6 +103,7 @@ const Search = ({ searchTerm: controlledTerm, setSearchTerm: setControlledTerm, 
                 </label>
             </div>
 
+            {/* Airing checkbox */}
             <div className="mt-3 flex items-center gap-3 text-sm">
                 <label className="flex items-center gap-2">
                     <input type="checkbox" checked={isAiring} onChange={e => setIsAiring(e.target.checked)} />
@@ -103,4 +114,5 @@ const Search = ({ searchTerm: controlledTerm, setSearchTerm: setControlledTerm, 
     );
 };
 
+// Export the component
 export default Search;

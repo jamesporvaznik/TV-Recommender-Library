@@ -41,7 +41,7 @@ function AllShows({ allShows, filters }) {
     const chunkSize = 5;
     const groupedRows = [];
     
-    // Use the result of the filter: 'filteredShows'
+    // Use the result of the filter: 'filteredShows' in the rows
     for (let i = 0; i < filteredShows.length; i += chunkSize) {
         const chunk = filteredShows.slice(i, i + chunkSize);
         groupedRows.push(chunk);

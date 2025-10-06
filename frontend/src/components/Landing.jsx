@@ -9,6 +9,7 @@ const Landing = () => {
       <h1 className="text-5xl font-bold">Welcome to TV Recommender</h1>
 
       <div className="mt-10 max-w-5xl mx-auto">
+        
         <div className="flex flex-col sm:flex-row items-center mb-8">
           <h2 className="text-xl font-semibold text-gray-500 mx-auto">Discover shows you love</h2>
           <div className="mt-2 sm:mt-0 sm:ml-4">
@@ -21,6 +22,8 @@ const Landing = () => {
             </button>
           </div>
         </div>
+
+        {/* Displaying some random shows for the users to see */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
           {useMemo(() => {
             // Picks random unique shows
@@ -42,6 +45,7 @@ const Landing = () => {
             </article>
           ))}
         </div>
+
       </div>
 
       {/* Two col features section: Track (left) and Placeholder image (right) */}

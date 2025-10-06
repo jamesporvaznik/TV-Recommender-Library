@@ -44,5 +44,5 @@ function Watchlist() {
     );
 }
 
-// Export the footer
+// Export the component
 export default Watchlist;
