@@ -1,48 +1,67 @@
-import React, { useState } from 'react';
-import showsData from '../../bookmarked.json';
+import React from 'react';
+import ShowCard from './ShowCard'; 
 
-// Define the functional component
-function Watchlist() {
-  // The component's 
-  // logic goes here (state, effects, handlers, etc.)
-  // Return the JSX (the component's UI)
+const filterShows = (shows, filters) => {
 
-    const chunkSize = 5;
+    // Filtering logic 
+    return shows.filter(show => {
+        if (!filters) return true;
+        const { q, genre, type, minRating, isAiring } = filters;
+        if (q && !show.title.toLowerCase().includes(q.toLowerCase())) return false;
+        if (genre && show.genre !== genre) return false;
+        const targetType = type === 'TV' ? 'TV Series' : type;
+        if (targetType && show.type !== targetType) return false;
+        if (minRating && show.rating < minRating) return false;
+        if (isAiring && !show.is_airing) return false;
+        return true; 
+    });
+};
+
+// Function to group shows into rows of 5
+const groupIntoRows = (shows, chunkSize = 5) => {
     const groupedRows = [];
-
-    for (let i = 0; i < showsData.length; i += chunkSize) {
-        // Use Array.prototype.slice() to get the chunk of 5 shows
-        const chunk = showsData.slice(i, i + chunkSize);
-        groupedRows.push(chunk);
+    for (let i = 0; i < shows.length; i += chunkSize) {
+        groupedRows.push(shows.slice(i, i + chunkSize));
     }
+    return groupedRows;
+};
 
+// Watchlist component now receives the new user tracking props
+const Watchlist = ({ 
+    shows, 
+    filters, 
+    watchedIds, 
+    bookmarkedIds, 
+    onToggleList 
+}) => {
+    const filteredShows = filterShows(shows, filters);
+    const groupedRows = groupIntoRows(filteredShows);
+
+    // Render the component
     return (
+        <div className="container mx-auto px-4 py-8">
+            <h2 className="text-2xl font-bold mb-6">Watchlist ({filteredShows.length})</h2>
 
-        <div className="all-shows-grid-container mt-10">
-            {/* Produce these rows maxing out at 3 rows */}
-            {groupedRows.slice(0, 3).map((row, rowIndex) => (
-            // 1. Outer map: Creates one row (a div) for every chunk of 5 shows
-            // Use a className that supports a 5-column grid or flex layout
-            <div key={rowIndex} className="grid grid-cols-5 gap-4 mb-8" >
-            {row.map((show) => (
-                // 2. Inner map: Renders a show card (article) inside the row
-                <article key={show.id} className="border rounded overflow-hidden bg-white shadow-md transition-shadow hover:shadow-lg">
-                <div className="h-40 bg-gray-200 flex items-center justify-center">
-                        <img src={`https://placehold.co/200x280/1f2937/ffffff?text=${encodeURIComponent(show.title)}`} alt={show.title} className="object-cover h-full w-full" />
+            {shows.length === 0 && (
+                <p className="text-gray-500">Your watchlist is empty. Go to 'All Shows' to add some!</p>
+            )}
+
+            {groupedRows.map((row, rowIndex) => (
+                <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
+                    {/* Iterate over the row chunk */}
+                    {row.map((show) => (
+                        <ShowCard 
+                            key={show.id} 
+                            show={show} 
+                            watchedIds={watchedIds}
+                            bookmarkedIds={bookmarkedIds}
+                            onToggleList={onToggleList}
+                        />
+                    ))}
                 </div>
-                <div className="p-3">
-                    <h3 className="text-sm font-semibold truncate">{show.title}</h3>
-                    <div className="text-xs text-gray-500">
-                    {show.type}: {show.rating}
-                    </div>
-                </div>
-                </article>
             ))}
-            </div>
-        ))}
         </div>
     );
-}
+};
 
-// Export the component
 export default Watchlist;
