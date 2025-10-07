@@ -63,7 +63,7 @@ function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSu
             </div>
             <div className="flex sm:flex-row px-20 mt-2">
                 <input
-                    type="search"
+                    type="text"
                     value={userTerm}
                     onChange={handleUserChange}
                     placeholder="Enter username"
@@ -73,7 +73,7 @@ function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSu
 
             <div className="flex sm:flex-row mt-8 px-20">
                 <input
-                    type="search"
+                    type="text"
                     value={passwordTerm}
                     onChange={handlePasswordChange}
                     placeholder="Enter password"
@@ -83,7 +83,7 @@ function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSu
 
             <div className="flex sm:flex-row mt-8 px-20">
                 <input
-                    type="search"
+                    type="text"
                     value={confirmTerm}
                     onChange={handleConfirmChange}
                     placeholder="Confirm your password"

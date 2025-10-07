@@ -11,6 +11,7 @@ import Watched from './components/Watched';
 import Watchlist from './components/Watchlist';
 import Login from './components/Login';
 import Signup from './components/Signup';   
+import Recommendations from './components/Recommendations';
 
 // Data Imports
 import allShowsData from '../shows.json'; 
@@ -115,10 +116,7 @@ function App() {
                         )}
                         
                         {currentPage === 'Recommendations' && (
-                            <div className="p-6">
-                                <h2 className="text-2xl font-semibold">Recommendations</h2>
-                                <p className="mt-2 text-gray-600">Placeholder content for Recommendations.</p>
-                            </div>
+                            <Recommendations />
                         )}
                         {currentPage === 'Login' && (
                             <Login setCurrentPage={setCurrentPage}/>
