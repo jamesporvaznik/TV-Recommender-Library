@@ -1,9 +1,7 @@
 import React from 'react';
 
 const Header = ({ 
-    searchTerm, setSearchTerm, 
     currentPage, setCurrentPage,
-    onLogin, onSignup
 }) => {
     // Navigation items for the multi-page feel (P1-T7)
     const NAVIGATION_PAGES = ['All Shows', 'Watched', 'Watchlist', 'Recommendations'];
@@ -45,42 +43,24 @@ const Header = ({
                 </div>
             </div>
 
+
             {/* Right: login / signup */}
-            {/* <div className="w-full md:w-1/5 flex justify-end gap-2 pr-4 md:pr-0">
-                <button
-                    onClick={() => onLogin?.()}
-                    className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold"
-                >
-                    Login
-                </button>
-                <button
-                    onClick={() => onSignup?.()}
-                    className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold"
-                >
-                    Sign up
-                </button>
-            </div> */}
-
-
-            {/* Right: login / signup - ***UPDATED LOGIC HERE*** */}
             <div className="w-full md:w-1/5 flex justify-end gap-2 pr-4 md:pr-0">
                 <button
-                    // 🔑 Change: Call setCurrentPage('Login')
+                    // Call setCurrentPage('Login')
                     onClick={() => setCurrentPage?.('Login')}
                     className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold"
                 >
                     Login
                 </button>
                 <button
-                    // 🔑 Change: Call setCurrentPage('Signup')
+                    // =Call setCurrentPage('Signup')
                     onClick={() => setCurrentPage?.('Signup')}
                     className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold"
                 >
                     Sign up
                 </button>
             </div>
-
-
 
         </nav>
     );

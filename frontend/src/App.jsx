@@ -31,7 +31,7 @@ function App() {
     const [currentPage, setCurrentPage] = useState('Home');
     const [filters, setFilters] = useState(null);
 
-    // User Tracking State (The Source of Truth)
+    // User Tracking State
     const [userLists, setUserLists] = useState({
         watched: initialUser.watched,
         bookmarked: initialUser.bookmarked,
@@ -121,12 +121,12 @@ function App() {
                             </div>
                         )}
                         {currentPage === 'Login' && (
-                            <Login />
+                            <Login setCurrentPage={setCurrentPage}/>
                         )}
                         
                         {currentPage === 'Signup' && (
                             <div>
-                                <Signup />
+                                <Signup setCurrentPage={setCurrentPage}/>
                             </div>
                         )}
                     </>

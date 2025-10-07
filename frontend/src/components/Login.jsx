@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { use } from 'react';
-
 
 // Define the functional component
-function Login({user, password, setUser, setPassword, onSubmit}) {
+function Login({user, password, setUser, setPassword, onSubmit, setCurrentPage}) {
     // The component's logic goes here (state, effects, handlers, etc.)
 
     // Local state used when the parent doesn't control the search term
@@ -21,7 +19,7 @@ function Login({user, password, setUser, setPassword, onSubmit}) {
     // Handles text input changes
     function handlePasswordChange(e) {
         const v = e.target.value;
-        if (typeof setUser === 'function') setPassword(v);
+        if (typeof setPassword === 'function') setPassword(v);
         else setLocalPassword(v);
     }
     const passwordTerm = typeof password === 'string' ?password : localPassword;
@@ -29,20 +27,21 @@ function Login({user, password, setUser, setPassword, onSubmit}) {
     //Handles form submission
     function handleSubmit(e) {
         e.preventDefault();
+
         const payload = {
-            q: userTerm.trim(),
-            user: user === '' ? null : user,
-            password: password === '' ? null : password
+            username: userTerm.trim(), 
+            password: passwordTerm,
         };
 
         if (typeof onSubmit === 'function') onSubmit(payload);
         else console.log('search payload', payload);
+        setCurrentPage?.('Home'); 
     }
   
 
   // Return the JSX (the component's UI)
   return (
-     <form className="w-full max-w-2xl mx-auto p-2 mt-56" onSubmit={handleSubmit}>
+     <form className="w-full max-w-2xl mx-auto p-2 mt-48" onSubmit={handleSubmit}>
         {/* Search bar and clear burton */}
             <div className="flex justify-between items-center px-20">
                 <h1 className="text-4xl font-bold mb-6 ">Welcome Back</h1>
@@ -52,7 +51,7 @@ function Login({user, password, setUser, setPassword, onSubmit}) {
             </div>
             <div className="flex sm:flex-row px-20 mt-2">
                 <input
-                    type="search"
+                    type="text"
                     value={userTerm}
                     onChange={handleUserChange}
                     placeholder="Enter username"
@@ -62,7 +61,7 @@ function Login({user, password, setUser, setPassword, onSubmit}) {
 
             <div className="flex sm:flex-row mt-8 px-20">
                 <input
-                    type="search"
+                    type="text"
                     value={passwordTerm}
                     onChange={handlePasswordChange}
                     placeholder="Enter password"

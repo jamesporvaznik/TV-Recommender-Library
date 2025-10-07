@@ -3,9 +3,9 @@ import { use } from 'react';
 
 
 // Define the functional component
-function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSubmit}) {
+function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSubmit, setCurrentPage}) {
     // The component's logic goes here (state, effects, handlers, etc.)
-
+    
     // Local state used when the parent doesn't control the search term
     const [localUser, setLocalUser] = useState(user || '');
     const [localPassword, setLocalPassword] = useState(password || '');
@@ -40,20 +40,20 @@ function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSu
     function handleSubmit(e) {
         e.preventDefault();
         const payload = {
-            q: userTerm.trim(),
-            user: user === '' ? null : user,
-            password: password === '' ? null : password,
-            confirm: confirm === '' ? null : confirm
+            username: userTerm.trim(), 
+            password: passwordTerm,
+            confirm: confirmTerm,
         };
 
         if (typeof onSubmit === 'function') onSubmit(payload);
         else console.log('search payload', payload);
+        setCurrentPage?.('Home'); 
     }
   
 
   // Return the JSX (the component's UI)
   return (
-     <form className="w-full max-w-2xl mx-auto p-2 mt-56" onSubmit={handleSubmit}>
+     <form className="w-full max-w-2xl mx-auto p-2 mt-40" onSubmit={handleSubmit}>
         {/* Search bar and clear burton */}
             <div className="flex justify-between items-center px-20">
                 <h1 className="text-4xl font-bold mb-6 ">Welcome</h1>
