@@ -49,14 +49,14 @@ const Header = ({
                 <button
                     // Call setCurrentPage('Login')
                     onClick={() => setCurrentPage?.('Login')}
-                    className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold"
+                    className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"  
                 >
                     Login
                 </button>
                 <button
                     // =Call setCurrentPage('Signup')
                     onClick={() => setCurrentPage?.('Signup')}
-                    className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold"
+                    className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"
                 >
                     Sign up
                 </button>
