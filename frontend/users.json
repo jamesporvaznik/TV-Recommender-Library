@@ -4,6 +4,8 @@
     "user": "James",
     "password": "test123",
     "watched": [],
-    "bookmarked": []
+    "bookmarked": [],
+    "addedShows": [],
+    "recommendedShows": []
   }
 ]

@@ -11,6 +11,9 @@ import Watched from './components/Watched';
 import Watchlist from './components/Watchlist';
 import Login from './components/Login';
 import Signup from './components/Signup';   
+import Recommendations from './components/Recommendations';
+import AddedShowsList from './components/AddedShowsList';
+import RecommendedShowsList from './components/RecommendedShowsList';
 
 // Data Imports
 import allShowsData from '../shows.json'; 
@@ -30,16 +33,123 @@ function App() {
     // Routing & Filtering State
     const [currentPage, setCurrentPage] = useState('Home');
     const [filters, setFilters] = useState(null);
+    const [isAddedListVisible, setIsAddedListVisible] = useState(true);
 
     // User Tracking State
     const [userLists, setUserLists] = useState({
         watched: initialUser.watched,
         bookmarked: initialUser.bookmarked,
+        added: initialUser.addedShows || [],
+        recommended: initialUser.recommendedShows || []
     });
 
     // Handler to receive the search payload from the Search component
     const handleSearch = (newFilters) => {
         setFilters(newFilters);
+    };
+
+    // Placeholder function that checks usr credentials against a single mock user
+    const checkUser = (user) => {
+        return user.username === initialUser.user && user.password === initialUser.password;
+    }
+
+    // Helper function to check if a show (by title) exists in a list of shows
+    const ifExistsInList = (showTitle, listName) => {
+
+        for(let i = 0; i < listName.length; i++){
+            const show = listName[i];
+            if(show.title.toLowerCase() === showTitle.toLowerCase()){
+                return show.id;
+            }
+        }
+        return -1;
+    }
+
+    // Function to add shows to the user's addedShows list
+    const addToList =  (showId) => {
+        setUserLists(prevLists => {
+            const currentList = prevLists.added;   
+            let updatedList;
+            let showExistsId = -1;
+
+            showExistsId = ifExistsInList(showId, allShows);
+
+            if(showExistsId === -1){
+                alert("Show not found in the all shows database.");
+                return prevLists; // No changes
+            }
+            else{
+                //checks if show is already in the added list
+                if (currentList.includes(showExistsId)) {
+                    // If ID exists, the added list remains unchanged
+                    updatedList = currentList;
+                    alert("Show already added to your list.");
+                } else {
+                    // If ID doesn't exist, add it to the list (mark)
+                    updatedList = [...currentList, showExistsId];
+                    alert("Show added to your list.");
+                }
+                console.log(updatedList);
+
+                return { ...prevLists, ['added']: updatedList };
+            }     
+        });
+    };
+
+    // Function to clear the user's addedShows list
+    const clearAddList = () => {
+        setUserLists(prevLists => ({
+            ...prevLists,
+            added: []
+        }));
+        alert("Cleared your added shows list.");
+    }
+
+    // Function to generate a recommendation list based on current filters and user lists (placeholder logic)
+    const getRecommendationList = (type, minRating, isWatched) => {
+        console.log("Generating recommendations with filters:", {type, minRating, isWatched});
+
+        let newRecommendationIds; 
+        let updatedRecommendationIds = [];
+
+        if(isWatched){
+            // Make algorithm from watched list
+            alert("Generating recommendations based on your watched shows.");
+            newRecommendationIds = [903, 125, 158];
+            
+            //min rating functionality
+            for(let i = 0; i < newRecommendationIds.length; ++i){
+                if(getShowById(newRecommendationIds[i]).rating >= minRating){
+                    updatedRecommendationIds.push(newRecommendationIds[i])
+                }
+            }
+        }
+        else{
+            // Make algorithm from added shows list
+            alert("Generating recommendations based on your added shows.");
+            newRecommendationIds = [234, 305, 418];
+
+            //min rating functionality
+            for(let i = 0; i < newRecommendationIds.length; ++i){
+                if(getShowById(newRecommendationIds[i]).rating >= minRating){
+                    updatedRecommendationIds.push(newRecommendationIds[i])
+                }
+            }
+        }
+            setUserLists(prevLists => ({
+            ...prevLists,
+            recommended: updatedRecommendationIds // Updates the userLists.recommended array
+        }));
+    }
+
+    // Function to hide the added shows list view
+    const hideAddedListView = () => {
+        setIsAddedListVisible(false);
+    };
+
+    // Function to show the added shows list view
+    const toggleAddedListView = () => {
+        setIsAddedListVisible(true);
     };
 
     // Toggle function to add/remove show IDs from watched/bookmarked lists
@@ -61,9 +171,11 @@ function App() {
         });
     };
     
-    // Data for Watched/Watchlist Pages
+    // Data for Watched/Watchlist/Added Pages
     const watchedShows = userLists.watched.map(getShowById).filter(Boolean);
     const bookmarkedShows = userLists.bookmarked.map(getShowById).filter(Boolean);
+    const addedShows = userLists.added.map(getShowById).filter(Boolean);
+    const recommendedShows = userLists.recommended.map(getShowById).filter(Boolean);
 
     // Render the component
     return (
@@ -75,7 +187,7 @@ function App() {
                     <Landing />
                 ) : (
                     <>  
-                        {/* Search bar is hidden on Login/Signup pages */}
+                        {/* Search bar is hidden on Login/Signup & Recommendations pages */}
                         {currentPage !== 'Login' && currentPage !== 'Signup' && currentPage !== 'Recommendations' && (
                                 <Search onSearch={handleSearch} />
                             )}
@@ -94,7 +206,7 @@ function App() {
                         
                         {currentPage === 'Watched' && (
                             <Watched 
-                                // Pass the filtered list of watched shows
+                                // Pass arguments to Watched component
                                 shows={watchedShows} 
                                 filters={filters} 
                                 watchedIds={userLists.watched}
@@ -105,7 +217,7 @@ function App() {
                         
                         {currentPage === 'Watchlist' && (
                             <Watchlist 
-                                // Pass the filtered list of bookmarked shows
+                                // Pass arguments to Watchlist component
                                 shows={bookmarkedShows} 
                                 filters={filters} 
                                 watchedIds={userLists.watched}
@@ -115,13 +227,39 @@ function App() {
                         )}
                         
                         {currentPage === 'Recommendations' && (
-                            <div className="p-6">
-                                <h2 className="text-2xl font-semibold">Recommendations</h2>
-                                <p className="mt-2 text-gray-600">Placeholder content for Recommendations.</p>
-                            </div>
+                            // Render Recommendations component and conditionally render AddedShowsList or a placeholder for recommendations shows list
+                            <>
+                                <Recommendations 
+                                    shows={allShows}
+                                    watchedIds={userLists.watched}
+                                    onAdd={addToList}
+                                    onClear={clearAddList}
+                                    onView={toggleAddedListView}
+                                    onHide={hideAddedListView}
+                                    onGenerate={getRecommendationList}
+                                />
+                                
+                                {/* Conditional Rendering of the sub-content area */}
+                                {isAddedListVisible ? (
+                                    <AddedShowsList 
+                                        shows={addedShows} 
+                                        watchedIds={userLists.watched}
+                                        bookmarkedIds={userLists.bookmarked}
+                                        onToggleList={updateShowList}
+                                    /> 
+                                ) : (
+                                    // placeholder for recommendations shows list
+                                    <RecommendedShowsList 
+                                        shows={recommendedShows} 
+                                        watchedIds={userLists.watched}
+                                        bookmarkedIds={userLists.bookmarked}
+                                        onToggleList={updateShowList}
+                                    /> 
+                                )}
+                            </>
                         )}
                         {currentPage === 'Login' && (
-                            <Login setCurrentPage={setCurrentPage}/>
+                            <Login setCurrentPage={setCurrentPage} onLogin={checkUser} />
                         )}
                         
                         {currentPage === 'Signup' && (
@@ -132,10 +270,10 @@ function App() {
                     </>
                 )}
             </main>
-            
             <Footer />
         </div>
     );
 }
 
+// Export the App component
 export default App;

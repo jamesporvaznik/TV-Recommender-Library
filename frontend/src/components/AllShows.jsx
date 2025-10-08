@@ -1,14 +1,3 @@
-// // Brainplanning on how to use  watched and bookmark logic
-
-// // have buttons for watched and bookmark for each movie/show
-// // on click it adds to the json file
-// // It will also need to change the state of the button to show that it has been added
-
-// // Another thing to remember is when i add users it will need to be added to a specific usrs watched or bookmark list
-// // This means that the json file or in a db will need to be structured differently
-// // Maybe have a users array and each user has a watched and bookmark array
-// // Then when a user logs in it will load their specific watched and bookmark list
-
 import React from 'react';
 import ShowCard from './ShowCard';
 
@@ -74,4 +63,5 @@ const AllShows = ({
     );
 };
 
+// Export the component
 export default AllShows;

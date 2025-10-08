@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { use } from 'react';
 
 
-// Define the functional component
+// Define the Signup component
 function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSubmit, setCurrentPage}) {
     // The component's logic goes here (state, effects, handlers, etc.)
     
@@ -12,7 +12,7 @@ function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSu
     const [localConfirm, setLocalConfirm] = useState(confirm || '');
 
 
-    // Handles text input changes
+    // Handles username input changes
     function handleUserChange(e) {
         const v = e.target.value;
         if (typeof setUser === 'function') setUser(v);
@@ -20,7 +20,7 @@ function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSu
     }
     const userTerm = typeof user === 'string' ?user : localUser;
 
-    // Handles text input changes
+    // Handles password input changes
     function handlePasswordChange(e) {
         const v = e.target.value;
         if (typeof setUser === 'function') setPassword(v);
@@ -28,7 +28,7 @@ function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSu
     }
     const passwordTerm = typeof password === 'string' ?password : localPassword;
 
-     // Handles text input changes
+     // Handles confirmed password input changes
     function handleConfirmChange(e) {
         const v = e.target.value;
         if (typeof setConfirm === 'function') setConfirm(v);
@@ -47,52 +47,59 @@ function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSu
 
         if (typeof onSubmit === 'function') onSubmit(payload);
         else console.log('search payload', payload);
+
+        // clear fields
+        setLocalPassword('');
+        setLocalUser('');
+
         setCurrentPage?.('Home'); 
     }
   
 
-  // Return the JSX (the component's UI)
+  // Render the component's UI
   return (
      <form className="w-full max-w-2xl mx-auto p-2 mt-40" onSubmit={handleSubmit}>
-        {/* Search bar and clear burton */}
-            <div className="flex justify-between items-center px-20">
-                <h1 className="text-4xl font-bold mb-6 ">Welcome</h1>
-            </div>
-            <div className="flex justify-between items-center px-20">
-                <h2 className="text-2xl font-bold mb-6 ">Create an Account</h2>
-            </div>
-            <div className="flex sm:flex-row px-20 mt-2">
-                <input
-                    type="search"
-                    value={userTerm}
-                    onChange={handleUserChange}
-                    placeholder="Enter username"
-                    className="flex-1 px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
-                />
-            </div> 
-
-            <div className="flex sm:flex-row mt-8 px-20">
-                <input
-                    type="search"
-                    value={passwordTerm}
-                    onChange={handlePasswordChange}
-                    placeholder="Enter password"
-                    className="flex-1 px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
-                />
-            </div>
-
-            <div className="flex sm:flex-row mt-8 px-20">
-                <input
-                    type="search"
-                    value={confirmTerm}
-                    onChange={handleConfirmChange}
-                    placeholder="Confirm your password"
-                    className="flex-1 px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
-                />
-            </div>
-            <div className="flex justify-center items-center px-20 mt-8">
-                <button type="submit" className="px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700 w-full">Login</button>
-            </div>
+        {/* Title/subtitle text */}
+        <div className="flex justify-between items-center px-20">
+            <h1 className="text-4xl font-bold mb-6 ">Welcome</h1>
+        </div>
+        <div className="flex justify-between items-center px-20">
+            <h2 className="text-2xl font-bold mb-6 ">Create an Account</h2>
+        </div>
+        {/* Username field */}
+        <div className="flex sm:flex-row px-20 mt-2">
+            <input
+                type="text"
+                value={userTerm}
+                onChange={handleUserChange}
+                placeholder="Enter username"
+                className="flex-1 px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+        </div> 
+        {/* Password field */}
+        <div className="flex sm:flex-row mt-8 px-20">
+            <input
+                type="text"
+                value={passwordTerm}
+                onChange={handlePasswordChange}
+                placeholder="Enter password"
+                className="flex-1 px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+        </div>
+        {/* Confirm password field */}
+        <div className="flex sm:flex-row mt-8 px-20">
+            <input
+                type="text"
+                value={confirmTerm}
+                onChange={handleConfirmChange}
+                placeholder="Confirm your password"
+                className="flex-1 px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+            />
+        </div>
+        {/* Signup button */}
+        <div className="flex justify-center items-center px-20 mt-8">
+            <button type="submit" className="px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700 w-full">Create Account</button>
+        </div>
             
      </form>
   );
