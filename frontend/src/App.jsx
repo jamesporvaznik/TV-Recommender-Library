@@ -116,6 +116,8 @@ function App() {
             // Make algorithm from watched list
             alert("Generating recommendations based on your watched shows.");
             newRecommendationIds = [903, 125, 158];
+            
+            //min rating functionality
             for(let i = 0; i < newRecommendationIds.length; ++i){
                 if(getShowById(newRecommendationIds[i]).rating >= minRating){
                     updatedRecommendationIds.push(newRecommendationIds[i])
@@ -124,9 +126,10 @@ function App() {
         }
         else{
             // Make algorithm from added shows list
-            //const recommendations = userLists.added
             alert("Generating recommendations based on your added shows.");
             newRecommendationIds = [234, 305, 418];
+
+            //min rating functionality
             for(let i = 0; i < newRecommendationIds.length; ++i){
                 if(getShowById(newRecommendationIds[i]).rating >= minRating){
                     updatedRecommendationIds.push(newRecommendationIds[i])
