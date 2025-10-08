@@ -1,21 +1,6 @@
 import React from 'react';
 import ShowCard from './ShowCard'; 
 
-const filterShows = (shows, filters) => {
-
-    // Filtering logic 
-    return shows.filter(show => {
-        if (!filters) return true;
-        const { q, genre, type, minRating, isAiring } = filters;
-        if (q && !show.title.toLowerCase().includes(q.toLowerCase())) return false;
-        if (genre && show.genre !== genre) return false;
-        const targetType = type === 'TV' ? 'TV Series' : type;
-        if (targetType && show.type !== targetType) return false;
-        if (minRating && show.rating < minRating) return false;
-        if (isAiring && !show.is_airing) return false;
-        return true; 
-    });
-};
 
 // Function to group shows into rows of 5
 const groupIntoRows = (shows, chunkSize = 5) => {
@@ -26,24 +11,22 @@ const groupIntoRows = (shows, chunkSize = 5) => {
     return groupedRows;
 };
 
-// Watched component now receives the new user tracking props
-const Watched = ({ 
+// AddedShowsList component now receives the new user tracking props
+const AddedShowsList = ({ 
     shows, 
-    filters,
     watchedIds, 
     bookmarkedIds, 
     onToggleList 
 }) => {
-    const filteredShows = filterShows(shows, filters);
-    const groupedRows = groupIntoRows(filteredShows);
+    const groupedRows = groupIntoRows(shows);
 
     // Render the component
     return (
         <div className="container mx-auto px-4 py-8">
-            <h2 className="text-2xl font-bold mb-6">Watched Shows ({filteredShows.length})</h2>
+            <h2 className="text-2xl font-bold mb-6">Added Shows ({shows.length})</h2>
 
             {shows.length === 0 && (
-                <p className="text-gray-500">You haven't marked any shows as watched yet.</p>
+                <p className="text-gray-500">You haven't added any shows to the list.</p>
             )}
 
             {groupedRows.map((row, rowIndex) => (
@@ -65,4 +48,4 @@ const Watched = ({
 };
 
 //Export the component
-export default Watched;
+export default AddedShowsList;

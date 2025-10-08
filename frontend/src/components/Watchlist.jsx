@@ -1,9 +1,8 @@
 import React from 'react';
 import ShowCard from './ShowCard'; 
 
-const filterShows = (shows, filters) => {
-
-    // Filtering logic 
+// Filtering logic
+const filterShows = (shows, filters) => { 
     return shows.filter(show => {
         if (!filters) return true;
         const { q, genre, type, minRating, isAiring } = filters;
@@ -63,5 +62,5 @@ const Watchlist = ({
         </div>
     );
 };
-
+//Export the component
 export default Watchlist;
