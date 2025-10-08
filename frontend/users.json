@@ -5,6 +5,7 @@
     "password": "test123",
     "watched": [],
     "bookmarked": [],
-    "addedShows": []
+    "addedShows": [],
+    "recommendedShows": []
   }
 ]

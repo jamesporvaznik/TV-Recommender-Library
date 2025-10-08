@@ -13,6 +13,7 @@ import Login from './components/Login';
 import Signup from './components/Signup';   
 import Recommendations from './components/Recommendations';
 import AddedShowsList from './components/AddedShowsList';
+import RecommendedShowsList from './components/RecommendedShowsList';
 
 // Data Imports
 import allShowsData from '../shows.json'; 
@@ -38,7 +39,8 @@ function App() {
     const [userLists, setUserLists] = useState({
         watched: initialUser.watched,
         bookmarked: initialUser.bookmarked,
-        added: initialUser.addedShows || []
+        added: initialUser.addedShows || [],
+        recommended: initialUser.recommendedShows || []
     });
 
     // Handler to receive the search payload from the Search component
@@ -106,16 +108,35 @@ function App() {
     // Function to generate a recommendation list based on current filters and user lists (placeholder logic)
     const getRecommendationList = (type, minRating, isWatched) => {
         console.log("Generating recommendations with filters:", {type, minRating, isWatched});
+
+        let newRecommendationIds; 
+        let updatedRecommendationIds = [];
+
         if(isWatched){
             // Make algorithm from watched list
-            const recommendations = userLists.watched
             alert("Generating recommendations based on your watched shows.");
+            newRecommendationIds = [903, 125, 158];
+            for(let i = 0; i < newRecommendationIds.length; ++i){
+                if(getShowById(newRecommendationIds[i]).rating >= minRating){
+                    updatedRecommendationIds.push(newRecommendationIds[i])
+                }
+            }
         }
         else{
             // Make algorithm from added shows list
-            const recommendations = userLists.added
+            //const recommendations = userLists.added
             alert("Generating recommendations based on your added shows.");
+            newRecommendationIds = [234, 305, 418];
+            for(let i = 0; i < newRecommendationIds.length; ++i){
+                if(getShowById(newRecommendationIds[i]).rating >= minRating){
+                    updatedRecommendationIds.push(newRecommendationIds[i])
+                }
+            }
         }
+            setUserLists(prevLists => ({
+            ...prevLists,
+            recommended: updatedRecommendationIds // Updates the userLists.recommended array
+        }));
     }
 
     // Function to hide the added shows list view
@@ -151,6 +172,7 @@ function App() {
     const watchedShows = userLists.watched.map(getShowById).filter(Boolean);
     const bookmarkedShows = userLists.bookmarked.map(getShowById).filter(Boolean);
     const addedShows = userLists.added.map(getShowById).filter(Boolean);
+    const recommendedShows = userLists.recommended.map(getShowById).filter(Boolean);
 
     // Render the component
     return (
@@ -224,10 +246,12 @@ function App() {
                                     /> 
                                 ) : (
                                     // placeholder for recommendations shows list
-                                    <div className="p-4 text-center text-gray-500">
-                                        <p>Use the filters above and click "Get Recommendations" to see suggestions.</p>
-                                        <p>Or click "View Added Shows" to see your list.</p>
-                                    </div>
+                                    <RecommendedShowsList 
+                                        shows={recommendedShows} 
+                                        watchedIds={userLists.watched}
+                                        bookmarkedIds={userLists.bookmarked}
+                                        onToggleList={updateShowList}
+                                    /> 
                                 )}
                             </>
                         )}
