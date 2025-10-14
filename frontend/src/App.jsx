@@ -14,6 +14,7 @@ import Signup from './components/Signup';
 import Recommendations from './components/Recommendations';
 import AddedShowsList from './components/AddedShowsList';
 import RecommendedShowsList from './components/RecommendedShowsList';
+import ShowDetails from './components/ShowDetails';
 
 // Data Imports
 import allShowsData from '../shows.json'; 
@@ -34,6 +35,7 @@ function App() {
     const [currentPage, setCurrentPage] = useState('Home');
     const [filters, setFilters] = useState(null);
     const [isAddedListVisible, setIsAddedListVisible] = useState(true);
+    const [popUpShow, setPopUpShow] = useState(null);
 
     // User Tracking State
     const [userLists, setUserLists] = useState({
@@ -42,6 +44,15 @@ function App() {
         added: initialUser.addedShows || [],
         recommended: initialUser.recommendedShows || []
     });
+
+    // Pop-up Logic
+    const handleOpenPopUp = (showData) => {
+        setPopUpShow(showData);
+    };
+
+    const handleClosePopUp = () => {
+        setPopUpShow(null);
+    };
 
     // Handler to receive the search payload from the Search component
     const handleSearch = (newFilters) => {
@@ -117,7 +128,7 @@ function App() {
             alert("Generating recommendations based on your watched shows.");
             newRecommendationIds = [903, 125, 158];
             
-            //min rating functionality
+            // min rating functionality
             for(let i = 0; i < newRecommendationIds.length; ++i){
                 if(getShowById(newRecommendationIds[i]).rating >= minRating){
                     updatedRecommendationIds.push(newRecommendationIds[i])
@@ -201,6 +212,7 @@ function App() {
                                 watchedIds={userLists.watched}
                                 bookmarkedIds={userLists.bookmarked}
                                 onToggleList={updateShowList}
+                                onCardClick={handleOpenPopUp}
                             />
                         )}
                         
@@ -212,6 +224,7 @@ function App() {
                                 watchedIds={userLists.watched}
                                 bookmarkedIds={userLists.bookmarked}
                                 onToggleList={updateShowList}
+                                onCardClick={handleOpenPopUp}
                             /> 
                         )}
                         
@@ -223,6 +236,7 @@ function App() {
                                 watchedIds={userLists.watched}
                                 bookmarkedIds={userLists.bookmarked}
                                 onToggleList={updateShowList}
+                                onCardClick={handleOpenPopUp}
                             /> 
                         )}
                         
@@ -246,6 +260,7 @@ function App() {
                                         watchedIds={userLists.watched}
                                         bookmarkedIds={userLists.bookmarked}
                                         onToggleList={updateShowList}
+                                        onCardClick={handleOpenPopUp}
                                     /> 
                                 ) : (
                                     // placeholder for recommendations shows list
@@ -254,6 +269,7 @@ function App() {
                                         watchedIds={userLists.watched}
                                         bookmarkedIds={userLists.bookmarked}
                                         onToggleList={updateShowList}
+                                        onCardClick={handleOpenPopUp}
                                     /> 
                                 )}
                             </>
@@ -271,6 +287,18 @@ function App() {
                 )}
             </main>
             <Footer />
+            
+            {/* RENDER MODAL HERE: Renders globally when modalShow is NOT null */}
+            {popUpShow && (
+                <ShowDetails 
+                    show={popUpShow}
+                    onClose={handleClosePopUp}
+                    watchedIds={userLists.watched}
+                    bookmarkedIds={userLists.bookmarked}
+                    onToggleList={updateShowList}
+                />
+            )}
+            
         </div>
     );
 }

@@ -16,7 +16,7 @@
     "genre": "Fantasy",
     "type": "Movie",
     "runtime_minutes": 145,
-    "year_released": 2023,
+    "year_started": 2023,
     "is_airing": false,
     "rating": 9.1
   },
@@ -48,7 +48,7 @@
     "genre": "Historical Documentary",
     "type": "Movie",
     "runtime_minutes": 98,
-    "year_released": 2022,
+    "year_started": 2022,
     "is_airing": false,
     "rating": 7.5
   },
@@ -58,7 +58,7 @@
     "genre": "Sci-Fi",
     "type": "Movie",
     "runtime_minutes": 112,
-    "year_released": 2024,
+    "year_started": 2024,
     "is_airing": false,
     "rating": 8.7
   },
@@ -101,7 +101,7 @@
     "genre": "Nature Documentary",
     "type": "Movie",
     "runtime_minutes": 55,
-    "year_released": 2024,
+    "year_started": 2024,
     "is_airing": false,
     "rating": 8.9
   },
@@ -122,7 +122,7 @@
     "genre": "Crime Drama",
     "type": "Movie",
     "runtime_minutes": 130,
-    "year_released": 2021,
+    "year_started": 2021,
     "is_airing": false,
     "rating": 8.3
   },
@@ -143,7 +143,7 @@
     "genre": "Romance",
     "type": "Movie",
     "runtime_minutes": 95,
-    "year_released": 2023,
+    "year_started": 2023,
     "is_airing": false,
     "rating": 7.7
   },
@@ -175,7 +175,7 @@
     "genre": "Steampunk Adventure",
     "type": "Movie",
     "runtime_minutes": 155,
-    "year_released": 2020,
+    "year_started": 2020,
     "is_airing": false,
     "rating": 8.6
   },
@@ -196,7 +196,7 @@
     "genre": "Action",
     "type": "Movie",
     "runtime_minutes": 105,
-    "year_released": 2025,
+    "year_started": 2025,
     "is_airing": true,
     "rating": 8.0
   },

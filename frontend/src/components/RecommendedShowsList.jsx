@@ -16,7 +16,8 @@ const RecommendedShowsList = ({
     shows, 
     watchedIds, 
     bookmarkedIds, 
-    onToggleList 
+    onToggleList,
+    onCardClick 
 }) => {
     const groupedRows = groupIntoRows(shows);
 
@@ -39,6 +40,7 @@ const RecommendedShowsList = ({
                             watchedIds={watchedIds}
                             bookmarkedIds={bookmarkedIds}
                             onToggleList={onToggleList}
+                            onCardClick={onCardClick}
                         />
                     ))}
                 </div>

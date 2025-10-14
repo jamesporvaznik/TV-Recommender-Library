@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 
 
-const ShowCard = ({ show, watchedIds, bookmarkedIds, onToggleList }) => {
+const ShowCard = ({ show, watchedIds, bookmarkedIds, onToggleList, onCardClick }) => {
     // Check the current status of the show for the current user
     const isWatched = watchedIds.includes(show.id);
     const isBookmarked = bookmarkedIds.includes(show.id);
@@ -17,7 +17,12 @@ const ShowCard = ({ show, watchedIds, bookmarkedIds, onToggleList }) => {
     };
 
     return (
-        <article key={show.id} className="border rounded overflow-hidden bg-white shadow-md transition-shadow hover:shadow-lg">
+        // Made the entire article clickable
+        <article 
+            key={show.id} 
+            onClick={() => onCardClick(show)} // This triggers the modal open function
+            className="border rounded overflow-hidden bg-white shadow-md transition-shadow hover:shadow-lg cursor-pointer" 
+        >
             {/* Image Section */}
             <div className="h-40 bg-gray-200 flex items-center justify-center">
                 <img 
@@ -38,7 +43,10 @@ const ShowCard = ({ show, watchedIds, bookmarkedIds, onToggleList }) => {
                 <div className="mt-3 flex justify-between gap-2">
                     {/* Bookmark Button */}
                     <button 
-                        onClick={handleToggleBookmark} 
+                        onClick={(e) => {
+                            e.stopPropagation(); //  Stops modal pop up when pressing buttons
+                            handleToggleBookmark();
+                        }} 
                         className={`text-xs px-2 py-1 rounded transition w-1/2 ${isBookmarked 
                             ? 'bg-blue-600 text-white hover:bg-blue-700' 
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
@@ -48,7 +56,10 @@ const ShowCard = ({ show, watchedIds, bookmarkedIds, onToggleList }) => {
                     
                     {/* Watched Button */}
                     <button 
-                        onClick={handleToggleWatched} 
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            handleToggleWatched(); 
+                        }} 
                         className={`text-xs px-2 py-1 rounded transition w-1/2 ${isWatched 
                             ? 'bg-green-600 text-white hover:bg-green-700' 
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}

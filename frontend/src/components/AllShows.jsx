@@ -31,7 +31,8 @@ const AllShows = ({
     filters,
     watchedIds,
     bookmarkedIds,
-    onToggleList
+    onToggleList,
+    onCardClick
 }) => {
     const filteredShows = filterShows(allShows, filters);
     const groupedRows = groupIntoRows(filteredShows);
@@ -55,6 +56,7 @@ const AllShows = ({
                             watchedIds={watchedIds}
                             bookmarkedIds={bookmarkedIds}
                             onToggleList={onToggleList}
+                            onCardClick={onCardClick}
                         />
                     ))}
                 </div>
