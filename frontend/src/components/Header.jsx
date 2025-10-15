@@ -1,7 +1,8 @@
 import React from 'react';
+import { FaUserCircle } from 'react-icons/fa'; 
 
 const Header = ({ 
-    currentPage, setCurrentPage, isLoggedIn, onLogout
+    currentPage, setCurrentPage, isLoggedIn
 }) => {
     // Navigation items for the multi-page feel (P1-T7)
     const NAVIGATION_PAGES = ['All Shows', 'Watched', 'Watchlist', 'Recommendations'];
@@ -47,47 +48,30 @@ const Header = ({
                 </div>
             </div>
 
-
-            {/* Right: login / signup */}
-            {/* <div className="w-full md:w-1/5 flex justify-end gap-2 pr-4 md:pr-0">
-                <button
-                    onClick={() => setCurrentPage?.('Login')}
-                    className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"  
-                >
-                    Login
-                </button>
-                <button
-                    onClick={() => setCurrentPage?.('Signup')}
-                    className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"
-                >
-                    Sign up
-                </button>
-            </div> */}
+            {/* Right: profile / login / signup */}
             <div className="w-full md:w-1/5 flex justify-end gap-2 pr-4 md:pr-0">
                 {isLoggedIn ? (
-                    // --- PROFILE VIEW (User is Logged In) ---
+                    // Profile View
                     <>
-                        <button
+                        <FaUserCircle
                             onClick={handleProfileClick}
-                            className="px-5 py-2 text-sm border rounded bg-indigo-600 text-white font-semibold shadow-md hover:bg-indigo-700"  
-                        >
-                            Profile
-                        </button>
+                            className="text-4xl cursor-pointer hover:text-cyan-700 transition"
+                        />
                     </>
                 ) : (
-                    // --- LOGOUT VIEW (User is Logged Out) ---
+                    // Signup / Login Button View
                     <div className="w-full md:w-1/5 flex justify-end gap-2 pr-4 md:pr-0">
                 <button
                     onClick={() => setCurrentPage?.('Login')}
-                    className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"  
+                    className="px-5 py-1 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"  
                 >
                     Login
                 </button>
                 <button
                     onClick={() => setCurrentPage?.('Signup')}
-                    className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"
+                    className="px-5 py-1 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"
                 >
-                    Sign up
+                    Signup
                 </button>
             </div>
                 )}

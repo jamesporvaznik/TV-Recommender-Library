@@ -56,13 +56,13 @@ function App() {
         setPopUpShow(null);
     };
 
-    // Function to hide the added shows list view
+    // Function to show when the user is logged out
     const handleLogout = () => {
         setIsLoggedIn(false);
         setCurrentPage('Home');
     };
 
-    // Function to show the added shows list view
+    // Function to show when logged in
     const handleLogin = () => {
         setIsLoggedIn(true);
     };
@@ -179,6 +179,12 @@ function App() {
     // Toggle function to add/remove show IDs from watched/bookmarked lists
     const updateShowList = (showId, listName) => {
         setUserLists(prevLists => {
+
+            if(!isLoggedIn){
+                alert("Login to access this functionality")
+                return prevLists;
+            }
+
             const currentList = prevLists[listName];
             const showExists = currentList.includes(showId);
             let updatedList;
@@ -233,64 +239,76 @@ function App() {
                                 onCardClick={handleOpenPopUp}
                             />
                         )}
-                        
+
                         {currentPage === 'Watched' && (
-                            <Watched 
-                                // Pass arguments to Watched component
-                                shows={watchedShows} 
-                                filters={filters} 
-                                watchedIds={userLists.watched}
-                                bookmarkedIds={userLists.bookmarked}
-                                onToggleList={updateShowList}
-                                onCardClick={handleOpenPopUp}
-                            /> 
+                            isLoggedIn ? (
+                                <Watched 
+                                    // Pass arguments to Watched component
+                                    shows={watchedShows} 
+                                    filters={filters} 
+                                    watchedIds={userLists.watched}
+                                    bookmarkedIds={userLists.bookmarked}
+                                    onToggleList={updateShowList}
+                                    onCardClick={handleOpenPopUp}
+                                /> 
+                            ) : (
+                                setCurrentPage('Login')                        
+                            )
                         )}
-                        
+
                         {currentPage === 'Watchlist' && (
-                            <Watchlist 
-                                // Pass arguments to Watchlist component
-                                shows={bookmarkedShows} 
-                                filters={filters} 
-                                watchedIds={userLists.watched}
-                                bookmarkedIds={userLists.bookmarked}
-                                onToggleList={updateShowList}
-                                onCardClick={handleOpenPopUp}
-                            /> 
+                            isLoggedIn ? (
+                                <Watchlist 
+                                    // Pass arguments to Watched component
+                                    shows={bookmarkedShows} 
+                                    filters={filters} 
+                                    watchedIds={userLists.watched}
+                                    bookmarkedIds={userLists.bookmarked}
+                                    onToggleList={updateShowList}
+                                    onCardClick={handleOpenPopUp}
+                                /> 
+                            ) : (
+                                setCurrentPage('Login')
+                            )
                         )}
                         
                         {currentPage === 'Recommendations' && (
-                            // Render Recommendations component and conditionally render AddedShowsList or a placeholder for recommendations shows list
-                            <>
-                                <Recommendations 
-                                    shows={allShows}
-                                    watchedIds={userLists.watched}
-                                    onAdd={addToList}
-                                    onClear={clearAddList}
-                                    onView={toggleAddedListView}
-                                    onHide={hideAddedListView}
-                                    onGenerate={getRecommendationList}
-                                />
-                                
-                                {/* Conditional Rendering of the sub-content area */}
-                                {isAddedListVisible ? (
-                                    <AddedShowsList 
-                                        shows={addedShows} 
+
+                            isLoggedIn ? (
+                                <>
+                                    <Recommendations 
+                                        shows={allShows}
                                         watchedIds={userLists.watched}
-                                        bookmarkedIds={userLists.bookmarked}
-                                        onToggleList={updateShowList}
-                                        onCardClick={handleOpenPopUp}
-                                    /> 
-                                ) : (
-                                    // placeholder for recommendations shows list
-                                    <RecommendedShowsList 
-                                        shows={recommendedShows} 
-                                        watchedIds={userLists.watched}
-                                        bookmarkedIds={userLists.bookmarked}
-                                        onToggleList={updateShowList}
-                                        onCardClick={handleOpenPopUp}
-                                    /> 
-                                )}
-                            </>
+                                        onAdd={addToList}
+                                        onClear={clearAddList}
+                                        onView={toggleAddedListView}
+                                        onHide={hideAddedListView}
+                                        onGenerate={getRecommendationList}
+                                    />
+                                    
+                                    {/* Conditional Rendering of the sub-content area */}
+                                    {isAddedListVisible ? (
+                                        <AddedShowsList 
+                                            shows={addedShows} 
+                                            watchedIds={userLists.watched}
+                                            bookmarkedIds={userLists.bookmarked}
+                                            onToggleList={updateShowList}
+                                            onCardClick={handleOpenPopUp}
+                                        /> 
+                                    ) : (
+                                        // placeholder for recommendations shows list
+                                        <RecommendedShowsList 
+                                            shows={recommendedShows} 
+                                            watchedIds={userLists.watched}
+                                            bookmarkedIds={userLists.bookmarked}
+                                            onToggleList={updateShowList}
+                                            onCardClick={handleOpenPopUp}
+                                        /> 
+                                    )}
+                                </>
+                            ) : (
+                                setCurrentPage('Login')
+                            )
                         )}
                         {currentPage === 'Login' && (
                             <Login setCurrentPage={setCurrentPage} onLoginSuccess={handleLogin} onLogin={checkUser} />
@@ -304,7 +322,15 @@ function App() {
 
                         {currentPage === 'Profile' && (
                             <div>
-                                <Profile />
+                                <Profile 
+                                    user = {initialUser}
+                                    watchedShows = {watchedShows}
+                                    bookmarkedShows = {bookmarkedShows}
+                                    watchedIds={userLists.watched}
+                                    bookmarkedIds={userLists.bookmarked}
+                                    onToggleList={updateShowList}
+                                    onCardClick={handleOpenPopUp}
+                                />
                             </div>
                         )}
                     </>
@@ -312,7 +338,7 @@ function App() {
             </main>
             <Footer />
             
-            {/* RENDER MODAL HERE: Renders globally when modalShow is NOT null */}
+            {/* Render popup */}
             {popUpShow && (
                 <ShowDetails 
                     show={popUpShow}
