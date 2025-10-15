@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 // Define the login component
-function Login({user, password, setUser, setPassword, onLogin, setCurrentPage}) {
+function Login({user, password, setUser, setPassword, onLoginSuccess, onLogin, setCurrentPage}) {
     // The component's logic goes here (state, effects, handlers, etc.)
 
     // Local state used when the parent doesn't control the search term
@@ -36,6 +36,7 @@ function Login({user, password, setUser, setPassword, onLogin, setCurrentPage}) 
         if (typeof onLogin === 'function') {
             if(onLogin(payload)){
                 alert("Sucessful login");
+                onLoginSuccess();
                 setCurrentPage?.('Home');
             }
             else{

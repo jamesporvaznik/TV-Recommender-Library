@@ -15,6 +15,7 @@ import Recommendations from './components/Recommendations';
 import AddedShowsList from './components/AddedShowsList';
 import RecommendedShowsList from './components/RecommendedShowsList';
 import ShowDetails from './components/ShowDetails';
+import Profile from './components/Profile';
 
 // Data Imports
 import allShowsData from '../shows.json'; 
@@ -36,6 +37,7 @@ function App() {
     const [filters, setFilters] = useState(null);
     const [isAddedListVisible, setIsAddedListVisible] = useState(true);
     const [popUpShow, setPopUpShow] = useState(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     // User Tracking State
     const [userLists, setUserLists] = useState({
@@ -52,6 +54,17 @@ function App() {
 
     const handleClosePopUp = () => {
         setPopUpShow(null);
+    };
+
+    // Function to hide the added shows list view
+    const handleLogout = () => {
+        setIsLoggedIn(false);
+        setCurrentPage('Home');
+    };
+
+    // Function to show the added shows list view
+    const handleLogin = () => {
+        setIsLoggedIn(true);
     };
 
     // Handler to receive the search payload from the Search component
@@ -191,7 +204,7 @@ function App() {
     // Render the component
     return (
         <div className="flex flex-col min-h-screen">
-            <Header currentPage={currentPage} setCurrentPage={setCurrentPage}/>
+            <Header currentPage={currentPage} setCurrentPage={setCurrentPage} isLoggedIn={isLoggedIn} onLogout={handleLogout} />
             
             <main className="flex-grow">
                 {currentPage === 'Home' ? (
@@ -199,7 +212,7 @@ function App() {
                 ) : (
                     <>  
                         {/* Search bar is hidden on Login/Signup & Recommendations pages */}
-                        {currentPage !== 'Login' && currentPage !== 'Signup' && currentPage !== 'Recommendations' && (
+                        {currentPage !== 'Login' && currentPage !== 'Signup' && currentPage !== 'Recommendations' && currentPage != 'Profile' && (
                                 <Search onSearch={handleSearch} />
                             )}
                         
@@ -275,12 +288,18 @@ function App() {
                             </>
                         )}
                         {currentPage === 'Login' && (
-                            <Login setCurrentPage={setCurrentPage} onLogin={checkUser} />
+                            <Login setCurrentPage={setCurrentPage} onLoginSuccess={handleLogin} onLogin={checkUser} />
                         )}
                         
                         {currentPage === 'Signup' && (
                             <div>
                                 <Signup setCurrentPage={setCurrentPage}/>
+                            </div>
+                        )}
+
+                        {currentPage === 'Profile' && (
+                            <div>
+                                <Profile />
                             </div>
                         )}
                     </>

@@ -1,10 +1,14 @@
 import React from 'react';
 
 const Header = ({ 
-    currentPage, setCurrentPage,
+    currentPage, setCurrentPage, isLoggedIn, onLogout
 }) => {
     // Navigation items for the multi-page feel (P1-T7)
     const NAVIGATION_PAGES = ['All Shows', 'Watched', 'Watchlist', 'Recommendations'];
+
+     const handleProfileClick = () => {
+        setCurrentPage?.('Profile'); // Navigate to the placeholder Profile page
+    };
 
     return (
         // Outer div for the navigation bar: three columns (logo | nav | auth)
@@ -45,21 +49,48 @@ const Header = ({
 
 
             {/* Right: login / signup */}
-            <div className="w-full md:w-1/5 flex justify-end gap-2 pr-4 md:pr-0">
+            {/* <div className="w-full md:w-1/5 flex justify-end gap-2 pr-4 md:pr-0">
                 <button
-                    // Call setCurrentPage('Login')
                     onClick={() => setCurrentPage?.('Login')}
                     className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"  
                 >
                     Login
                 </button>
                 <button
-                    // =Call setCurrentPage('Signup')
                     onClick={() => setCurrentPage?.('Signup')}
                     className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"
                 >
                     Sign up
                 </button>
+            </div> */}
+            <div className="w-full md:w-1/5 flex justify-end gap-2 pr-4 md:pr-0">
+                {isLoggedIn ? (
+                    // --- PROFILE VIEW (User is Logged In) ---
+                    <>
+                        <button
+                            onClick={handleProfileClick}
+                            className="px-5 py-2 text-sm border rounded bg-indigo-600 text-white font-semibold shadow-md hover:bg-indigo-700"  
+                        >
+                            Profile
+                        </button>
+                    </>
+                ) : (
+                    // --- LOGOUT VIEW (User is Logged Out) ---
+                    <div className="w-full md:w-1/5 flex justify-end gap-2 pr-4 md:pr-0">
+                <button
+                    onClick={() => setCurrentPage?.('Login')}
+                    className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"  
+                >
+                    Login
+                </button>
+                <button
+                    onClick={() => setCurrentPage?.('Signup')}
+                    className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"
+                >
+                    Sign up
+                </button>
+            </div>
+                )}
             </div>
 
         </nav>
