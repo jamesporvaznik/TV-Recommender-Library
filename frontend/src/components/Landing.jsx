@@ -1,8 +1,9 @@
 import React, { useMemo, useState } from 'react';
+import ShowCard from './ShowCard'
 import showsData from '../../shows.json';
 
 // Landing page component
-const Landing = () => {
+const Landing = ({watchedIds, bookmarkedIds, onToggleList, onCardClick}) => {
   const [refreshKey, setRefreshKey] = useState(0);
   return (
     <section className="py-20 text-center">
@@ -34,15 +35,14 @@ const Landing = () => {
             }
             return arr.slice(0, Math.min(5, arr.length));
           }, [refreshKey]).map(show => (
-            <article key={show.id} className="border rounded overflow-hidden bg-white shadow-sm">
-              <div className="h-40 bg-gray-200 flex items-center justify-center">
-                <img src={`https://placehold.co/200x280/1f2937/ffffff?text=${encodeURIComponent(show.title)}`} alt={show.title} className="object-cover h-full w-full" />
-              </div>
-              <div className="p-3">
-                <h3 className="text-sm font-semibold">{show.title}</h3>
-                <div className="text-xs text-gray-500">{show.type}: {show.rating}</div>
-              </div>
-            </article>
+            <ShowCard
+              key={show.id}
+              show={show}
+              watchedIds={watchedIds}
+              bookmarkedIds={bookmarkedIds}
+              onToggleList={onToggleList}
+              onCardClick={onCardClick} 
+            />
           ))}
         </div>
 

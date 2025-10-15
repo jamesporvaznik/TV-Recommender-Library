@@ -208,7 +208,12 @@ function App() {
             
             <main className="flex-grow">
                 {currentPage === 'Home' ? (
-                    <Landing />
+                    <Landing
+                        watchedIds={userLists.watched}
+                        bookmarkedIds={userLists.bookmarked}
+                        onToggleList={updateShowList}
+                        onCardClick={handleOpenPopUp}
+                    />
                 ) : (
                     <>  
                         {/* Search bar is hidden on Login/Signup & Recommendations pages */}
