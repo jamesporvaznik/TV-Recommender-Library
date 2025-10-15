@@ -126,7 +126,7 @@ function App() {
         if(isWatched){
             // Make algorithm from watched list
             alert("Generating recommendations based on your watched shows.");
-            newRecommendationIds = [903, 125, 158];
+            newRecommendationIds = [106, 117, 103];
             
             // min rating functionality
             for(let i = 0; i < newRecommendationIds.length; ++i){
@@ -138,7 +138,7 @@ function App() {
         else{
             // Make algorithm from added shows list
             alert("Generating recommendations based on your added shows.");
-            newRecommendationIds = [234, 305, 418];
+            newRecommendationIds = [119, 109, 104];
 
             //min rating functionality
             for(let i = 0; i < newRecommendationIds.length; ++i){

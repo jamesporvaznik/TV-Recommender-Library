@@ -42,7 +42,7 @@ const ShowDetails = ({
                         <p><strong>Genre:</strong> {show.genre || 'N/A'}</p>
                     </div>
                     <div className="space-y-4">
-                        <p><strong>Streaming On:</strong> {show.streamingService || 'Not Found'}</p>
+                        <p><strong>Streaming On:</strong> {show.streaming || 'Not Found'}</p>
                         <p><strong>Length:</strong> {show.type === 'TV Series' ? `${show.seasons} Seasons` : `${show.runtime_minutes} minutes`}</p>
                         <p><strong>Rating:</strong> PG </p>
                     </div>
@@ -50,7 +50,7 @@ const ShowDetails = ({
 
                 {/* Description */}
                 <h3 className="text-xl font-semibold mt-4 mb-2">Description</h3>
-                <p className="text-gray-600 mb-6"> A structural engineer installs himself in a prison he helped design, in order to save his falsely accused brother from a death sentence by breaking themselves out from the inside. </p>
+                <p className="text-gray-600 mb-6"> {show.description || 'N/A'} </p>
 
                 {/* Buttons */}
                 <div className="flex space-x-3 justify-between border-t pt-4">
