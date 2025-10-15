@@ -1,10 +1,15 @@
 import React from 'react';
+import { FaUserCircle } from 'react-icons/fa'; 
 
 const Header = ({ 
-    currentPage, setCurrentPage,
+    currentPage, setCurrentPage, isLoggedIn
 }) => {
     // Navigation items for the multi-page feel (P1-T7)
     const NAVIGATION_PAGES = ['All Shows', 'Watched', 'Watchlist', 'Recommendations'];
+
+     const handleProfileClick = () => {
+        setCurrentPage?.('Profile'); // Navigate to the placeholder Profile page
+    };
 
     return (
         // Outer div for the navigation bar: three columns (logo | nav | auth)
@@ -43,23 +48,33 @@ const Header = ({
                 </div>
             </div>
 
-
-            {/* Right: login / signup */}
+            {/* Right: profile / login / signup */}
             <div className="w-full md:w-1/5 flex justify-end gap-2 pr-4 md:pr-0">
+                {isLoggedIn ? (
+                    // Profile View
+                    <>
+                        <FaUserCircle
+                            onClick={handleProfileClick}
+                            className="text-4xl cursor-pointer hover:text-cyan-700 transition"
+                        />
+                    </>
+                ) : (
+                    // Signup / Login Button View
+                    <div className="w-full md:w-1/5 flex justify-end gap-2 pr-4 md:pr-0">
                 <button
-                    // Call setCurrentPage('Login')
                     onClick={() => setCurrentPage?.('Login')}
-                    className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"  
+                    className="px-5 py-1 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"  
                 >
                     Login
                 </button>
                 <button
-                    // =Call setCurrentPage('Signup')
                     onClick={() => setCurrentPage?.('Signup')}
-                    className="px-5 py-2 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"
+                    className="px-5 py-1 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"
                 >
-                    Sign up
+                    Signup
                 </button>
+            </div>
+                )}
             </div>
 
         </nav>
