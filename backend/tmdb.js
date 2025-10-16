@@ -27,9 +27,9 @@ async function fetchAndPrintShowPage() {
         
         // Loop through the page and display the shows
         data.results.forEach((show, index) => {
-            console.log(`\n[#${index + 1}] ID: ${show.id} | Title: ${show.name}`);
-            console.log(`\tPlot: "${show.overview.substring(0, 80)}..."`);
-            console.log(`\tRating: ${show.vote_average}`);
+            console.log(`\nTitle: ${show.name}`);
+            console.log(`Plot: "${show.overview}"`);
+            console.log(`Rating: ${show.vote_average}`);
         });
     
     // Failure to retreive results
