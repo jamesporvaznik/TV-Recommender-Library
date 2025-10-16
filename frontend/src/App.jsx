@@ -330,6 +330,7 @@ function App() {
                                     bookmarkedIds={userLists.bookmarked}
                                     onToggleList={updateShowList}
                                     onCardClick={handleOpenPopUp}
+                                    onLogout={handleLogout}
                                 />
                             </div>
                         )}
