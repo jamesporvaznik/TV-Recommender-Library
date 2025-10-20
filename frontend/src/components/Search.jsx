@@ -52,7 +52,7 @@ const Search = ({ searchTerm: controlledTerm, setSearchTerm: setControlledTerm, 
     }
 
     // Options for dropdowns
-    const genres = ['All', 'Drama', 'Comedy', 'Sci-Fi', 'Documentary', 'Action', 'Horror', 'Romance', 'Thriller', 'Fantasy', 'Animation', 'Mystery', 'Crime', 'Adventure', 'Biography', 'Family', 'History', 'Music', 'Musical', 'Sport', 'War', 'Western'];
+    const genres = ['All', 'Action & Adventure', 'Animation', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Family', 'Kids', 'Mystery', 'News', 'Reality', 'Sci-Fi & Fantasy', 'Soap', 'Talk', 'War & Politics', 'Western'];
     const types = ['All', 'TV', 'Movie'];
     const streamingOptions = ['Any', 'Netflix', 'Hulu', 'Disney+', 'Amazon Prime', 'HBO Max', 'Apple TV+', 'Peacock', 'Paramount+', 'YouTube', 'Crunchyroll', 'Tubi', 'Vudu', 'Sling TV', 'FuboTV', 'Philo', 'Acorn TV', 'BritBox', 'Shudder', 'Starz', 'Cinemax', 'Epix', 'Mubi', 'CuriosityStream', 'Kanopy', 'Plex', 'Xumo', 'Pluto TV', 'Roku Channel'];
 

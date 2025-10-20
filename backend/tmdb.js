@@ -16,7 +16,7 @@ async function fetchAndPrintShowPage() {
             throw new Error("TMDB_API_KEY is missing. Check your .env file.");
         }
 
-        // Retreive by page
+        // Retreive by page 
         const url = `${BASE_URL}/discover/tv?api_key=${TMDB_API_KEY}&language=en-US&sort_by=popularity.desc&page=${TARGET_PAGE}`;
         const response = await axios.get(url);
         const data = response.data;
