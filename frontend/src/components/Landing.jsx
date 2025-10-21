@@ -1,9 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import ShowCard from './ShowCard'
-import showsData from '../../shows.json';
 
 // Landing page component
-const Landing = ({watchedIds, bookmarkedIds, onToggleList, onCardClick}) => {
+const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) => {
   const [refreshKey, setRefreshKey] = useState(0);
   return (
     <section className="py-20 text-center">
@@ -28,7 +27,7 @@ const Landing = ({watchedIds, bookmarkedIds, onToggleList, onCardClick}) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
           {useMemo(() => {
             // Picks random unique shows
-            const arr = showsData.slice();
+            const arr = shows.slice();
             for (let i = arr.length - 1; i > 0; i--) {
               const j = Math.floor(Math.random() * (i + 1));
               [arr[i], arr[j]] = [arr[j], arr[i]];

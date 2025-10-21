@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 
 // Component Imports
@@ -18,26 +18,21 @@ import ShowDetails from './components/ShowDetails';
 import Profile from './components/Profile';
 
 // Data Imports
-import allShowsData from '../shows.json'; 
 import initialUserData from '../users.json'; 
 
-// Get the single fake user object from the array
-const initialUser = initialUserData[0]; 
-
-// Create the final, non-reactive list of all shows
-const allShows = allShowsData.map(show => ({ ...show }));
-
-// Helper function to find a full show object by ID
-const getShowById = (id) => allShows.find(show => show.id === id);
-
-
 function App() {
+
+    // Mock user data
+    const initialUser = initialUserData[0]; 
+
     // Routing & Filtering State
     const [currentPage, setCurrentPage] = useState('Home');
     const [filters, setFilters] = useState(null);
     const [isAddedListVisible, setIsAddedListVisible] = useState(true);
     const [popUpShow, setPopUpShow] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [allShows, setAllShows] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     // User Tracking State
     const [userLists, setUserLists] = useState({
@@ -46,6 +41,33 @@ function App() {
         added: initialUser.addedShows || [],
         recommended: initialUser.recommendedShows || []
     });
+
+    // Helper function to find a full show object by ID
+    const getShowById = (id) => allShows.find(show => show.tmdb_id === id);
+
+
+    // Get shows from database
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // 1. Fetch All Shows Data
+                const showsResponse = await fetch('/api/shows');
+                const { data: showsData } = await showsResponse.json();
+                setAllShows(showsData.map(show => ({ ...show })));
+
+            } catch (error) {
+                console.error("Failed to fetch initial data:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    if (loading) {
+        return <div className="text-center p-10">Loading show data...</div>;
+    }
 
     // Pop-up Logic
     const handleOpenPopUp = (showData) => {
@@ -83,7 +105,7 @@ function App() {
         for(let i = 0; i < listName.length; i++){
             const show = listName[i];
             if(show.title.toLowerCase() === showTitle.toLowerCase()){
-                return show.id;
+                return show.tmdb_id;
             }
         }
         return -1;
@@ -95,7 +117,6 @@ function App() {
             const currentList = prevLists.added;   
             let updatedList;
             let showExistsId = -1;
-
             showExistsId = ifExistsInList(showId, allShows);
 
             if(showExistsId === -1){
@@ -113,7 +134,7 @@ function App() {
                     updatedList = [...currentList, showExistsId];
                     alert("Show added to your list.");
                 }
-                console.log(updatedList);
+                //console.log(updatedList);
 
                 return { ...prevLists, ['added']: updatedList };
             }     
@@ -130,8 +151,8 @@ function App() {
     }
 
     // Function to generate a recommendation list based on current filters and user lists (placeholder logic)
-    const getRecommendationList = (type, minRating, isWatched) => {
-        console.log("Generating recommendations with filters:", {type, minRating, isWatched});
+    const getRecommendationList = (minRating, minReviews, isWatched) => {
+        console.log("Generating recommendations with filters:", {minRating, minReviews, isWatched});
 
         let newRecommendationIds; 
         let updatedRecommendationIds = [];
@@ -139,11 +160,11 @@ function App() {
         if(isWatched){
             // Make algorithm from watched list
             alert("Generating recommendations based on your watched shows.");
-            newRecommendationIds = [106, 117, 103];
+            newRecommendationIds = [1, 7, 9];
             
             // min rating functionality
             for(let i = 0; i < newRecommendationIds.length; ++i){
-                if(getShowById(newRecommendationIds[i]).rating >= minRating){
+                if(getShowById(newRecommendationIds[i]).rating_avg >= minRating){
                     updatedRecommendationIds.push(newRecommendationIds[i])
                 }
             }
@@ -151,11 +172,11 @@ function App() {
         else{
             // Make algorithm from added shows list
             alert("Generating recommendations based on your added shows.");
-            newRecommendationIds = [119, 109, 104];
+            newRecommendationIds = [13, 15, 29];
 
             //min rating functionality
             for(let i = 0; i < newRecommendationIds.length; ++i){
-                if(getShowById(newRecommendationIds[i]).rating >= minRating){
+                if(getShowById(newRecommendationIds[i]).rating_avg >= minRating){
                     updatedRecommendationIds.push(newRecommendationIds[i])
                 }
             }
@@ -215,6 +236,7 @@ function App() {
             <main className="flex-grow">
                 {currentPage === 'Home' ? (
                     <Landing
+                        shows = {allShows}
                         watchedIds={userLists.watched}
                         bookmarkedIds={userLists.bookmarked}
                         onToggleList={updateShowList}

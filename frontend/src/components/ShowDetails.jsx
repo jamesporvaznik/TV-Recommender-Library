@@ -12,12 +12,12 @@ const ShowDetails = ({
     if (!show) return null; 
 
     // Current status of watched and bookmarked
-    const isWatched = watchedIds?.includes(show.id);
-    const isBookmarked = bookmarkedIds?.includes(show.id);
+    const isWatched = watchedIds?.includes(show.tmdb_id);
+    const isBookmarked = bookmarkedIds?.includes(show.tmdb_id);
 
     // Handlers for the action buttons
-    const handleToggleWatched = () => onToggleList(show.id, 'watched');
-    const handleToggleBookmark = () => onToggleList(show.id, 'bookmarked');
+    const handleToggleWatched = () => onToggleList(show.tmdb_id, 'watched');
+    const handleToggleBookmark = () => onToggleList(show.tmdb_id, 'bookmarked');
     
     // Determine if the 'Remove' button should be shown
     const showRemoveButton = typeof onRemoveFromAdded === 'function';
@@ -32,25 +32,25 @@ const ShowDetails = ({
                 className="bg-white rounded-lg p-6 max-w-2xl w-full shadow-2xl overflow-y-auto max-h-full"
                 onClick={(e) => e.stopPropagation()} 
             >
-                <h2 className="text-3xl font-bold mb-2">{show.title} ({show.year_started || 'N/A'})</h2>
+                <h2 className="text-3xl font-bold mb-2">{show.title} </h2>
 
                 {/* Show Details */}
                 <div className="grid grid-cols-2 gap-4 mt-10 mb-10 text-gray-700">
                     <div className="space-y-4">
-                        <p><strong>Type:</strong> {show.type}</p>
-                        <p><strong>Rating:</strong> {show.rating}</p>
-                        <p><strong>Genre:</strong> {show.genre || 'N/A'}</p>
+                        {/* <p><strong>Type:</strong> {show.type}</p> */}
+                        <p><strong>Rating:</strong> {show.rating_avg} ({show.vote_count})</p>
+                        <p><strong>Genre:</strong> {show.genres || 'N/A'}</p>
                     </div>
                     <div className="space-y-4">
-                        <p><strong>Streaming On:</strong> {show.streaming || 'Not Found'}</p>
-                        <p><strong>Length:</strong> {show.type === 'TV Series' ? `${show.seasons} Seasons` : `${show.runtime_minutes} minutes`}</p>
-                        <p><strong>Rating:</strong> PG </p>
+                        {/* <p><strong>Streaming On:</strong> {show.streaming || 'Not Found'}</p> */}
+                        {/* <p><strong>Length:</strong> {show.type === 'TV Series' ? `${show.seasons} Seasons` : `${show.runtime_minutes} minutes`}</p> */}
+                        <p><strong>Release Date:</strong> {show.release_date} </p>
                     </div>
                 </div>
 
                 {/* Description */}
                 <h3 className="text-xl font-semibold mt-4 mb-2">Description</h3>
-                <p className="text-gray-600 mb-6"> {show.description || 'N/A'} </p>
+                <p className="text-gray-600 mb-6"> {show.overview || 'N/A'} </p>
 
                 {/* Buttons */}
                 <div className="flex space-x-3 justify-between border-t pt-4">
