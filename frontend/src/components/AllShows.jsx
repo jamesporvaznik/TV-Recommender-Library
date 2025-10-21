@@ -5,13 +5,14 @@ const filterShows = (allShows, filters) => {
     // Filtering logic 
     return allShows.filter(show => {
         if (!filters) return true;
-        const { q, genre, type, minRating, isAiring } = filters;
+        const { q, genre, minRating, minReviews } = filters;
         if (q && !show.title.toLowerCase().includes(q.toLowerCase())) return false;
-        if (genre && show.genre !== genre) return false;
-        const targetType = type === 'TV' ? 'TV Series' : type;
-        if (targetType && show.type !== targetType) return false;
-        if (minRating && show.rating < minRating) return false;
-        if (isAiring && !show.is_airing) return false;
+        if (genre && show.genres !== genre) return false;
+        // const targetType = type === 'TV' ? 'TV Series' : type;
+        // if (targetType && show.type !== targetType) return false;
+        if (minRating && show.rating_avg < minRating) return false;
+        if (minReviews && show.vote_count < minReviews) return false;
+        // if (isAiring && !show.is_airing) return false;
         return true; 
     });
 };
@@ -40,13 +41,13 @@ const AllShows = ({
     // Render the component
     return (
         <div className="container mx-auto px-4 py-8">
-            <h2 className="text-2xl font-bold mb-6">All Shows ({filteredShows.length})</h2>
+            <h2 className="text-2xl font-bold mb-6">All Shows</h2>
 
             {groupedRows.length === 0 && (
                 <p className="text-gray-500">No shows match your current filters.</p>
             )}
         
-            {groupedRows.map((row, rowIndex) => (
+            {groupedRows.slice(0, 3).map((row, rowIndex) => (
                 <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
                     {/* Iterate over the row chunk */}
                     {row.map((show) => (

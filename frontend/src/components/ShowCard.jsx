@@ -3,17 +3,17 @@ import React, { useMemo, useState } from 'react';
 
 const ShowCard = ({ show, watchedIds, bookmarkedIds, onToggleList, onCardClick }) => {
     // Check the current status of the show for the current user
-    const isWatched = watchedIds.includes(show.id);
-    const isBookmarked = bookmarkedIds.includes(show.id);
+    const isWatched = watchedIds.includes(show.tmdb_id);
+    const isBookmarked = bookmarkedIds.includes(show.tmdb_id);
 
     // Handler for the Bookmark/Watchlist button
     const handleToggleBookmark = () => {
-        onToggleList(show.id, 'bookmarked');
+        onToggleList(show.tmdb_id, 'bookmarked');
     };
 
     // Handler for the Watched button
     const handleToggleWatched = () => {
-        onToggleList(show.id, 'watched');
+        onToggleList(show.tmdb_id, 'watched');
     };
 
     return (
@@ -36,7 +36,7 @@ const ShowCard = ({ show, watchedIds, bookmarkedIds, onToggleList, onCardClick }
             <div className="p-3">
                 <h3 className="text-sm font-semibold truncate">{show.title}</h3>
                 <div className="text-xs text-gray-500">
-                    {show.type}: {show.rating}
+                    Rating: {show.rating_avg}
                 </div>
 
                 {/* Tracking Buttons */}

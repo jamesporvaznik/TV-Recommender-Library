@@ -6,8 +6,9 @@ function Recommendations({addTerm, setAddTerm, onAdd, onClear, onView, onHide, o
 
     // Local state used when the parent doesn't control the search term
     const [localAddTerm, setLocalAddTerm] = useState(addTerm || '');
-    const [type, setType] = useState('TV');
+    // const [type, setType] = useState('TV');
     const [minRating, setMinRating] = useState(0);
+    const [minReviews, setMinReviews] = useState(0);
     const [isWatched, setIsWatched] = useState(false);
 
 
@@ -66,11 +67,9 @@ function Recommendations({addTerm, setAddTerm, onAdd, onClear, onView, onHide, o
             onHide();
         }
         if (typeof onGenerate === 'function'){
-            onGenerate(type, minRating, isWatched);
+            onGenerate(minRating, minReviews, isWatched);
         }
     }
-
-    const types = ['TV', 'Movie'];
 
     // Render the form
     return (
@@ -101,17 +100,23 @@ function Recommendations({addTerm, setAddTerm, onAdd, onClear, onView, onHide, o
                 </div>
 
                 {/* Type Dropdown */}
-                <label className="flex flex-col">
+                {/* <label className="flex flex-col">
                     <span className="text-xs text-gray-500">Type</span>
                     <select value={type} onChange={e => setType(e.target.value)} className="mt-1 px-2 py-1 border rounded">
                         {types.map(t => <option key={t} value={t}>{t}</option>)}
                     </select>
-                </label>
+                </label> */}
 
                 {/* Min Rating Input */}
                 <label className="flex flex-col">
                     <span className="text-xs text-gray-500">Min Rating</span>
                     <input type="number" min="0" max="10" value={minRating} onChange={e => setMinRating(e.target.value)} className="mt-1 px-2 py-1 border rounded" />
+                </label>
+
+                {/* Min Reviews Input */}
+                <label className="flex flex-col">
+                    <span className="text-xs text-gray-500">Min Raters</span>
+                    <input type="number" min="0" value={minReviews} onChange={e => setMinReviews(e.target.value)} className="mt-1 px-2 py-1 border rounded" />
                 </label>
 
                 {/* View Added Shows Button */}
