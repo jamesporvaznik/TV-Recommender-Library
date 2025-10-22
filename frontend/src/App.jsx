@@ -33,6 +33,7 @@ function App() {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [allShows, setAllShows] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [addedShowIds, setAddedShowIds] = useState([]);
 
     // User Tracking State
     const [userLists, setUserLists] = useState({
@@ -89,14 +90,69 @@ function App() {
         setIsLoggedIn(true);
     };
 
+    const handleSignUp = async(user) => {
+        try {
+            const response = await fetch('/api/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(user)
+            });
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                // Success: Store token for session when i add that funcitonality
+                console.log("Signup API success:", data.message);
+                return true; 
+            } else {
+                // Failure: Invalid credentials
+                console.error("Signup failed:", data.message);
+                return false;
+            }
+
+        } catch (error) {
+            console.error("Network error during login:", error);
+            alert("A network error occurred. Could not connect to the server.");
+            return false;
+        }
+    }
+
     // Handler to receive the search payload from the Search component
     const handleSearch = (newFilters) => {
         setFilters(newFilters);
     };
 
     // Placeholder function that checks usr credentials against a single mock user
-    const checkUser = (user) => {
-        return user.username === initialUser.user && user.password === initialUser.password;
+    const checkUser = async (user) => {
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(user)
+            });
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+
+                localStorage.setItem('userToken', data.token);
+                localStorage.setItem('currentUserId', data.userId);
+                localStorage.setItem('username', data.username);
+
+                console.log(localStorage.userToken, localStorage.currentUserId, localStorage.username);
+
+                // Success: Store token for session when i add that funcitonality
+                console.log("Login API success:", data.message);
+                return true; 
+            } else {
+                // Failure: Invalid credentials
+                console.error("Login failed:", data.message);
+                return false;
+            }
+
+        } catch (error) {
+            console.error("Network error during login:", error);
+            alert("A network error occurred. Could not connect to the server.");
+            return false;
+        }
     }
 
     // Helper function to check if a show (by title) exists in a list of shows
@@ -181,7 +237,7 @@ function App() {
                 }
             }
         }
-            setUserLists(prevLists => ({
+        setUserLists(prevLists => ({
             ...prevLists,
             recommended: updatedRecommendationIds // Updates the userLists.recommended array
         }));
@@ -193,8 +249,44 @@ function App() {
     };
 
     // Function to show the added shows list view
-    const toggleAddedListView = () => {
+    const toggleAddedListView = async () => {
+
+        const token = localStorage.userToken;
+        console.log(token);
+
+        try {
+            // /api/added
+            const response = await fetch('/api/added', {
+                method: 'GET',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    // 2. Attach the token for authentication
+                    'Authorization': `Bearer ${token}` 
+                },
+
+            });
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                // Success: Store token for session when i add that funcitonality
+                console.log("Added API success:", data.added);
+                setAddedShowIds(data.added);
+                setIsAddedListVisible(true);
+                return true; 
+            } else {
+                // Failure: Invalid credentials
+                console.error("getting added shows failed:", data.message);
+                return false;
+            }
+
+        } catch (error) {
+            console.error("Network error during login:", error);
+            alert("A network error occurred. Could not connect to the server.");
+            return false;
+        }
+
         setIsAddedListVisible(true);
+
     };
 
     // Toggle function to add/remove show IDs from watched/bookmarked lists
@@ -225,7 +317,7 @@ function App() {
     // Data for Watched/Watchlist/Added Pages
     const watchedShows = userLists.watched.map(getShowById).filter(Boolean);
     const bookmarkedShows = userLists.bookmarked.map(getShowById).filter(Boolean);
-    const addedShows = userLists.added.map(getShowById).filter(Boolean);
+    const addedShows = addedShowIds.map(getShowById).filter(Boolean);
     const recommendedShows = userLists.recommended.map(getShowById).filter(Boolean);
 
     // Render the component
@@ -338,7 +430,7 @@ function App() {
                         
                         {currentPage === 'Signup' && (
                             <div>
-                                <Signup setCurrentPage={setCurrentPage}/>
+                                <Signup setCurrentPage={setCurrentPage} onSubmit={handleSignUp}/>
                             </div>
                         )}
 
