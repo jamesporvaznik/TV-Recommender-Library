@@ -137,7 +137,7 @@ function App() {
                 localStorage.setItem('currentUserId', data.userId);
                 localStorage.setItem('username', data.username);
 
-                console.log(localStorage.userToken, localStorage.currentUserId, localStorage.username);
+                // console.log(localStorage.userToken, localStorage.currentUserId, localStorage.username);
 
                 // Success: Store token for session when i add that funcitonality
                 console.log("Login API success:", data.message);
@@ -284,9 +284,6 @@ function App() {
             alert("A network error occurred. Could not connect to the server.");
             return false;
         }
-
-        setIsAddedListVisible(true);
-
     };
 
     // Toggle function to add/remove show IDs from watched/bookmarked lists

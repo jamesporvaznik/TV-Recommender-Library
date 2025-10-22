@@ -172,8 +172,6 @@ app.post('/api/login', async (req, res) => {
 //getting watched show ids
 app.get('/api/added', authenticateToken, async (req, res) => {
 
-    console.log("hi")
-
     const userId = req.userId;
     try {
         const user = await findUserById(db, userId);
