@@ -34,6 +34,8 @@ function App() {
     const [allShows, setAllShows] = useState([]);
     const [loading, setLoading] = useState(true);
     const [addedShowIds, setAddedShowIds] = useState([]);
+    const [watchedShowIds, setWatchedShowIds] = useState([]);
+    const [bookmarkedShowIds, setBookmarkedShowIds] = useState([]);
 
     // User Tracking State
     const [userLists, setUserLists] = useState({
@@ -137,7 +139,7 @@ function App() {
                 localStorage.setItem('currentUserId', data.userId);
                 localStorage.setItem('username', data.username);
 
-                // console.log(localStorage.userToken, localStorage.currentUserId, localStorage.username);
+                loadData();
 
                 // Success: Store token for session when i add that funcitonality
                 console.log("Login API success:", data.message);
@@ -150,6 +152,54 @@ function App() {
 
         } catch (error) {
             console.error("Network error during login:", error);
+            alert("A network error occurred. Could not connect to the server.");
+            return false;
+        }
+    }
+
+    const loadData = async () => {
+        const token = localStorage.userToken;
+
+        try{
+            const response = await fetch('/api/watched', { 
+                method: 'GET',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` 
+                },
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {             
+                setWatchedShowIds(data.watched || []);
+            } else {
+                console.error("Failed to synchronize lists:", data.message);
+            }
+        } catch (error) {
+            console.error("Network error during retrieving watched:", error);
+            alert("A network error occurred. Could not connect to the server.");
+            return false;
+        }
+
+        try {
+            const response = await fetch('/api/bookmarked', { 
+                method: 'GET',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` 
+                },
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {             
+                setBookmarkedShowIds(data.bookmarked || []);
+            } else {
+                console.error("Failed to synchronize lists:", data.message);
+            }
+        } catch (error) {
+            console.error("Network error during retrieving bookmarked:", error);
             alert("A network error occurred. Could not connect to the server.");
             return false;
         }
@@ -171,7 +221,6 @@ function App() {
     const addToList = async (showId) => {
 
         const token = localStorage.userToken;
-        //console.log(token);
 
         const payload = {
             userId: localStorage.userId,
@@ -192,6 +241,7 @@ function App() {
             if (response.ok && data.success) {
                 // Success: Store token for session when i add that funcitonality
                 console.log("Insert Added API success:", data.message);
+                setAddedShowIds(data.added);
                 return true; 
             } else {
                 // Failure: Invalid credentials
@@ -204,42 +254,10 @@ function App() {
             alert("A network error occurred. Could not connect to the server.");
             return false;
         }
-
-        // setUserLists(prevLists => {
-        //     const currentList = prevLists.added;   
-        //     let updatedList;
-        //     let showExistsId = -1;
-        //     showExistsId = ifExistsInList(showId, allShows);
-
-        //     if(showExistsId === -1){
-        //         alert("Show not found in the all shows database.");
-        //         return prevLists; // No changes
-        //     }
-        //     else{
-        //         //checks if show is already in the added list
-        //         if (currentList.includes(showExistsId)) {
-        //             // If ID exists, the added list remains unchanged
-        //             updatedList = currentList;
-        //             alert("Show already added to your list.");
-        //         } else {
-        //             // If ID doesn't exist, add it to the list (mark)
-        //             updatedList = [...currentList, showExistsId];
-        //             alert("Show added to your list.");
-        //         }
-        //         //console.log(updatedList);
-
-        //         return { ...prevLists, ['added']: updatedList };
-        //     }     
-        // });
     };
 
     // Function to clear the user's addedShows list
     const clearAddList = async () => {
-        // setUserLists(prevLists => ({
-        //     ...prevLists,
-        //     added: []
-        // }));
-        // alert("Cleared your added shows list.");4
 
         const token = localStorage.userToken;
         console.log(token);
@@ -355,33 +373,73 @@ function App() {
     };
 
     // Toggle function to add/remove show IDs from watched/bookmarked lists
-    const updateShowList = (showId, listName) => {
-        setUserLists(prevLists => {
+    const updateShowList = async (showId, listName) => {
 
-            if(!isLoggedIn){
-                alert("Login to access this functionality")
-                return prevLists;
+
+        const token = localStorage.userToken;
+
+        const payload = {
+            userId: localStorage.userId,
+            showId: showId,            
+        };
+
+        try {
+            if(listName === 'watched'){
+                const response = await fetch('/api/watched', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json', 
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    // Success: Store token for session when i add that funcitonality
+                    console.log("Watched API success:", data.message);
+                    setWatchedShowIds(data.watched);
+                    return true; 
+                } else {
+                    // Failure: Invalid credentials
+                    console.error("Inserting wacthed failed:", data.message);
+                    return false;
+                }
             }
+            else if(listName === 'bookmarked'){
+                const response = await fetch('/api/bookmarked', {
+                    method: 'POST',
+                    headers: { 
+                        'Content-Type': 'application/json', 
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(payload)
+                });
 
-            const currentList = prevLists[listName];
-            const showExists = currentList.includes(showId);
-            let updatedList;
+                const data = await response.json();
 
-            if (showExists) {
-                // If ID exists, filter it out (remove/unmark)
-                updatedList = currentList.filter(id => id !== showId);
-            } else {
-                // If ID doesn't exist, add it to the list (mark)
-                updatedList = [...currentList, showId];
+                if (response.ok && data.success) {
+                    // Success: Store token for session when i add that funcitonality
+                    console.log("Bookmarked API success:", data.message);
+                    setBookmarkedShowIds(data.bookmarked);
+                    return true; 
+                } else {
+                    // Failure: Invalid credentials
+                    console.error("Inserting bookmarked failed:", data.message);
+                    return false;
+                }
             }
-
-            return { ...prevLists, [listName]: updatedList };
-        });
-    };
+        } catch (error) {
+            console.error("Network error during insert watched:", error);
+            alert("A network error occurred. Could not connect to the server.");
+            return false;
+        }
+    }
     
     // Data for Watched/Watchlist/Added Pages
-    const watchedShows = userLists.watched.map(getShowById).filter(Boolean);
-    const bookmarkedShows = userLists.bookmarked.map(getShowById).filter(Boolean);
+    const watchedShows = watchedShowIds.map(getShowById).filter(Boolean);
+    const bookmarkedShows = bookmarkedShowIds.map(getShowById).filter(Boolean);
     const addedShows = addedShowIds.map(getShowById).filter(Boolean);
     const recommendedShows = userLists.recommended.map(getShowById).filter(Boolean);
 
@@ -394,8 +452,8 @@ function App() {
                 {currentPage === 'Home' ? (
                     <Landing
                         shows = {allShows}
-                        watchedIds={userLists.watched}
-                        bookmarkedIds={userLists.bookmarked}
+                        watchedIds={watchedShowIds}
+                        bookmarkedIds={bookmarkedShowIds}
                         onToggleList={updateShowList}
                         onCardClick={handleOpenPopUp}
                     />
@@ -412,8 +470,8 @@ function App() {
                             <AllShows 
                                 allShows={allShows} 
                                 filters={filters} 
-                                watchedIds={userLists.watched}
-                                bookmarkedIds={userLists.bookmarked}
+                                watchedIds={watchedShowIds}
+                                bookmarkedIds={bookmarkedShowIds}
                                 onToggleList={updateShowList}
                                 onCardClick={handleOpenPopUp}
                             />
@@ -425,8 +483,8 @@ function App() {
                                     // Pass arguments to Watched component
                                     shows={watchedShows} 
                                     filters={filters} 
-                                    watchedIds={userLists.watched}
-                                    bookmarkedIds={userLists.bookmarked}
+                                    watchedIds={watchedShowIds}
+                                    bookmarkedIds={bookmarkedShowIds}
                                     onToggleList={updateShowList}
                                     onCardClick={handleOpenPopUp}
                                 /> 
@@ -441,8 +499,8 @@ function App() {
                                     // Pass arguments to Watched component
                                     shows={bookmarkedShows} 
                                     filters={filters} 
-                                    watchedIds={userLists.watched}
-                                    bookmarkedIds={userLists.bookmarked}
+                                    watchedIds={watchedShowIds}
+                                    bookmarkedIds={bookmarkedShowIds}
                                     onToggleList={updateShowList}
                                     onCardClick={handleOpenPopUp}
                                 /> 
@@ -457,7 +515,7 @@ function App() {
                                 <>
                                     <Recommendations 
                                         shows={allShows}
-                                        watchedIds={userLists.watched}
+                                        watchedIds={watchedShowIds}
                                         onAdd={addToList}
                                         onClear={clearAddList}
                                         onView={toggleAddedListView}
@@ -469,8 +527,8 @@ function App() {
                                     {isAddedListVisible ? (
                                         <AddedShowsList 
                                             shows={addedShows} 
-                                            watchedIds={userLists.watched}
-                                            bookmarkedIds={userLists.bookmarked}
+                                            watchedIds={watchedShowIds}
+                                            bookmarkedIds={bookmarkedShowIds}
                                             onToggleList={updateShowList}
                                             onCardClick={handleOpenPopUp}
                                         /> 
@@ -478,8 +536,8 @@ function App() {
                                         // placeholder for recommendations shows list
                                         <RecommendedShowsList 
                                             shows={recommendedShows} 
-                                            watchedIds={userLists.watched}
-                                            bookmarkedIds={userLists.bookmarked}
+                                            watchedIds={watchedShowIds}
+                                            bookmarkedIds={bookmarkedShowIds}
                                             onToggleList={updateShowList}
                                             onCardClick={handleOpenPopUp}
                                         /> 
@@ -505,8 +563,8 @@ function App() {
                                     user = {initialUser}
                                     watchedShows = {watchedShows}
                                     bookmarkedShows = {bookmarkedShows}
-                                    watchedIds={userLists.watched}
-                                    bookmarkedIds={userLists.bookmarked}
+                                    watchedIds={watchedShowIds}
+                                    bookmarkedIds={bookmarkedShowIds}
                                     onToggleList={updateShowList}
                                     onCardClick={handleOpenPopUp}
                                     onLogout={handleLogout}
@@ -523,8 +581,8 @@ function App() {
                 <ShowDetails 
                     show={popUpShow}
                     onClose={handleClosePopUp}
-                    watchedIds={userLists.watched}
-                    bookmarkedIds={userLists.bookmarked}
+                    watchedIds={watchedShowIds}
+                    bookmarkedIds={bookmarkedShowIds}
                     onToggleList={updateShowList}
                 />
             )}

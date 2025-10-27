@@ -15,7 +15,7 @@ app.use(express.json());
 const initializeDatabase = require('./db.js');
 let db;
 
-const { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, insertAdded, clearAdded } = require('./dbQueries.js');
+const { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, insertAdded, clearAdded, toggleWatched, toggleBookmarked, getWatched, getBookmarked} = require('./dbQueries.js');
 
 
 function authenticateToken(req, res, next) {
@@ -52,6 +52,38 @@ app.get('/api/shows', async (req, res) => {
     } catch (e) {
         console.error("CRASH ERROR:", e.message, e.stack);
         res.status(500).json({ error: "Failed to load show data from database." });
+    }
+});
+
+app.get('/api/watched', authenticateToken, async (req, res) => {
+    const userId = req.userId;
+    try {
+        const watchedList = await getWatched(db, userId);
+
+        return res.status(200).json({ 
+            success: true, 
+            message: 'Fetched watched list successfully.',
+            watched: watchedList
+        });
+    } catch (e) {
+        console.error("Watched error:", e.message);
+        res.status(500).json({ success: false, message: 'Server error during retrieving watched ids.' });
+    }
+});
+
+app.get('/api/bookmarked', authenticateToken, async (req, res) => {
+    const userId = req.userId;
+    try {
+        const bookmarkedList = await getBookmarked(db, userId);
+
+        return res.status(200).json({ 
+            success: true, 
+            message: 'Fetched bookmarked list successfully.',
+            bookmarked: bookmarkedList
+        });
+    } catch (e) {
+        console.error("Bookmarked error:", e.message);
+        res.status(500).json({ success: false, message: 'Server error during retrieving bookmarked ids.' });
     }
 });
 
@@ -136,38 +168,61 @@ app.post('/api/login', async (req, res) => {
 
 // //getting watched show ids
 // app.get('/api/watched', async (req, res) => {
-//     const userId = req.userId;
-//     try {
-//         const user = await findUserById(db, userId);
 
-//         if (!user) {
-//             return res.status(404).json({ success: false, message: 'User not found in DB.' });
-//         }
-
-//         const watchedIds = JSON.parse(user.watched_ids || '[]');
-
-//         return res.json({
-//             success: true,
-//             watchedIds: watchedIds
-//         });
-
-//     } catch (e) {
-//         console.error("Watched error:", e.message);
-//         res.status(500).json({ success: false, message: 'Server error during fetching watched ids.' });
-//     }
 // });
 
-// //adding a watched show to the users account data
-// app.post('/api/watched'), async (req, res) => {
-//     const { userId, showId } = req.body;
-//     try {
-//         await insertWatched(db, userId, showId); 
+//adding a watched show to the users account data
+app.post('/api/watched', authenticateToken, async (req, res) => {
 
-//     } catch (e) {
-//         console.error("Insert error:", e.message);
-//         res.status(500).json({ success: false, message: 'Server error during inserting watched id.' });
-//     } 
-// }
+    const { showId } = req.body;
+    const userId = req.userId;
+
+    if (!showId) {
+        return res.status(400).json({ success: false, message: 'Show title is required.' });
+    }
+
+    try {
+        
+        const watchedList = await toggleWatched(db, userId, showId);
+
+        return res.status(200).json({ 
+            success: true, 
+            message: 'Show added to your list successfully.',
+            watched: watchedList
+        });
+
+    } catch (e) {
+        console.error("Insert added error:", e.message);
+        res.status(500).json({ success: false, message: 'Server error during inserted added ids.' });
+    }
+});
+
+//adding a bookmarked show to the users account data
+app.post('/api/bookmarked', authenticateToken, async (req, res) => {
+
+    const { showId } = req.body;
+    const userId = req.userId;
+
+    if (!showId) {
+        return res.status(400).json({ success: false, message: 'Show title is required.' });
+    }
+
+    try {
+        
+        const bookmarkedList = await toggleBookmarked(db, userId, showId);
+
+        return res.status(200).json({ 
+            success: true, 
+            message: 'Show added to your list successfully.',
+            bookmarked: bookmarkedList
+        });
+
+    } catch (e) {
+        console.error("Insert added error:", e.message);
+        res.status(500).json({ success: false, message: 'Server error during inserted added ids.' });
+    }
+});
+
 
 //getting watched show ids
 app.get('/api/added', authenticateToken, async (req, res) => {
@@ -202,12 +257,8 @@ app.get('/api/added', authenticateToken, async (req, res) => {
 //adding a added show to the users account data
 app.post('/api/added', authenticateToken, async (req, res) => {
 
-    console.log(req.body);
-
     const { showId } = req.body;
     const userId = req.userId;
-
-    console.log(showId);
 
     if (!showId) {
         return res.status(400).json({ success: false, message: 'Show title is required.' });
@@ -217,17 +268,16 @@ app.post('/api/added', authenticateToken, async (req, res) => {
 
         const titleId = await getShowByTitle(db, showId);
 
-        console.log(titleId)
-
         if(titleId === undefined || titleId === null){
             return res.status(404).json({ success: false, message: 'Show not found in DB.' });
         }
         
-        await insertAdded(db, userId, titleId.tmdb_id);
+        const addedList = await insertAdded(db, userId, titleId.tmdb_id);
 
         return res.status(200).json({ 
             success: true, 
-            message: 'Show added to your list successfully.' 
+            message: 'Show added to your list successfully.',
+            added: addedList
         });
 
     } catch (e) {
