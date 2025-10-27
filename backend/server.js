@@ -166,11 +166,6 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// //getting watched show ids
-// app.get('/api/watched', async (req, res) => {
-
-// });
-
 //adding a watched show to the users account data
 app.post('/api/watched', authenticateToken, async (req, res) => {
 

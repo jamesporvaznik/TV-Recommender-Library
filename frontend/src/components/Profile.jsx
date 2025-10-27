@@ -29,7 +29,7 @@ function Profile({user, watchedShows, bookmarkedShows, watchedIds, bookmarkedIds
                 />
             </div>
             <div className ="flex justify-center text-3xl font-bold mt-5">
-                <p>{user.user}</p>
+                <p>{user}</p>
                 <button onClick={onLogout} className="px-4 py-2 ml-4 text-base font-semibold bg-red-600 text-white rounded transition hover:bg-red-700 shadow-md">
                     Logout
                 </button>

@@ -560,7 +560,7 @@ function App() {
                         {currentPage === 'Profile' && (
                             <div>
                                 <Profile 
-                                    user = {initialUser}
+                                    user = {localStorage.username}
                                     watchedShows = {watchedShows}
                                     bookmarkedShows = {bookmarkedShows}
                                     watchedIds={watchedShowIds}
