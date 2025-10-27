@@ -15,7 +15,7 @@ app.use(express.json());
 const initializeDatabase = require('./db.js');
 let db;
 
-const { getAllShows, findUserByUsername, createAccount, findUserById, insertWatched } = require('./dbQueries.js');
+const { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, insertAdded, clearAdded } = require('./dbQueries.js');
 
 
 function authenticateToken(req, res, next) {
@@ -175,16 +175,17 @@ app.get('/api/added', authenticateToken, async (req, res) => {
     const userId = req.userId;
     try {
         const user = await findUserById(db, userId);
+        const rawJSON = user.added || '[]';
 
         if (!user) {
             return res.status(404).json({ success: false, message: 'User not found in DB.' });
         }
 
-        const addedIds = JSON.parse(user.added || '[]');
+        const addedIds = JSON.parse(rawJSON);
 
         return res.json({
             success: true,
-            added: addedIds
+            added: addedIds 
         });
 
     } catch (e) {
@@ -198,10 +199,66 @@ app.get('/api/added', authenticateToken, async (req, res) => {
 
 // }
 
-// //adding a added show to the users account data
-// app.post('/api/added'), async (req, res) => {
+//adding a added show to the users account data
+app.post('/api/added', authenticateToken, async (req, res) => {
 
-// }
+    console.log(req.body);
+
+    const { showId } = req.body;
+    const userId = req.userId;
+
+    console.log(showId);
+
+    if (!showId) {
+        return res.status(400).json({ success: false, message: 'Show title is required.' });
+    }
+
+    try {
+
+        const titleId = await getShowByTitle(db, showId);
+
+        console.log(titleId)
+
+        if(titleId === undefined || titleId === null){
+            return res.status(404).json({ success: false, message: 'Show not found in DB.' });
+        }
+        
+        await insertAdded(db, userId, titleId.tmdb_id);
+
+        return res.status(200).json({ 
+            success: true, 
+            message: 'Show added to your list successfully.' 
+        });
+
+    } catch (e) {
+        console.error("Insert added error:", e.message);
+        res.status(500).json({ success: false, message: 'Server error during inserted added ids.' });
+    }
+});
+
+app.delete('/api/added', authenticateToken, async (req, res) => {
+
+    const userId = req.userId;
+    try {
+        const user = await findUserById(db, userId);
+        
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found in DB.' });
+        }
+
+        await clearAdded(db, userId);
+
+        return res.json({
+            success: true,
+            added: [] 
+        });
+
+    } catch (e) {
+        console.error("Deleting Added error:", e.message);
+        res.status(500).json({ success: false, message: 'Server error during deleted added ids.' });
+    }
+
+});
 
 // //adding a recommended show to the users account data
 // app.post('/api/recommended'), async (req, res) => {

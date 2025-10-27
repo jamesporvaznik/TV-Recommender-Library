@@ -168,42 +168,110 @@ function App() {
     }
 
     // Function to add shows to the user's addedShows list
-    const addToList =  (showId) => {
-        setUserLists(prevLists => {
-            const currentList = prevLists.added;   
-            let updatedList;
-            let showExistsId = -1;
-            showExistsId = ifExistsInList(showId, allShows);
+    const addToList = async (showId) => {
 
-            if(showExistsId === -1){
-                alert("Show not found in the all shows database.");
-                return prevLists; // No changes
+        const token = localStorage.userToken;
+        //console.log(token);
+
+        const payload = {
+            userId: localStorage.userId,
+            showId: showId,            
+        };
+
+        try {
+            const response = await fetch('/api/added', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(payload)
+            });
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                // Success: Store token for session when i add that funcitonality
+                console.log("Insert Added API success:", data.message);
+                return true; 
+            } else {
+                // Failure: Invalid credentials
+                console.error("Inserting added failed:", data.message);
+                return false;
             }
-            else{
-                //checks if show is already in the added list
-                if (currentList.includes(showExistsId)) {
-                    // If ID exists, the added list remains unchanged
-                    updatedList = currentList;
-                    alert("Show already added to your list.");
-                } else {
-                    // If ID doesn't exist, add it to the list (mark)
-                    updatedList = [...currentList, showExistsId];
-                    alert("Show added to your list.");
-                }
-                //console.log(updatedList);
 
-                return { ...prevLists, ['added']: updatedList };
-            }     
-        });
+        } catch (error) {
+            console.error("Network error during insert added:", error);
+            alert("A network error occurred. Could not connect to the server.");
+            return false;
+        }
+
+        // setUserLists(prevLists => {
+        //     const currentList = prevLists.added;   
+        //     let updatedList;
+        //     let showExistsId = -1;
+        //     showExistsId = ifExistsInList(showId, allShows);
+
+        //     if(showExistsId === -1){
+        //         alert("Show not found in the all shows database.");
+        //         return prevLists; // No changes
+        //     }
+        //     else{
+        //         //checks if show is already in the added list
+        //         if (currentList.includes(showExistsId)) {
+        //             // If ID exists, the added list remains unchanged
+        //             updatedList = currentList;
+        //             alert("Show already added to your list.");
+        //         } else {
+        //             // If ID doesn't exist, add it to the list (mark)
+        //             updatedList = [...currentList, showExistsId];
+        //             alert("Show added to your list.");
+        //         }
+        //         //console.log(updatedList);
+
+        //         return { ...prevLists, ['added']: updatedList };
+        //     }     
+        // });
     };
 
     // Function to clear the user's addedShows list
-    const clearAddList = () => {
-        setUserLists(prevLists => ({
-            ...prevLists,
-            added: []
-        }));
-        alert("Cleared your added shows list.");
+    const clearAddList = async () => {
+        // setUserLists(prevLists => ({
+        //     ...prevLists,
+        //     added: []
+        // }));
+        // alert("Cleared your added shows list.");4
+
+        const token = localStorage.userToken;
+        console.log(token);
+
+        try {
+            // /api/added
+            const response = await fetch('/api/added', {
+                method: 'DELETE',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` 
+                },
+
+            });
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                // Success: Store token for session when i add that funcitonality
+                console.log("Delete Added API success:", data.added);
+                setAddedShowIds(data.added);
+                return true; 
+            } else {
+                // Failure: Invalid credentials
+                console.error("deleting added shows failed:", data.message);
+                return false;
+            }
+
+        } catch (error) {
+            console.error("Network error during login:", error);
+            alert("A network error occurred. Could not connect to the server.");
+            return false;
+        }
     }
 
     // Function to generate a recommendation list based on current filters and user lists (placeholder logic)
