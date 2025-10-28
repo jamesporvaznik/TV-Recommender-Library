@@ -165,14 +165,33 @@ app.post('/api/login', async (req, res) => {
             token: token
         });
 
-        // Compare the submitted password to the stored hash
-        // const match = await bcrypt.compare(password, user.password_hash);
-
     } catch (e) {
         console.error("Login error:", e.message);
         res.status(500).json({ success: false, message: 'Server error during login.' });
     }
 });
+
+// app.post('/api/logout', authenticateToken, async (req, res) => {
+
+//     const tokenJti = req.userId.jti; 
+    
+//     // Get the remaining time until the token expires
+//     const tokenExp = req.userId.exp; 
+//     const nowInSeconds = Math.floor(Date.now() / 1000);
+//     const expiresInSeconds = tokenExp - nowInSeconds;
+
+//     if (expiresInSeconds > 0) {
+//         // manually expire the token
+//         await redisClient.set(tokenJti, 'blacklisted', 'EX', expiresInSeconds); 
+        
+//         return res.status(200).json({ success: true, message: 'Logout successful, token revoked.' });
+//     }
+    
+//     // Handle edge case where token is already expired
+//     return res.status(400).json({ success: false, message: 'Token is already expired.' });
+
+// });
+
 
 //adding a watched show to the users account data
 app.post('/api/watched', authenticateToken, async (req, res) => {

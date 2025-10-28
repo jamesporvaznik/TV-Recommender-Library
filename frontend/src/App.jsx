@@ -82,7 +82,28 @@ function App() {
     };
 
     // Function to show when the user is logged out
-    const handleLogout = () => {
+    const handleLogout = async() => {
+
+        // try {
+        //     await fetch('/api/logout', { 
+        //         method: 'POST',
+        //         headers: { 
+        //             'Authorization': `Bearer ${localStorage.getItem('userToken')}` 
+        //         }
+        //     });
+        // } catch (error) {
+        //     // Log the error but continue, as the local logout is still necessary
+        //     console.error("Server logout failed, but clearing local storage:", error);
+        // }
+
+        localStorage.removeItem('userToken');
+        localStorage.removeItem('currentUserId');
+        localStorage.removeItem('username'); 
+
+        setAddedShowIds([]);
+        setWatchedShowIds([]);
+        setBookmarkedShowIds([]);
+        
         setIsLoggedIn(false);
         setCurrentPage('Home');
     };

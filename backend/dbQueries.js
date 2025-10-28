@@ -5,7 +5,13 @@ async function getAllShows(db) {
 
 async function findUserByUsername(db, username) {
     // This query fetches the user record based on the provided username
-    return db.get('SELECT id, username, password, watched, bookmarked, added, recommended FROM users WHERE username = ?', username);
+    const user = await db.get('SELECT id, username, password, watched, bookmarked, added, recommended FROM users WHERE username = ?', username);
+
+    if (user && user.id) {
+        return user;
+    }
+
+    return null;
 }
 
 async function createAccount(db, username, password){
