@@ -100,8 +100,13 @@ app.post('/api/signup', async (req, res) => {
     }
     
     try {
+
+        let SALT_ROUNDS = 10;
+
+        const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+
         let userId = -1;
-        userId = await createAccount(db, username, password); 
+        userId = await createAccount(db, username, passwordHash); 
 
         if(userId == -1){
             return res.status(401).json({ success: false, message: 'Failed to create account' });
@@ -137,7 +142,10 @@ app.post('/api/login', async (req, res) => {
         if (!user) {
             return res.status(401).json({ success: false, message: 'Invalid username or password.' });
         }
-        if(user.password != password){
+        const match = await bcrypt.compare(password, user.password);
+
+        if (!match) {
+            // Use generic message for failed password too
             return res.status(401).json({ success: false, message: 'Invalid username or password.' });
         }
 
