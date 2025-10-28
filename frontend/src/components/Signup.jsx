@@ -51,8 +51,9 @@ function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSu
         // clear fields
         setLocalPassword('');
         setLocalUser('');
+        setLocalConfirm('');
 
-        setCurrentPage?.('Home'); 
+        setCurrentPage?.('Login'); 
     }
   
 
