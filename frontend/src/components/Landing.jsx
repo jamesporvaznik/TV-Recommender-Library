@@ -1,9 +1,19 @@
 import React, { useMemo, useState } from 'react';
 import ShowCard from './ShowCard'
 
+// const filterShows = (allShows) => {
+//     // Filtering logic 
+//     return shows.filter(show => {
+//         if (show.rating_avg < 8) return false;
+//         if (show.vote_count < 2000) return false;
+//         return true; 
+//     });
+// }
+
 // Landing page component
 const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) => {
   const [refreshKey, setRefreshKey] = useState(0);
+  
   return (
     <section className="py-20 text-center">
       <h1 className="text-5xl font-bold">Welcome to TV Recommender</h1>
