@@ -39,13 +39,10 @@ function App() {
 
     // User Tracking State
     const [userLists, setUserLists] = useState({
-        watched: initialUser.watched,
-        bookmarked: initialUser.bookmarked,
-        added: initialUser.addedShows || [],
         recommended: initialUser.recommendedShows || []
     });
 
-    // Helper function to find a full show object by ID
+    // Helper function to find a full show object by TMDB ID
     const getShowById = (id) => allShows.find(show => show.tmdb_id === id);
 
 
@@ -53,7 +50,6 @@ function App() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                // 1. Fetch All Shows Data
                 const showsResponse = await fetch('/api/shows');
                 const { data: showsData } = await showsResponse.json();
                 setAllShows(showsData.map(show => ({ ...show })));
@@ -67,22 +63,45 @@ function App() {
 
         fetchData();
     }, []);
-
+    
+    // Temporary component if loading
     if (loading) {
         return <div className="text-center p-10">Loading show data...</div>;
     }
 
-    // Pop-up Logic
+    // Open pop up
     const handleOpenPopUp = (showData) => {
         setPopUpShow(showData);
     };
 
+    // Close pop up
     const handleClosePopUp = () => {
         setPopUpShow(null);
     };
 
     // Function to show when the user is logged out
-    const handleLogout = () => {
+    const handleLogout = async() => {
+
+        // try {
+        //     await fetch('/api/logout', { 
+        //         method: 'POST',
+        //         headers: { 
+        //             'Authorization': `Bearer ${localStorage.getItem('userToken')}` 
+        //         }
+        //     });
+        // } catch (error) {
+        //     // Log the error but continue, as the local logout is still necessary
+        //     console.error("Server logout failed, but clearing local storage:", error);
+        // }
+
+        localStorage.removeItem('userToken');
+        localStorage.removeItem('currentUserId');
+        localStorage.removeItem('username'); 
+
+        setAddedShowIds([]);
+        setWatchedShowIds([]);
+        setBookmarkedShowIds([]);
+        
         setIsLoggedIn(false);
         setCurrentPage('Home');
     };
@@ -92,6 +111,7 @@ function App() {
         setIsLoggedIn(true);
     };
 
+    // Handles login submission
     const handleSignUp = async(user) => {
         try {
             const response = await fetch('/api/signup', {
@@ -102,7 +122,6 @@ function App() {
             const data = await response.json();
 
             if (response.ok && data.success) {
-                // Success: Store token for session when i add that funcitonality
                 console.log("Signup API success:", data.message);
                 return true; 
             } else {
@@ -123,7 +142,7 @@ function App() {
         setFilters(newFilters);
     };
 
-    // Placeholder function that checks usr credentials against a single mock user
+    // Function that checks usr credentials against database
     const checkUser = async (user) => {
         try {
             const response = await fetch('/api/login', {
@@ -135,13 +154,14 @@ function App() {
 
             if (response.ok && data.success) {
 
+                // holds user credentials in localStorage
                 localStorage.setItem('userToken', data.token);
                 localStorage.setItem('currentUserId', data.userId);
                 localStorage.setItem('username', data.username);
-
+                
+                // loads the users watched and bookmarked shows upon login
                 loadData();
 
-                // Success: Store token for session when i add that funcitonality
                 console.log("Login API success:", data.message);
                 return true; 
             } else {
@@ -156,7 +176,8 @@ function App() {
             return false;
         }
     }
-
+    
+    // Function to load the users watched and bookmarked shows
     const loadData = async () => {
         const token = localStorage.userToken;
 
@@ -206,16 +227,16 @@ function App() {
     }
 
     // Helper function to check if a show (by title) exists in a list of shows
-    const ifExistsInList = (showTitle, listName) => {
+    // const ifExistsInList = (showTitle, listName) => {
 
-        for(let i = 0; i < listName.length; i++){
-            const show = listName[i];
-            if(show.title.toLowerCase() === showTitle.toLowerCase()){
-                return show.tmdb_id;
-            }
-        }
-        return -1;
-    }
+    //     for(let i = 0; i < listName.length; i++){
+    //         const show = listName[i];
+    //         if(show.title.toLowerCase() === showTitle.toLowerCase()){
+    //             return show.tmdb_id;
+    //         }
+    //     }
+    //     return -1;
+    // }
 
     // Function to add shows to the user's addedShows list
     const addToList = async (showId) => {
@@ -223,8 +244,7 @@ function App() {
         const token = localStorage.userToken;
 
         const payload = {
-            userId: localStorage.userId,
-            showId: showId,            
+            showId: showId         
         };
 
         try {
@@ -239,7 +259,6 @@ function App() {
             const data = await response.json();
 
             if (response.ok && data.success) {
-                // Success: Store token for session when i add that funcitonality
                 console.log("Insert Added API success:", data.message);
                 setAddedShowIds(data.added);
                 return true; 
@@ -263,7 +282,6 @@ function App() {
         console.log(token);
 
         try {
-            // /api/added
             const response = await fetch('/api/added', {
                 method: 'DELETE',
                 headers: { 
@@ -275,7 +293,6 @@ function App() {
             const data = await response.json();
 
             if (response.ok && data.success) {
-                // Success: Store token for session when i add that funcitonality
                 console.log("Delete Added API success:", data.added);
                 setAddedShowIds(data.added);
                 return true; 
@@ -334,19 +351,17 @@ function App() {
         setIsAddedListVisible(false);
     };
 
-    // Function to show the added shows list view
+    // Function to show the added shows list view and get it from the database
     const toggleAddedListView = async () => {
 
         const token = localStorage.userToken;
         console.log(token);
 
         try {
-            // /api/added
             const response = await fetch('/api/added', {
                 method: 'GET',
                 headers: { 
                     'Content-Type': 'application/json',
-                    // 2. Attach the token for authentication
                     'Authorization': `Bearer ${token}` 
                 },
 
@@ -354,7 +369,6 @@ function App() {
             const data = await response.json();
 
             if (response.ok && data.success) {
-                // Success: Store token for session when i add that funcitonality
                 console.log("Added API success:", data.added);
                 setAddedShowIds(data.added);
                 setIsAddedListVisible(true);
@@ -379,8 +393,7 @@ function App() {
         const token = localStorage.userToken;
 
         const payload = {
-            userId: localStorage.userId,
-            showId: showId,            
+            showId: showId            
         };
 
         try {
@@ -397,7 +410,6 @@ function App() {
                 const data = await response.json();
 
                 if (response.ok && data.success) {
-                    // Success: Store token for session when i add that funcitonality
                     console.log("Watched API success:", data.message);
                     setWatchedShowIds(data.watched);
                     return true; 
@@ -420,7 +432,6 @@ function App() {
                 const data = await response.json();
 
                 if (response.ok && data.success) {
-                    // Success: Store token for session when i add that funcitonality
                     console.log("Bookmarked API success:", data.message);
                     setBookmarkedShowIds(data.bookmarked);
                     return true; 

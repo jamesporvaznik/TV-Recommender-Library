@@ -1,5 +1,6 @@
 import React from 'react';
 import ShowCard from './ShowCard'; 
+import { useState, useEffect } from 'react';
 
 // Filtering logic
 const filterShows = (shows, filters) => { 
@@ -36,8 +37,24 @@ const Watchlist = ({
     onToggleList, 
     onCardClick 
 }) => {
+    
+    const [visibleRows, setVisibleRows] = useState(3); 
+    const ROWS_TO_LOAD = 3;
+
     const filteredShows = filterShows(shows, filters);
     const groupedRows = groupIntoRows(filteredShows);
+
+    //checks if there are more shows to load
+    const hasMoreToLoad = visibleRows < groupedRows.length;
+
+    // Function to increase the number of rows loaded
+    const loadMore = () => {
+        setVisibleRows(prevCount => prevCount + ROWS_TO_LOAD);
+    };
+
+    React.useEffect(() => {
+        setVisibleRows(3);
+    }, [filters]);
 
     // Render the component
     return (
@@ -48,7 +65,7 @@ const Watchlist = ({
                 <p className="text-gray-500">Your watchlist is empty. Go to 'All Shows' to add some!</p>
             )}
 
-            {groupedRows.slice(0, 3).map((row, rowIndex) => (
+            {groupedRows.slice(0, visibleRows).map((row, rowIndex) => (
                 <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
                     {/* Iterate over the row chunk */}
                     {row.map((show) => (
@@ -63,6 +80,19 @@ const Watchlist = ({
                     ))}
                 </div>
             ))}
+
+            {/* Load more shows button if there are more shows possible */}
+            {hasMoreToLoad && (
+                <div className="text-center mt-4">
+                    <button
+                        onClick={loadMore}
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+                    >
+                        Load More Shows 
+                    </button>
+                </div>
+            )}
+
         </div>
     );
 };

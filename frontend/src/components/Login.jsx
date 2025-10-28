@@ -25,7 +25,7 @@ function Login({user, password, setUser, setPassword, onLoginSuccess, onLogin, s
     const passwordTerm = typeof password === 'string' ?password : localPassword;
 
     //Handles form submission
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
 
         const payload = {
@@ -34,7 +34,10 @@ function Login({user, password, setUser, setPassword, onLoginSuccess, onLogin, s
         };
 
         if (typeof onLogin === 'function') {
-            if(onLogin(payload)){
+
+            const loginSuccess = await onLogin(payload);
+
+            if(loginSuccess === true){
                 alert("Sucessful login");
                 onLoginSuccess();
                 setCurrentPage?.('Home');
