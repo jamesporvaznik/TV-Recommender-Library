@@ -7,7 +7,7 @@ require('dotenv').config({ path: './.env' });
 
 const jwt = require('jsonwebtoken'); 
 const JWT_SECRET = process.env.JWT_SECRET; 
-const JWT_EXPIRY = '1h'; // Token expires in 1 hour (standard practice)
+const JWT_EXPIRY = '1h'; 
 
 app.use(cors()); 
 app.use(express.json());
@@ -17,7 +17,7 @@ let db;
 
 const { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, insertAdded, clearAdded, toggleWatched, toggleBookmarked, getWatched, getBookmarked} = require('./dbQueries.js');
 
-
+// checks that user is logged in
 function authenticateToken(req, res, next) {
     // Check for the 'Authorization' header (e.g., "Bearer TOKEN")
     const authHeader = req.headers['authorization'];
@@ -35,7 +35,7 @@ function authenticateToken(req, res, next) {
         }
         // Success: Attach the decoded user ID to the request object
         req.userId = user.id; 
-        next(); // Proceed to the final route handler
+        next();
     });
 }
 
@@ -43,7 +43,7 @@ function authenticateToken(req, res, next) {
 app.get('/api/shows', async (req, res) => {
     try {
 
-        // connect to the db
+        // gets shows from database
         const shows = await getAllShows(db); 
         res.json({
             data: shows
@@ -55,6 +55,7 @@ app.get('/api/shows', async (req, res) => {
     }
 });
 
+// get watched shows and returns them to the frontend
 app.get('/api/watched', authenticateToken, async (req, res) => {
     const userId = req.userId;
     try {
@@ -71,6 +72,7 @@ app.get('/api/watched', authenticateToken, async (req, res) => {
     }
 });
 
+// get bookmarked shows and returns them to the frontend
 app.get('/api/bookmarked', authenticateToken, async (req, res) => {
     const userId = req.userId;
     try {
@@ -91,6 +93,7 @@ app.get('/api/bookmarked', authenticateToken, async (req, res) => {
 app.post('/api/signup', async (req, res) => {
     const { username, password, confirm } = req.body;
 
+    // basic checks
     if (!username || !password || !confirm) {
         return res.status(400).json({ success: false, message: 'Credentials are required.' });
     }
@@ -100,9 +103,9 @@ app.post('/api/signup', async (req, res) => {
     }
     
     try {
-
         let SALT_ROUNDS = 10;
 
+        //hashing the password
         const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
 
         let userId = -1;
@@ -115,7 +118,6 @@ app.post('/api/signup', async (req, res) => {
         res.status(201).json({ 
             success: true, 
             message: 'Account created successfully. Please log in.',
-            // Optionally include userId for debugging/tracking
             userId: userId 
         });
 
@@ -132,24 +134,28 @@ app.post('/api/signup', async (req, res) => {
 app.post('/api/login', async (req, res) => {
     const { username, password } = req.body;
 
+    // basic checks
     if (!username || !password) {
         return res.status(400).json({ success: false, message: 'Credentials are required.' });
     }
 
     try {
+        //finds user from the db
         const user = await findUserByUsername(db, username);
 
+        // user not found in db
         if (!user) {
             return res.status(401).json({ success: false, message: 'Invalid username or password.' });
         }
+
+        // checks password against hashed password
         const match = await bcrypt.compare(password, user.password);
 
         if (!match) {
-            // Use generic message for failed password too
             return res.status(401).json({ success: false, message: 'Invalid username or password.' });
         }
 
-        // 1. Define the payload (the data inside the token)
+        // payload
         const payload = { 
             id: user.id, 
             username: user.username 
@@ -192,19 +198,19 @@ app.post('/api/login', async (req, res) => {
 
 // });
 
-
 //adding a watched show to the users account data
 app.post('/api/watched', authenticateToken, async (req, res) => {
 
     const { showId } = req.body;
     const userId = req.userId;
 
+    // makes sure the showId variables is defined
     if (!showId) {
         return res.status(400).json({ success: false, message: 'Show title is required.' });
     }
 
     try {
-        
+        // adds the show to the watched list and returns the new list
         const watchedList = await toggleWatched(db, userId, showId);
 
         return res.status(200).json({ 
@@ -225,12 +231,13 @@ app.post('/api/bookmarked', authenticateToken, async (req, res) => {
     const { showId } = req.body;
     const userId = req.userId;
 
+    // makes sure the showId variables is defined
     if (!showId) {
         return res.status(400).json({ success: false, message: 'Show title is required.' });
     }
 
     try {
-        
+        // adds the show to the bookmarked list and returns the new list
         const bookmarkedList = await toggleBookmarked(db, userId, showId);
 
         return res.status(200).json({ 
@@ -245,12 +252,13 @@ app.post('/api/bookmarked', authenticateToken, async (req, res) => {
     }
 });
 
-
-//getting watched show ids
+//getting added show ids
 app.get('/api/added', authenticateToken, async (req, res) => {
 
     const userId = req.userId;
+
     try {
+        // gets user by id
         const user = await findUserById(db, userId);
         const rawJSON = user.added || '[]';
 
@@ -271,29 +279,27 @@ app.get('/api/added', authenticateToken, async (req, res) => {
     }
 });
 
-// //adding a bookmarked show to the users account data
-// app.post('/api/bookmarked'), async (req, res) => {
-
-// }
-
 //adding a added show to the users account data
 app.post('/api/added', authenticateToken, async (req, res) => {
 
     const { showId } = req.body;
     const userId = req.userId;
 
+    // makes sure the showId variables is defined
     if (!showId) {
         return res.status(400).json({ success: false, message: 'Show title is required.' });
     }
 
     try {
 
+        //gets the tmdb_id from the title
         const titleId = await getShowByTitle(db, showId);
 
         if(titleId === undefined || titleId === null){
             return res.status(404).json({ success: false, message: 'Show not found in DB.' });
         }
         
+        // adds the show to the added list and returns the new list
         const addedList = await insertAdded(db, userId, titleId.tmdb_id);
 
         return res.status(200).json({ 
@@ -308,16 +314,20 @@ app.post('/api/added', authenticateToken, async (req, res) => {
     }
 });
 
+// Function to clear the added show ids from the user in the db
 app.delete('/api/added', authenticateToken, async (req, res) => {
 
     const userId = req.userId;
+
     try {
+        //gets the user by id
         const user = await findUserById(db, userId);
         
         if (!user) {
             return res.status(404).json({ success: false, message: 'User not found in DB.' });
         }
 
+        // clears the entire added list from the user
         await clearAdded(db, userId);
 
         return res.json({
@@ -332,11 +342,7 @@ app.delete('/api/added', authenticateToken, async (req, res) => {
 
 });
 
-// //adding a recommended show to the users account data
-// app.post('/api/recommended'), async (req, res) => {
-
-// }
-
+//handles some initializations when starting the server.
 async function startServer() {
     // Initialize db
     db = await initializeDatabase(); 
