@@ -39,9 +39,6 @@ function App() {
 
     // User Tracking State
     const [userLists, setUserLists] = useState({
-        watched: initialUser.watched,
-        bookmarked: initialUser.bookmarked,
-        added: initialUser.addedShows || [],
         recommended: initialUser.recommendedShows || []
     });
 
