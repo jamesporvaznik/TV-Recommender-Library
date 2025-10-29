@@ -80,7 +80,7 @@ function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSu
         {/* Password field */}
         <div className="flex sm:flex-row mt-8 px-20">
             <input
-                type="text"
+                type="password"
                 value={passwordTerm}
                 onChange={handlePasswordChange}
                 placeholder="Enter password"
@@ -90,7 +90,7 @@ function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSu
         {/* Confirm password field */}
         <div className="flex sm:flex-row mt-8 px-20">
             <input
-                type="text"
+                type="password"
                 value={confirmTerm}
                 onChange={handleConfirmChange}
                 placeholder="Confirm your password"
