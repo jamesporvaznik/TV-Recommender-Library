@@ -224,20 +224,24 @@ async function getBookmarked(db, userId){
 
 //Takes in the added shows and returns recommendations from pinecone
 async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = false){
+
     let showRecord;
     let excludedIdsSet
 
+    // get the overview of the first show in the watched list
     if (isWatched) {
         showRecord = await db.get(`SELECT overview FROM shows WHERE tmdb_id = ?`, watchedIds[0]);
         excludedIdsSet = new Set([
             ...addedIds.map(String)
         ]);
     }
+    // get the overview of the first show in the added list
     else{
          if (!addedIds || addedIds.length === 0) {
             throw new Error("No added IDs provided for recommendation.");
         }
 
+        // create a set of excluded ids (added list) so you wont get that show as a recommendation
         excludedIdsSet = new Set([
             ...addedIds.map(String)
         ]);
@@ -249,10 +253,10 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
         throw new Error("Show not found.");
     }
 
-    
-
+    //get the 50 most similar shows to the selected show
     const recommendedIds = await textSearch(showRecord.overview, 50);
 
+    //put those shows into a list excluding any shows already in the added list
     const recommendations = recommendedIds.filter(hit => !excludedIdsSet.has(hit._id)).map(hit => parseInt(hit._id, 10));
 
     const newListString = JSON.stringify(recommendations); 
@@ -261,7 +265,6 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
     await db.run(`UPDATE users SET recommended = ? WHERE id = ?`, newListString, userId);
 
     return recommendations;  
-
 }
 
 module.exports = { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, insertAdded, clearAdded, toggleWatched, toggleBookmarked, getWatched, getBookmarked, getRecommendations };
