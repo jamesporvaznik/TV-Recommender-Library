@@ -77,7 +77,7 @@ function Login({user, password, setUser, setPassword, onLoginSuccess, onLogin, s
         {/* Password field */}
         <div className="flex sm:flex-row mt-8 px-20">
             <input
-                type="text"
+                type="password"
                 value={passwordTerm}
                 onChange={handlePasswordChange}
                 placeholder="Enter password"
