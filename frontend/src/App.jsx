@@ -36,6 +36,7 @@ function App() {
     const [addedShowIds, setAddedShowIds] = useState([]);
     const [watchedShowIds, setWatchedShowIds] = useState([]);
     const [bookmarkedShowIds, setBookmarkedShowIds] = useState([]);
+    const [recommendedShowIds, setRecommendedShowIds] = useState([]);
 
     // User Tracking State
     const [userLists, setUserLists] = useState({
@@ -309,41 +310,96 @@ function App() {
         }
     }
 
+    const filteringRecommendations = async (minRating, minReviews, recommended) => {
+        console.log("Filtering recommendations with:", {minRating, minReviews, recommended});
+
+        let filteredRecommendations = [];
+        for(let i = 0; i < recommended.length; ++i){
+
+            const show = await getShowById(recommended[i]); 
+
+            if(show && show.rating_avg !== undefined && show.vote_count !== undefined){
+                if(show.rating_avg >= minRating && show.vote_count >= minReviews){
+                    filteredRecommendations.push(show.tmdb_id);
+                }
+            }
+            
+            if(filteredRecommendations.length >= 10){
+                break;
+            }
+        }
+
+        return filteredRecommendations;
+
+    }
+
     // Function to generate a recommendation list based on current filters and user lists (placeholder logic)
-    const getRecommendationList = (minRating, minReviews, isWatched) => {
+    const getRecommendationList = async (minRating, minReviews, isWatched) => {
         console.log("Generating recommendations with filters:", {minRating, minReviews, isWatched});
 
-        let newRecommendationIds; 
-        let updatedRecommendationIds = [];
+        const token = localStorage.userToken;
 
-        if(isWatched){
-            // Make algorithm from watched list
-            alert("Generating recommendations based on your watched shows.");
-            newRecommendationIds = [1, 7, 9];
+        try {
+            const response = await fetch('/api/recommendations', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({isWatched: isWatched})
+            });
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                console.log("Got recommended successgully:", data.message);
+                console.log('Contents of data.recommended:', data.recommended);
+                const recommended = await filteringRecommendations(minRating, minReviews, data.recommended);
+                setRecommendedShowIds(recommended);
+                return true; 
+            } else {
+                // Failure: Invalid credentials
+                console.error("Inserting added failed:", data.message);
+                return false;
+            }
+
+        } catch (error) {
+            console.error("Network error during insert added:", error);
+            alert("A network error occurred. Could not connect to the server.");
+            return false;
+        }
+
+
+        // let newRecommendationIds; 
+        // let updatedRecommendationIds = [];
+
+        // if(isWatched){
+        //     // Make algorithm from watched list
+        //     alert("Generating recommendations based on your watched shows.");
+        //     newRecommendationIds = [1, 7, 9];
             
-            // min rating functionality
-            for(let i = 0; i < newRecommendationIds.length; ++i){
-                if(getShowById(newRecommendationIds[i]).rating_avg >= minRating){
-                    updatedRecommendationIds.push(newRecommendationIds[i])
-                }
-            }
-        }
-        else{
-            // Make algorithm from added shows list
-            alert("Generating recommendations based on your added shows.");
-            newRecommendationIds = [13, 15, 29];
+        //     // min rating functionality
+        //     for(let i = 0; i < newRecommendationIds.length; ++i){
+        //         if(getShowById(newRecommendationIds[i]).rating_avg >= minRating){
+        //             updatedRecommendationIds.push(newRecommendationIds[i])
+        //         }
+        //     }
+        // }
+        // else{
+        //     // Make algorithm from added shows list
+        //     alert("Generating recommendations based on your added shows.");
+        //     newRecommendationIds = [13, 15, 29];
 
-            //min rating functionality
-            for(let i = 0; i < newRecommendationIds.length; ++i){
-                if(getShowById(newRecommendationIds[i]).rating_avg >= minRating){
-                    updatedRecommendationIds.push(newRecommendationIds[i])
-                }
-            }
-        }
-        setUserLists(prevLists => ({
-            ...prevLists,
-            recommended: updatedRecommendationIds // Updates the userLists.recommended array
-        }));
+        //     //min rating functionality
+        //     for(let i = 0; i < newRecommendationIds.length; ++i){
+        //         if(getShowById(newRecommendationIds[i]).rating_avg >= minRating){
+        //             updatedRecommendationIds.push(newRecommendationIds[i])
+        //         }
+        //     }
+        // }
+        // setUserLists(prevLists => ({
+        //     ...prevLists,
+        //     recommended: updatedRecommendationIds // Updates the userLists.recommended array
+        // }));
     }
 
     // Function to hide the added shows list view
@@ -415,6 +471,7 @@ function App() {
                     return true; 
                 } else {
                     // Failure: Invalid credentials
+                    alert("Must be logged in to update watched list.");
                     console.error("Inserting wacthed failed:", data.message);
                     return false;
                 }
@@ -437,6 +494,7 @@ function App() {
                     return true; 
                 } else {
                     // Failure: Invalid credentials
+                    alert("Must be logged in to update bookmarked list.");
                     console.error("Inserting bookmarked failed:", data.message);
                     return false;
                 }
@@ -452,7 +510,7 @@ function App() {
     const watchedShows = watchedShowIds.map(getShowById).filter(Boolean);
     const bookmarkedShows = bookmarkedShowIds.map(getShowById).filter(Boolean);
     const addedShows = addedShowIds.map(getShowById).filter(Boolean);
-    const recommendedShows = userLists.recommended.map(getShowById).filter(Boolean);
+    const recommendedShows = recommendedShowIds.map(getShowById).filter(Boolean);
 
     // Render the component
     return (

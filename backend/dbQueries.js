@@ -1,3 +1,31 @@
+require('dotenv').config({ path: './.env' }); 
+
+const { Pinecone } = require('@pinecone-database/pinecone');
+
+const pc = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
+const index = pc.index('show-js').namespace("example-namespace");; 
+
+async function textSearch(queryText, topK = 20) {
+  try {
+    const results = await index.searchRecords({
+      query: {
+        topK: topK,
+        inputs: {text: queryText},
+        },
+    });
+
+    return results.result.hits;
+
+  } catch (error) {
+    console.error('Error during Pinecone search:', error);
+    throw error; 
+  }
+}
+
+// Example usage
+// textSearch('Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night\'s Watch, is all that stands between the realms of men and icy horrors beyond.', 10);
+
+
 // Function to return all shows in the database
 async function getAllShows(db) {
     return db.all('SELECT * FROM shows'); 
@@ -43,7 +71,7 @@ async function findUserById(db, userId){
 
 // Get a shows record from the database by title (May want to add functionality to search by lowercase)
 async function getShowByTitle(db, addTerm){
-    return db.get('SELECT tmdb_id, title, overview, genres, rating_avg, vote_count, release_date FROM shows WHERE title = ?', addTerm);
+    return db.get('SELECT tmdb_id, title, overview, genres, rating_avg, vote_count, release_date FROM shows WHERE LOWER(title) = LOWER(?)', addTerm);
 }
 
 // insert a show into a users added list
@@ -194,4 +222,46 @@ async function getBookmarked(db, userId){
     return currentList;
 }
 
-module.exports = { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, insertAdded, clearAdded, toggleWatched, toggleBookmarked, getWatched, getBookmarked };
+//Takes in the added shows and returns recommendations from pinecone
+async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = false){
+    let showRecord;
+    let excludedIdsSet
+
+    if (isWatched) {
+        showRecord = await db.get(`SELECT overview FROM shows WHERE tmdb_id = ?`, watchedIds[0]);
+        excludedIdsSet = new Set([
+            ...addedIds.map(String)
+        ]);
+    }
+    else{
+         if (!addedIds || addedIds.length === 0) {
+            throw new Error("No added IDs provided for recommendation.");
+        }
+
+        excludedIdsSet = new Set([
+            ...addedIds.map(String)
+        ]);
+
+        showRecord = await db.get(`SELECT overview FROM shows WHERE tmdb_id = ?`, addedIds[0]);
+    }
+
+    if (!showRecord) {
+        throw new Error("Show not found.");
+    }
+
+    
+
+    const recommendedIds = await textSearch(showRecord.overview, 50);
+
+    const recommendations = recommendedIds.filter(hit => !excludedIdsSet.has(hit._id)).map(hit => parseInt(hit._id, 10));
+
+    const newListString = JSON.stringify(recommendations); 
+
+    // update the database
+    await db.run(`UPDATE users SET recommended = ? WHERE id = ?`, newListString, userId);
+
+    return recommendations;  
+
+}
+
+module.exports = { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, insertAdded, clearAdded, toggleWatched, toggleBookmarked, getWatched, getBookmarked, getRecommendations };
