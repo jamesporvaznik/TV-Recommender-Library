@@ -267,4 +267,29 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
     return recommendations;  
 }
 
-module.exports = { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, insertAdded, clearAdded, toggleWatched, toggleBookmarked, getWatched, getBookmarked, getRecommendations };
+async function getRecommendationsBySearch(db, userId, query){
+
+    //get the 50 most similar shows to the search query
+    const recommendedIds = await textSearch(query, 50);
+
+    //put those shows into a list excluding any shows already in the added list
+    const recommendations = recommendedIds.map(hit => parseInt(hit._id, 10));
+
+    const newListString = JSON.stringify(recommendations); 
+
+    // update the database
+    await db.run(`UPDATE users SET recommended = ? WHERE id = ?`, newListString, userId);
+
+    return recommendations;
+}
+
+async function clearRecommendations(db, userId){
+
+    const emptyListJSON = '[]';
+
+    // update the database
+    await db.run(`UPDATE users SET recommended = ? WHERE id = ?`, emptyListJSON, userId);
+}
+
+
+module.exports = { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, insertAdded, clearAdded, toggleWatched, toggleBookmarked, getWatched, getBookmarked, getRecommendations, getRecommendationsBySearch, clearRecommendations };

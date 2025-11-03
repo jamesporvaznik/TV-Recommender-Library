@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 
 // Define the functional component
-function Recommendations({addTerm, setAddTerm, onAdd, onClear, onView, onHide, onGenerate}) {
+function Recommendations({addTerm, setAddTerm, onAdd, onClear, onView, onHide, onGenerate, onSearchQuery}) {
     // The component's logic goes here (state, effects, handlers, etc.)
 
     // Local state used when the parent doesn't control the search term
     const [localAddTerm, setLocalAddTerm] = useState(addTerm || '');
-    // const [type, setType] = useState('TV');
     const [minRating, setMinRating] = useState(0);
     const [minReviews, setMinReviews] = useState(0);
     const [isWatched, setIsWatched] = useState(false);
@@ -47,10 +46,13 @@ function Recommendations({addTerm, setAddTerm, onAdd, onClear, onView, onHide, o
         }
         else console.log('Cleared recommendation list');
         
-        // Reset filters
-        // setLocalAddTerm(''); 
-        // setType('TV');
-        // setMinRating(0);
+    }
+
+    function handleSearchQuery() {
+        if (typeof onSearchQuery === 'function'){
+            onSearchQuery();
+        }
+        else console.log('Searching shows with query is not working');
     }
 
     // Let user view the added shows list
@@ -81,7 +83,7 @@ function Recommendations({addTerm, setAddTerm, onAdd, onClear, onView, onHide, o
                     type="search"
                     value={term}
                     onChange={handleAddTermChange}
-                    placeholder="Search movies and shows by title..."
+                    placeholder="Add shows by title..."
                     className="flex-1 px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
                 />
                 <button type="submit" className="px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700">Add</button>
@@ -98,14 +100,6 @@ function Recommendations({addTerm, setAddTerm, onAdd, onClear, onView, onHide, o
                         <span className="text-xs text-gray-600">Use Watched List</span>
                     </label>
                 </div>
-
-                {/* Type Dropdown */}
-                {/* <label className="flex flex-col">
-                    <span className="text-xs text-gray-500">Type</span>
-                    <select value={type} onChange={e => setType(e.target.value)} className="mt-1 px-2 py-1 border rounded">
-                        {types.map(t => <option key={t} value={t}>{t}</option>)}
-                    </select>
-                </label> */}
 
                 {/* Min Rating Input */}
                 <label className="flex flex-col">
@@ -134,6 +128,10 @@ function Recommendations({addTerm, setAddTerm, onAdd, onClear, onView, onHide, o
             {/* Button to generate recommendations */}
             <div className="mt-1 text-sm text-gray-500 flex justify-center">
                 <button type="button" onClick={getRecommendations} className="mt-3 px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700">Get Recommendations</button>
+            </div>
+
+            <div className="mt-3 text-sm text-gray-500 flex justify-center">
+                <button type="button" onClick={handleSearchQuery} className="mt-3 px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700">Search by Query</button>
             </div>
         </form>
     );
