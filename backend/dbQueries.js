@@ -22,10 +22,6 @@ async function textSearch(queryText, topK = 20) {
   }
 }
 
-// Example usage
-// textSearch('Seven noble families fight for control of the mythical land of Westeros. Friction between the houses leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war, a neglected military order of misfits, the Night\'s Watch, is all that stands between the realms of men and icy horrors beyond.', 10);
-
-
 // Function to return all shows in the database
 async function getAllShows(db) {
     return db.all('SELECT * FROM shows'); 
@@ -228,14 +224,61 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
     let showRecord;
     let excludedIdsSet
 
-    // get the overview of the first show in the watched list
+    // Recommend based on the watched list
     if (isWatched) {
-        showRecord = await db.get(`SELECT overview FROM shows WHERE tmdb_id = ?`, watchedIds[0]);
+
+        if (!watchedIds || watchedIds.length === 0) {
+            throw new Error("No added IDs provided for recommendation.");
+        }
+
+        // create a set of excluded ids (watched list) so you wont get that show as a recommendation
         excludedIdsSet = new Set([
-            ...addedIds.map(String)
+            ...watchedIds.map(String)
         ]);
+
+
+        let myMap = new Map();
+
+        // Iterate through each watched show
+        for(let i = 0; i < watchedIds.length; i++){
+            
+            // Get the overview of the current show
+            showRecord = await db.get(`SELECT overview FROM shows WHERE tmdb_id = ?`, watchedIds[i]);
+
+            if (!showRecord) {
+                throw new Error("Show not found.");
+            }
+
+            //get the 50 most similar shows to the selected show
+            const recommendedIds = await textSearch(showRecord.overview, 50);
+
+            recommendedIds.forEach(hit => {
+                // Get the current accumulated score for this recommended ID, or 0 if it's new
+                const currentScore = myMap.get(hit._id) || 0;
+
+                //console.log(`Recommended ID: ${hit._id}, Current Score: ${currentScore}, Hit Score: ${hit._score}`);
+
+                // Add the new score to the current total
+                myMap.set(hit._id, currentScore + hit._score);
+            });
+        }
+
+        // Sort the recommendations by their accumulated scores and convert to an array
+        const combinedRecommendations = Array.from(myMap.entries())
+            .map(([id, score]) => ({ id, score }))
+            .sort((a, b) => b.score - a.score);
+
+        //put those shows into a list excluding any shows already in the watched list
+        const recommendations = combinedRecommendations.filter(item => !excludedIdsSet.has(item.id)).map(item => parseInt(item.id, 10));
+        const newListString = JSON.stringify(recommendations); 
+
+        // update the database
+        await db.run(`UPDATE users SET recommended = ? WHERE id = ?`, newListString, userId);
+
+        return recommendations;  
+
     }
-    // get the overview of the first show in the added list
+    // recommend based on the added list
     else{
          if (!addedIds || addedIds.length === 0) {
             throw new Error("No added IDs provided for recommendation.");
@@ -246,25 +289,50 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
             ...addedIds.map(String)
         ]);
 
-        showRecord = await db.get(`SELECT overview FROM shows WHERE tmdb_id = ?`, addedIds[0]);
+        let myMap = new Map();
+
+        // Iterate through each added show
+        for(let i = 0; i < addedIds.length; i++){
+            
+            // Get the overview of the current show
+            showRecord = await db.get(`SELECT overview FROM shows WHERE tmdb_id = ?`, addedIds[i]);
+
+            if (!showRecord) {
+                throw new Error("Show not found.");
+            }
+
+            //get the 50 most similar shows to the selected show
+            const recommendedIds = await textSearch(showRecord.overview, 50);
+
+            recommendedIds.forEach(hit => {
+                // Get the current accumulated score for this recommended ID, or 0 if it's new
+                const currentScore = myMap.get(hit._id) || 0;
+                
+                //console.log(`Recommended ID: ${hit._id}, Current Score: ${currentScore}, Hit Score: ${hit._score}`);
+
+                // Add the new score to the current total
+                myMap.set(hit._id, currentScore + hit._score);
+            });
+        }
+
+        // Sort the recommendations by their accumulated scores and convert to an array
+        const combinedRecommendations = Array.from(myMap.entries())
+            .map(([id, score]) => ({ id, score }))
+            .sort((a, b) => b.score - a.score);
+    
+        //console.log(combinedRecommendations.slice(0, 10)); // Print just the top 10 for a cleaner look
+
+        //put those shows into a list excluding any shows already in the added list
+        const recommendations = combinedRecommendations.filter(item => !excludedIdsSet.has(item.id)).map(item => parseInt(item.id, 10));
+        const newListString = JSON.stringify(recommendations); 
+
+        //console.log(recommendations.slice(0, 10));
+
+        // update the database
+        await db.run(`UPDATE users SET recommended = ? WHERE id = ?`, newListString, userId);
+
+        return recommendations; 
     }
-
-    if (!showRecord) {
-        throw new Error("Show not found.");
-    }
-
-    //get the 50 most similar shows to the selected show
-    const recommendedIds = await textSearch(showRecord.overview, 50);
-
-    //put those shows into a list excluding any shows already in the added list
-    const recommendations = recommendedIds.filter(hit => !excludedIdsSet.has(hit._id)).map(hit => parseInt(hit._id, 10));
-
-    const newListString = JSON.stringify(recommendations); 
-
-    // update the database
-    await db.run(`UPDATE users SET recommended = ? WHERE id = ?`, newListString, userId);
-
-    return recommendations;  
 }
 
 async function getRecommendationsBySearch(db, userId, query){
