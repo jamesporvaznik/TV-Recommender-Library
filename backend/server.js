@@ -15,7 +15,7 @@ app.use(express.json());
 const initializeDatabase = require('./db.js');
 let db;
 
-const { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, insertAdded, clearAdded, toggleWatched, toggleBookmarked, getWatched, getBookmarked, getRecommendations} = require('./dbQueries.js');
+const { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, insertAdded, clearAdded, toggleWatched, toggleBookmarked, getWatched, getBookmarked, getRecommendations, getRecommendationsBySearch, clearRecommendations} = require('./dbQueries.js');
 
 // checks that user is logged in
 function authenticateToken(req, res, next) {
@@ -343,7 +343,7 @@ app.delete('/api/added', authenticateToken, async (req, res) => {
 });
 
 // getting recommendations based on single added show
-app.post('/api/recommendations', authenticateToken, async (req, res) => {
+app.post('/api/recommendations/shows', authenticateToken, async (req, res) => {
     
     const {isWatched} = req.body;
     const userId = req.userId;
@@ -374,6 +374,62 @@ app.post('/api/recommendations', authenticateToken, async (req, res) => {
         console.error("Recommended error:", e.message);
         res.status(500).json({ success: false, message: 'Server error during fetching added ids.' });
     }
+});
+
+// getting recommendations based on a search query
+app.post('/api/recommendations/search', authenticateToken, async (req, res) => {
+    
+    const {query} = req.body;
+    const userId = req.userId;
+
+    try {
+        // gets user by id
+        const user = await findUserById(db, userId);
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found in DB.' });
+        }
+
+        const recommendations = await getRecommendationsBySearch(db, userId, query);
+
+        return res.status(200).json({ 
+            success: true, 
+            message: 'recommendations added successfully.',
+            recommended: recommendations
+        });
+        
+
+    } catch (e) {
+        console.error("Recommended error:", e.message);
+        res.status(500).json({ success: false, message: 'Server error during fetching added ids.' });
+    }
+});
+
+app.delete(`/api/recommendations`, authenticateToken, async (req, res) => {
+
+    const userId = req.userId;
+
+    try {
+        // gets user by id
+        const user = await findUserById(db, userId);
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found in DB.' });
+        }
+
+        await clearRecommendations(db, userId);
+
+        return res.status(200).json({ 
+            success: true, 
+            message: 'recommendations added successfully.',
+        });
+        
+
+    } catch (e) {
+        console.error("Recommended error:", e.message);
+        res.status(500).json({ success: false, message: 'Server error during fetching added ids.' });
+    }
+
 });
 
 //handles some initializations when starting the server.
