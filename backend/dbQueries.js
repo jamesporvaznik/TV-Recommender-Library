@@ -351,13 +351,26 @@ async function getRecommendationsBySearch(db, userId, query){
     return recommendations;
 }
 
+// clears the recommendation list
 async function clearRecommendations(db, userId){
 
     const emptyListJSON = '[]';
 
-    // update the database
+    // update the database to clear recommendations
     await db.run(`UPDATE users SET recommended = ? WHERE id = ?`, emptyListJSON, userId);
 }
 
+// sets a rating for a show by a user
+async function setRating(db, userId, showId, rating){
+
+    const sql = `
+        INSERT INTO user_ratings 
+        (user_id, tmdb_id, rating) 
+        VALUES (?, ?, ?)
+    `;
+
+    await db.run(sql, userId, showId, rating);
+
+}
 
 module.exports = { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, insertAdded, clearAdded, toggleWatched, toggleBookmarked, getWatched, getBookmarked, getRecommendations, getRecommendationsBySearch, clearRecommendations };
