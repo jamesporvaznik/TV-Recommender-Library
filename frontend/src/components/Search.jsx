@@ -41,10 +41,8 @@ const Search = ({ searchTerm: controlledTerm, setSearchTerm: setControlledTerm, 
         if (typeof setControlledTerm === 'function') setControlledTerm('');
         else setLocalTerm('');
         setGenre('All');
-        setType('All');
         setMinReviews(0);
-        setStreamingOn('Any');
-        setIsAiring(false);
+        setMinRating(0);
     }
 
     // Options for dropdowns

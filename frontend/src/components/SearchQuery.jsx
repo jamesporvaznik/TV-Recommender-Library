@@ -46,7 +46,7 @@ function SearchQuery({query, setQuery, onSearch, onSearchAdd}) {
         if (typeof onSearch === 'function'){
             onSearch(term, minRating, minReviews);
             // Clear input field after submission
-            setLocalQuery(''); 
+            // setLocalQuery(''); 
         }
     }
 
