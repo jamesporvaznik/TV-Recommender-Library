@@ -4,11 +4,8 @@ const Search = ({ searchTerm: controlledTerm, setSearchTerm: setControlledTerm, 
     // Local state used when the parent doesn't control the search term
     const [localTerm, setLocalTerm] = useState(controlledTerm || '');
     const [genre, setGenre] = useState('All');
-    const [type, setType] = useState('All');
     const [minRating, setMinRating] = useState(0);
     const [minReviews, setMinReviews] = useState(0);
-    const [streamingOn, setStreamingOn] = useState('Any');
-    const [isAiring, setIsAiring] = useState(false);
 
     // Keep local term in sync if parent controls it
     useEffect(() => {
@@ -30,11 +27,8 @@ const Search = ({ searchTerm: controlledTerm, setSearchTerm: setControlledTerm, 
         const payload = {
             q: term.trim(),
             genre: genre === 'All' ? null : genre,
-            // type: type === 'All' ? null : type,
             minRating: Number(minRating) || null,
             minReviews: Number(minReviews) || null,
-            // streamingOn: streamingOn === 'Any' ? null : streamingOn,
-            // isAiring: !!isAiring,
         };
 
         if (typeof onSearch === 'function') onSearch(payload);
@@ -85,13 +79,6 @@ const Search = ({ searchTerm: controlledTerm, setSearchTerm: setControlledTerm, 
                     </select>
                 </label>
 
-                {/* <label className="flex flex-col">
-                    <span className="text-xs text-gray-500">Type</span>
-                    <select value={type} onChange={e => setType(e.target.value)} className="mt-1 px-2 py-1 border rounded">
-                        {types.map(t => <option key={t} value={t}>{t}</option>)}
-                    </select>
-                </label> */}
-
                 <label className="flex flex-col">
                     <span className="text-xs text-gray-500">Min Rating</span>
                     <input type="number" min="0" max="10" value={minRating} onChange={e => setMinRating(e.target.value)} className="mt-1 px-2 py-1 border rounded" />
@@ -102,21 +89,7 @@ const Search = ({ searchTerm: controlledTerm, setSearchTerm: setControlledTerm, 
                     <input type="number" min="0" value={minReviews} onChange={e => setMinReviews(e.target.value)} className="mt-1 px-2 py-1 border rounded" />
                 </label>
 
-                {/* <label className="flex flex-col">
-                    <span className="text-xs text-gray-500">Streaming On</span>
-                    <select value={streamingOn} onChange={e => setStreamingOn(e.target.value)} className="mt-1 px-2 py-1 border rounded">
-                        {streamingOptions.map(s => <option key={s} value={s}>{s}</option>)}
-                    </select>
-                </label> */}
             </div>
-
-            {/* Airing checkbox */}
-            {/* <div className="mt-3 flex items-center gap-3 text-sm">
-                <label className="flex items-center gap-2">
-                    <input type="checkbox" checked={isAiring} onChange={e => setIsAiring(e.target.checked)} />
-                    <span className="text-xs text-gray-600">Currently airing</span>
-                </label>
-            </div> */}
         </form>
     );
 };
