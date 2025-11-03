@@ -69,7 +69,7 @@ const Search = ({ searchTerm: controlledTerm, setSearchTerm: setControlledTerm, 
                     type="search"
                     value={term}
                     onChange={handleTermChange}
-                    placeholder="Search movies and shows by title..."
+                    placeholder="Search shows by title..."
                     className="flex-1 px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
                 />
                 <button type="submit" className="px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700">Search</button>

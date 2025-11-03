@@ -16,14 +16,9 @@ import AddedShowsList from './components/AddedShowsList';
 import RecommendedShowsList from './components/RecommendedShowsList';
 import ShowDetails from './components/ShowDetails';
 import Profile from './components/Profile';
-
-// Data Imports
-import initialUserData from '../users.json'; 
+import SearchQuery from './components/SearchQuery';
 
 function App() {
-
-    // Mock user data
-    const initialUser = initialUserData[0]; 
 
     // Routing & Filtering State
     const [currentPage, setCurrentPage] = useState('Home');
@@ -37,11 +32,7 @@ function App() {
     const [watchedShowIds, setWatchedShowIds] = useState([]);
     const [bookmarkedShowIds, setBookmarkedShowIds] = useState([]);
     const [recommendedShowIds, setRecommendedShowIds] = useState([]);
-
-    // User Tracking State
-    const [userLists, setUserLists] = useState({
-        recommended: initialUser.recommendedShows || []
-    });
+    const [isAddSearch, setIsAddSearch] = useState(true);
 
     // Helper function to find a full show object by TMDB ID
     const getShowById = (id) => allShows.find(show => show.tmdb_id === id);
@@ -340,7 +331,7 @@ function App() {
         const token = localStorage.userToken;
 
         try {
-            const response = await fetch('/api/recommendations', {
+            const response = await fetch('/api/recommendations/shows', {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json', 
@@ -402,9 +393,94 @@ function App() {
         // }));
     }
 
+    const getRecommendationsBySearchQuery = async (query, minRating, minReviews) => {
+
+        console.log("Generating recommendations with filters:", {query, minRating, minReviews});
+
+        const token = localStorage.userToken;
+
+        if(query === '' || query === null){
+            alert("Please enter a search query.");
+            return false;
+        }
+
+        try {
+            const response = await fetch('/api/recommendations/search', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({query: query})
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                console.log("Got recommended successfully:", data.message);
+                console.log('Contents of data.recommended:', data.recommended);
+                const recommended = await filteringRecommendations(minRating, minReviews, data.recommended);
+                setRecommendedShowIds(recommended);
+                return true; 
+            } else {
+                // Failure: Invalid credentials
+                console.error("Inserting added failed:", data.message);
+                return false;
+            }
+
+        } catch (error) {
+            console.error("Network error during insert added:", error);
+            alert("A network error occurred. Could not connect to the server.");
+            return false;
+        }
+
+    };
+
     // Function to hide the added shows list view
     const hideAddedListView = () => {
         setIsAddedListVisible(false);
+    };
+
+    // Function to hide the added shows list view
+    const showSearchByQuery = async() => {
+
+        setIsAddSearch(false);
+
+        const token = localStorage.userToken;
+
+        try {
+            const response = await fetch('/api/recommendations', {
+                method: 'DELETE',
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                console.log("Got recommended successfully:", data.message);
+                setRecommendedShowIds([]);
+                setIsAddedListVisible(false);
+                return true; 
+            } else {
+                // Failure: Invalid credentials
+                console.error("Inserting added failed:", data.message);
+                return false;
+            }
+
+        } catch (error) {
+            console.error("Network error during insert added:", error);
+            alert("A network error occurred. Could not connect to the server.");
+            return false;
+        }
+ 
+    };
+
+    // Function to hide the added shows list view
+    const showAddSearch = () => {
+        setIsAddSearch(true);
     };
 
     // Function to show the added shows list view and get it from the database
@@ -582,7 +658,23 @@ function App() {
 
                             isLoggedIn ? (
                                 <>
-                                    <Recommendations 
+                                    {isAddSearch ? (
+                                        <Recommendations 
+                                            onAdd={addToList}
+                                            onClear={clearAddList}
+                                            onView={toggleAddedListView}
+                                            onHide={hideAddedListView}
+                                            onGenerate={getRecommendationList}
+                                            onSearchQuery={showSearchByQuery}
+                                        />
+                                    ) : (
+                                        // placeholder for recommendations shows list
+                                        <SearchQuery
+                                            onSearch={getRecommendationsBySearchQuery}
+                                            onSearchAdd={showAddSearch}
+                                        />
+                                    )}
+                                    {/* <Recommendations 
                                         shows={allShows}
                                         watchedIds={watchedShowIds}
                                         onAdd={addToList}
@@ -590,7 +682,7 @@ function App() {
                                         onView={toggleAddedListView}
                                         onHide={hideAddedListView}
                                         onGenerate={getRecommendationList}
-                                    />
+                                    /> */}
                                     
                                     {/* Conditional Rendering of the sub-content area */}
                                     {isAddedListVisible ? (
