@@ -22,6 +22,33 @@ async function textSearch(queryText, topK = 20) {
   }
 }
 
+async function textSearchAgainstShow(queryText, topK = 20, filterId) {
+  try {
+
+    let filter = {};
+    if (filterId) {
+        // Use the Pinecone filter syntax for equality: { fieldName: { $eq: value } }
+        filter = { 
+            tmdb_id: { '$eq': filterId } 
+        };
+    }
+
+    const results = await index.searchRecords({
+      query: {
+        topK: topK,
+        inputs: {text: queryText},
+        filter: filter
+        },
+    });
+
+    return results.result.hits;
+
+  } catch (error) {
+    console.error('Error during Pinecone search:', error);
+    throw error; 
+  }
+}
+
 // Function to return all shows in the database
 async function getAllShows(db) {
     return db.all('SELECT * FROM shows'); 
@@ -304,6 +331,9 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
             if (!showRecord) {
                 throw new Error("Show not found.");
             }
+
+            const similarityResult = await textSearchAgainstShow(showRecord.overview, 1, watchedIds[i]);
+            console.log(similarityResult);
 
             //get the 50 most similar shows to the selected show
             const recommendedIds = await textSearch(showRecord.overview, 50);

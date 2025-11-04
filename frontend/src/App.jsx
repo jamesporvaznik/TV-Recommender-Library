@@ -336,7 +336,7 @@ function App() {
                 }
             }
             
-            if(filteredRecommendations.length >= 10){
+            if(filteredRecommendations.length >= 30){
                 break;
             }
         }
