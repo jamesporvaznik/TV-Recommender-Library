@@ -22,6 +22,33 @@ async function textSearch(queryText, topK = 20) {
   }
 }
 
+async function textSearchAgainstShow(queryText, topK = 20, filterId) {
+  try {
+
+    let filter = {};
+    if (filterId) {
+        // Use the Pinecone filter syntax for equality: { fieldName: { $eq: value } }
+        filter = { 
+            tmdb_id: { '$eq': filterId } 
+        };
+    }
+
+    const results = await index.searchRecords({
+      query: {
+        topK: topK,
+        inputs: {text: queryText},
+        filter: filter
+        },
+    });
+
+    return results.result.hits;
+
+  } catch (error) {
+    console.error('Error during Pinecone search:', error);
+    throw error; 
+  }
+}
+
 // Function to return all shows in the database
 async function getAllShows(db) {
     return db.all('SELECT * FROM shows'); 
@@ -219,7 +246,7 @@ async function getBookmarked(db, userId){
 }
 
 //Takes in the added shows and returns recommendations from pinecone
-async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = false){
+async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = false, ratingsMap){
 
     let showRecord;
     let excludedIdsSet
@@ -236,7 +263,6 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
             ...watchedIds.map(String)
         ]);
 
-
         let myMap = new Map();
 
         // Iterate through each watched show
@@ -249,6 +275,10 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
                 throw new Error("Show not found.");
             }
 
+            const ratingScore = ratingsMap.get(String(watchedIds[i])) || 0;
+
+            //console.log(`Show ID: ${watchedIds[i]}, Rating Score: ${ratingScore}`);
+
             //get the 50 most similar shows to the selected show
             const recommendedIds = await textSearch(showRecord.overview, 50);
 
@@ -259,6 +289,7 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
                 //console.log(`Recommended ID: ${hit._id}, Current Score: ${currentScore}, Hit Score: ${hit._score}`);
 
                 // Add the new score to the current total
+                //myMap.set(hit._id, currentScore + (ratingScore / 10 * hit._score));
                 myMap.set(hit._id, currentScore + hit._score);
             });
         }
@@ -300,6 +331,9 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
             if (!showRecord) {
                 throw new Error("Show not found.");
             }
+
+            const similarityResult = await textSearchAgainstShow(showRecord.overview, 1, watchedIds[i]);
+            console.log(similarityResult);
 
             //get the 50 most similar shows to the selected show
             const recommendedIds = await textSearch(showRecord.overview, 50);
@@ -367,10 +401,31 @@ async function setRating(db, userId, showId, rating){
         INSERT INTO user_ratings 
         (user_id, tmdb_id, rating) 
         VALUES (?, ?, ?)
+
+
+        ON CONFLICT(user_id, tmdb_id) 
+        DO UPDATE SET 
+        rating = excluded.rating
     `;
 
     await db.run(sql, userId, showId, rating);
 
 }
 
-module.exports = { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, insertAdded, clearAdded, toggleWatched, toggleBookmarked, getWatched, getBookmarked, getRecommendations, getRecommendationsBySearch, clearRecommendations };
+async function getRating(db, userId){
+
+    const ratingRecords = await db.all('SELECT tmdb_id, rating FROM user_ratings WHERE user_id = ?', userId);
+
+    const ratingsMap = new Map();
+
+    // Iterate over the array and populate the Map
+    ratingRecords.forEach(record => {
+        ratingsMap.set(String(record.tmdb_id), record.rating);
+    });
+
+    return ratingsMap;
+
+}
+
+
+module.exports = { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, insertAdded, clearAdded, toggleWatched, toggleBookmarked, getWatched, getBookmarked, getRecommendations, getRecommendationsBySearch, clearRecommendations, setRating, getRating };
