@@ -15,7 +15,7 @@ app.use(express.json());
 const initializeDatabase = require('./db.js');
 let db;
 
-const { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, insertAdded, clearAdded, toggleWatched, toggleBookmarked, getWatched, getBookmarked, getRecommendations, getRecommendationsBySearch, clearRecommendations} = require('./dbQueries.js');
+const { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, insertAdded, clearAdded, toggleWatched, toggleBookmarked, getWatched, getBookmarked, getRecommendations, getRecommendationsBySearch, clearRecommendations, setRating, getRating} = require('./dbQueries.js');
 
 // checks that user is logged in
 function authenticateToken(req, res, next) {
@@ -358,10 +358,12 @@ app.post('/api/recommendations/shows', authenticateToken, async (req, res) => {
             return res.status(404).json({ success: false, message: 'User not found in DB.' });
         }
 
+        ratingsMap = await getRating(db, userId);
+
         const addedIds = JSON.parse(rawAdded);
         const watchedIds = JSON.parse(rawWatched);
 
-        const recommendations = await getRecommendations(db, userId, addedIds, watchedIds, isWatched);
+        const recommendations = await getRecommendations(db, userId, addedIds, watchedIds, isWatched, ratingsMap);
 
         return res.status(200).json({ 
             success: true, 
@@ -428,6 +430,50 @@ app.delete(`/api/recommendations`, authenticateToken, async (req, res) => {
     } catch (e) {
         console.error("Recommended error:", e.message);
         res.status(500).json({ success: false, message: 'Server error during fetching added ids.' });
+    }
+
+});
+
+// endpoint to get ratings for the user
+app.get('/api/rating', authenticateToken, async (req, res) => {
+
+    const userId = req.userId;  
+
+    try {
+
+        ratingsMap = await getRating(db, userId);
+
+        const ratingsObject = Object.fromEntries(ratingsMap);
+
+        return res.status(200).json({ 
+            success: true, 
+            message: 'ratings fetched successfully.',
+            ratings: ratingsObject
+        });
+         
+    } catch (e) {
+        console.error("Rating fetch error:", e.message);
+        res.status(500).json({ success: false, message: 'Server error during fetching ratings.' });
+    }
+});
+
+// endpoint to set a rating for a show
+app.post('/api/rating', authenticateToken, async (req, res) => {
+
+    const { ratingValue, showId } = req.body;
+    const userId = req.userId;
+
+    try {
+        await setRating(db, userId, showId, ratingValue);
+
+        return res.status(200).json({ 
+            success: true, 
+            message: 'Rating submitted successfully.'
+        });
+
+    } catch (e) {
+        console.error("Rating error:", e.message);
+        res.status(500).json({ success: false, message: 'Server error during submitting rating.' });
     }
 
 });
