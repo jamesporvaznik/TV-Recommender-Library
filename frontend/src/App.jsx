@@ -33,6 +33,7 @@ function App() {
     const [bookmarkedShowIds, setBookmarkedShowIds] = useState([]);
     const [recommendedShowIds, setRecommendedShowIds] = useState([]);
     const [isAddSearch, setIsAddSearch] = useState(true);
+    const [ratedShowsMap, setRatedShowsMap] = useState(new Map());
 
     // Helper function to find a full show object by TMDB ID
     const getShowById = (id) => allShows.find(show => show.tmdb_id === id);
@@ -121,7 +122,6 @@ function App() {
                 console.error("Signup failed:", data.message);
                 return false;
             }
-
         } catch (error) {
             console.error("Network error during login:", error);
             alert("A network error occurred. Could not connect to the server.");
@@ -214,6 +214,27 @@ function App() {
         } catch (error) {
             console.error("Network error during retrieving bookmarked:", error);
             alert("A network error occurred. Could not connect to the server.");
+            return false;
+        }
+
+        try{
+            const response = await fetch('/api/rating', { 
+                method: 'GET',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` 
+                },
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {          
+                setRatedShowsMap(new Map(Object.entries(data.ratings || {})));
+            } else {
+                console.error("Failed to synchronize lists:", data.message);
+            }
+        } catch (error) {
+            console.error("Network error during retrieving rated shows:", error);
             return false;
         }
     }
@@ -321,7 +342,6 @@ function App() {
         }
 
         return filteredRecommendations;
-
     }
 
     // Function to generate a recommendation list based on current filters and user lists (placeholder logic)
@@ -358,39 +378,6 @@ function App() {
             alert("A network error occurred. Could not connect to the server.");
             return false;
         }
-
-
-        // let newRecommendationIds; 
-        // let updatedRecommendationIds = [];
-
-        // if(isWatched){
-        //     // Make algorithm from watched list
-        //     alert("Generating recommendations based on your watched shows.");
-        //     newRecommendationIds = [1, 7, 9];
-            
-        //     // min rating functionality
-        //     for(let i = 0; i < newRecommendationIds.length; ++i){
-        //         if(getShowById(newRecommendationIds[i]).rating_avg >= minRating){
-        //             updatedRecommendationIds.push(newRecommendationIds[i])
-        //         }
-        //     }
-        // }
-        // else{
-        //     // Make algorithm from added shows list
-        //     alert("Generating recommendations based on your added shows.");
-        //     newRecommendationIds = [13, 15, 29];
-
-        //     //min rating functionality
-        //     for(let i = 0; i < newRecommendationIds.length; ++i){
-        //         if(getShowById(newRecommendationIds[i]).rating_avg >= minRating){
-        //             updatedRecommendationIds.push(newRecommendationIds[i])
-        //         }
-        //     }
-        // }
-        // setUserLists(prevLists => ({
-        //     ...prevLists,
-        //     recommended: updatedRecommendationIds // Updates the userLists.recommended array
-        // }));
     }
 
     const getRecommendationsBySearchQuery = async (query, minRating, minReviews) => {
@@ -436,6 +423,44 @@ function App() {
 
     };
 
+    const setRating = async (rating, showId) => {
+
+        console.log("Setting rating to:", rating);
+        const token = localStorage.userToken;
+
+        try {
+            const response = await fetch('/api/rating', {
+                method: 'POST',
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ratingValue: rating, showId: showId})
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                console.log("Set rating successfully:", data.message);
+
+                const newMap = new Map(ratedShowsMap);
+                newMap.set(String(showId), rating); 
+                setRatedShowsMap(newMap);
+
+                return true; 
+            } else {
+                // Failure: Invalid credentials
+                console.error("Inserting added failed:", data.message);
+                return false;
+            }
+
+        } catch (error) {
+            console.error("Network error during insert added:", error);
+            alert("A network error occurred. Could not connect to the server.");
+            return false;
+        }
+    };
+
     // Function to hide the added shows list view
     const hideAddedListView = () => {
         setIsAddedListVisible(false);
@@ -475,7 +500,6 @@ function App() {
             alert("A network error occurred. Could not connect to the server.");
             return false;
         }
- 
     };
 
     // Function to hide the added shows list view
@@ -674,15 +698,6 @@ function App() {
                                             onSearchAdd={showAddSearch}
                                         />
                                     )}
-                                    {/* <Recommendations 
-                                        shows={allShows}
-                                        watchedIds={watchedShowIds}
-                                        onAdd={addToList}
-                                        onClear={clearAddList}
-                                        onView={toggleAddedListView}
-                                        onHide={hideAddedListView}
-                                        onGenerate={getRecommendationList}
-                                    /> */}
                                     
                                     {/* Conditional Rendering of the sub-content area */}
                                     {isAddedListVisible ? (
@@ -745,6 +760,8 @@ function App() {
                     watchedIds={watchedShowIds}
                     bookmarkedIds={bookmarkedShowIds}
                     onToggleList={updateShowList}
+                    setRating={setRating}
+                    userRating={ratedShowsMap.get(String(popUpShow.tmdb_id))}
                 />
             )}
             
