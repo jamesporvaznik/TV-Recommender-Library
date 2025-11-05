@@ -26,12 +26,9 @@ const ShowDetails = ({
     const handleToggleWatched = () => onToggleList(show.tmdb_id, 'watched');
     const handleToggleBookmark = () => onToggleList(show.tmdb_id, 'bookmarked');
 
-    // Determine if the 'Remove' button should be shown
-    const showRemoveButton = typeof onRemoveFromAdded === 'function';
-
     const handleCancel = () => {
-        setIsModalOpen(false); // Close the modal
-        setRatingValue(''); // Clear the input
+        setIsModalOpen(false); 
+        setRatingValue(''); 
     };
     
     const handleSave = () => {
@@ -39,8 +36,8 @@ const ShowDetails = ({
             setRating(ratingValue, show.tmdb_id);
         }
         console.log(`Submitting rating ${ratingValue} for ${show.title}`);
-        setIsModalOpen(false); // Close the modal
-        setRatingValue(''); // Clear the input
+        setIsModalOpen(false); 
+        setRatingValue(''); 
     };
 
     const handleRatingChange = (event) => {
@@ -59,9 +56,6 @@ const ShowDetails = ({
         setIsModalOpen(true);
     }
 
-    // const saveButton = ratingValue.trim().length > 0;
-    // const cancelButton = ratingValue.trim().length > 0;
-
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={onClose}>
             {/* Pop-up Content */}
@@ -79,9 +73,6 @@ const ShowDetails = ({
 
                     <div className="flex-1 flex justify-end">
                         {isWatched && (
-                            // <span className="px-3 py-1 bg-green-600 text-white text-sm rounded-full">
-                            //     Watched
-                            // </span>
                             <div className="flex items-center gap-2">
                                 <label htmlFor="show-rating" className="text-sm font-medium text-gray-700">
                                     Rate (1-10):
@@ -92,14 +83,10 @@ const ShowDetails = ({
                                     min="1"
                                     max="10"
                                     placeholder="0"
-                                    // Assuming you have a state variable to hold the rating value (e.g., 'ratingValue')
                                     value={ratingValue} 
-                                    // Assuming you have a function to handle changes (e.g., 'handleRatingChange')
                                     onChange={handleRatingChange} 
                                     className="w-16 p-1 text-center border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-sm"
                                 />
-                                {/* Optional: Add a button to submit the rating */}
-                                {/* <button className="px-2 py-1 bg-blue-500 text-white text-xs rounded-md">Save</button> */}
                             </div>
                         )}
                     </div>
@@ -108,13 +95,10 @@ const ShowDetails = ({
                 {/* Show Details */}
                 <div className="grid grid-cols-2 gap-4 mt-10 mb-10 text-gray-700">
                     <div className="space-y-4">
-                        {/* <p><strong>Type:</strong> {show.type}</p> */}
                         <p><strong>Rating:</strong> {show.rating_avg} ({show.vote_count})</p>
                         <p><strong>Genre:</strong> {show.genres || 'N/A'}</p>
                     </div>
                     <div className="space-y-4">
-                        {/* <p><strong>Streaming On:</strong> {show.streaming || 'Not Found'}</p> */}
-                        {/* <p><strong>Length:</strong> {show.type === 'TV Series' ? `${show.seasons} Seasons` : `${show.runtime_minutes} minutes`}</p> */}
                         <p><strong>Release Date:</strong> {show.release_date} </p>
                     </div>
                 </div>
@@ -147,16 +131,6 @@ const ShowDetails = ({
                     
                     {/* Right: Optional Remove and Close Buttons */}
                     <div className="flex space-x-3">
-                        {/* Optional: Remove from Added List Button */}
-                        {showRemoveButton && (
-                            <button 
-                                onClick={() => onRemoveFromAdded(show.id)} 
-                                className="px-4 py-2 text-sm bg-red-500 text-white rounded hover:bg-red-600 transition"
-                            >
-                                Remove from Added List
-                            </button>
-                        )}
-
                         {/* Close Button */}
                         <button onClick={onClose} className="px-4 py-2 text-sm bg-gray-500 text-white rounded hover:bg-gray-600 transition">
                             Close
