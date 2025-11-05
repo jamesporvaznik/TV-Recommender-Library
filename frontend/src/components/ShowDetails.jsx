@@ -9,7 +9,6 @@ const ShowDetails = ({
     watchedIds, 
     bookmarkedIds, 
     onToggleList,
-    onRemoveFromAdded,
     setRating,
     userRating,
 }) => {
