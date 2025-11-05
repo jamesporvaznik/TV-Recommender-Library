@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import ComboBox from './ComboBox';
+import FilterStorage from './FilterStorage';
 
 // Define the functional component
 function Recommendations({addTerm, setAddTerm, onAdd, onClear, onView, onHide, onGenerate, onSearchQuery}) {
@@ -133,6 +135,8 @@ function Recommendations({addTerm, setAddTerm, onAdd, onClear, onView, onHide, o
             <div className="mt-3 text-sm text-gray-500 flex justify-center">
                 <button type="button" onClick={handleSearchQuery} className="mt-3 px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700">Search by Query</button>
             </div>
+            <ComboBox />
+            {/* <FilterStorage /> */}
         </form>
     );
 }
