@@ -22,32 +22,32 @@ async function textSearch(queryText, topK = 20) {
   }
 }
 
-async function textSearchAgainstShow(queryText, topK = 20, filterId) {
-  try {
+// async function textSearchAgainstShow(queryText, topK = 1, filterId) {
+//   try {
 
-    let filter = {};
-    if (filterId) {
-        // Use the Pinecone filter syntax for equality: { fieldName: { $eq: value } }
-        filter = { 
-            tmdb_id: { '$eq': filterId } 
-        };
-    }
+//     let filter = {};
+//     if (filterId) {
+//         // Use the Pinecone filter syntax for equality: { fieldName: { $eq: value } }
+//         filter = { 
+//             tmdb_id: { '$eq': filterId } 
+//         };
+//     }
 
-    const results = await index.searchRecords({
-      query: {
-        topK: topK,
-        inputs: {text: queryText},
-        filter: filter
-        },
-    });
+//     const results = await index.searchRecords({
+//       query: {
+//         topK: topK,
+//         inputs: {text: queryText},
+//         filter: filter
+//         },
+//     });
 
-    return results.result.hits;
+//     return results.result.hits;
+//     } catch (error) {
+//         console.error('Error during Pinecone search:', error);
+//         throw error; 
+//     } 
+// }
 
-  } catch (error) {
-    console.error('Error during Pinecone search:', error);
-    throw error; 
-  }
-}
 
 // Function to return all shows in the database
 async function getAllShows(db) {
@@ -289,8 +289,8 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
                 //console.log(`Recommended ID: ${hit._id}, Current Score: ${currentScore}, Hit Score: ${hit._score}`);
 
                 // Add the new score to the current total
-                //myMap.set(hit._id, currentScore + (ratingScore / 10 * hit._score));
-                myMap.set(hit._id, currentScore + hit._score);
+                myMap.set(hit._id, currentScore + (ratingScore * hit._score));
+                //myMap.set(hit._id, currentScore + hit._score);
             });
         }
 
@@ -332,8 +332,14 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
                 throw new Error("Show not found.");
             }
 
-            const similarityResult = await textSearchAgainstShow(showRecord.overview, 1, watchedIds[i]);
-            console.log(similarityResult);
+            // for(let j = 0; j < 1; j++){
+            //     //watchedRecord = await db.get(`SELECT overview FROM shows WHERE tmdb_id = ?`, watchedIds[j]);
+            //     const similarityResult = await textSearchAgainstShow(showRecord.overview, 1, watchedIds[j]);
+            //     console.log(similarityResult);
+            // }
+
+            // const similarityResult = await textSearchAgainstShow(showRecord.overview, 1, watchedIds[i]);
+            // console.log(similarityResult);
 
             //get the 50 most similar shows to the selected show
             const recommendedIds = await textSearch(showRecord.overview, 50);

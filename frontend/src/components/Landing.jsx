@@ -1,18 +1,18 @@
 import React, { useMemo, useState } from 'react';
 import ShowCard from './ShowCard'
 
-// const filterShows = (allShows) => {
-//     // Filtering logic 
-//     return shows.filter(show => {
-//         if (show.rating_avg < 8) return false;
-//         if (show.vote_count < 2000) return false;
-//         return true; 
-//     });
-// }
-
 // Landing page component
 const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) => {
   const [refreshKey, setRefreshKey] = useState(0);
+
+  // Filter shows so better shows are displayed
+  const filteredShows = shows.filter(show => {
+        
+        const meetsRating = show.rating_avg > 6;
+        const meetsReviewCount = show.vote_count > 500;
+        
+        return meetsRating && meetsReviewCount;
+    });
   
   return (
     <section className="py-20 text-center">
@@ -37,7 +37,7 @@ const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
           {useMemo(() => {
             // Picks random unique shows
-            const arr = shows.slice();
+            const arr = filteredShows.slice();
             for (let i = arr.length - 1; i > 0; i--) {
               const j = Math.floor(Math.random() * (i + 1));
               [arr[i], arr[j]] = [arr[j], arr[i]];

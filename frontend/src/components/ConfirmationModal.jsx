@@ -2,10 +2,10 @@ const ConfirmationModal = ({ isModalOpen, ratingValue, handleSave, handleCancel,
     if (!isModalOpen) return null;
 
     return (
-        // 1. Backdrop: Fixed, covers entire screen, semi-transparent black background
+        // Modal Overlay
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-70 transition-opacity duration-300">
             
-            {/* 2. Modal Container: The actual centered white box */}
+            {/* Modal Container */}
             <div className="bg-white p-8 rounded-xl shadow-2xl max-w-sm w-full transform transition-all duration-300 scale-100">
                 
                 <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
@@ -17,7 +17,7 @@ const ConfirmationModal = ({ isModalOpen, ratingValue, handleSave, handleCancel,
                     for "{showTitle}"?
                 </p>
                 
-                {/* 3. Button Group: Centered in the modal footer */}
+                {/* Buttons */}
                 <div className="flex justify-center gap-4">
                     {/* Cancel Button */}
                     <button
