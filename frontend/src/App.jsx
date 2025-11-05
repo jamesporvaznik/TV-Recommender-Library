@@ -336,9 +336,9 @@ function App() {
                 }
             }
             
-            if(filteredRecommendations.length >= 30){
-                break;
-            }
+            // if(filteredRecommendations.length >= 30){
+            //     break;
+            // }
         }
 
         return filteredRecommendations;

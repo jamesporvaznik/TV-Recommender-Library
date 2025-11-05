@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import React from 'react';
 import ShowCard from './ShowCard'; 
 
@@ -21,6 +22,22 @@ const RecommendedShowsList = ({
 }) => {
     const groupedRows = groupIntoRows(shows);
 
+    const [visibleRows, setVisibleRows] = useState(3); 
+    const ROWS_TO_LOAD = 3;
+
+
+    //checks if there are more shows to load
+    const hasMoreToLoad = visibleRows < groupedRows.length;
+
+    // Function to increase the number of rows loaded
+    const loadMore = () => {
+        setVisibleRows(prevCount => prevCount + ROWS_TO_LOAD);
+    };
+
+    React.useEffect(() => {
+            setVisibleRows(3);
+        }, [shows]);
+
     // Render the component
     return (
         <div className="container mx-auto px-4 py-8">
@@ -30,7 +47,7 @@ const RecommendedShowsList = ({
                 <p className="text-gray-500">You haven't added any shows to the list.</p>
             )}
 
-            {groupedRows.map((row, rowIndex) => (
+            {groupedRows.slice(0, visibleRows).map((row, rowIndex) => (
                 <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
                     {/* Iterate over the row chunk */}
                     {row.map((show) => (
@@ -45,6 +62,17 @@ const RecommendedShowsList = ({
                     ))}
                 </div>
             ))}
+            {/* Load more shows button if there are more shows possible */}
+            {hasMoreToLoad && (
+                <div className="text-center mt-4">
+                    <button
+                        onClick={loadMore}
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+                    >
+                        Load More Shows 
+                    </button>
+                </div>
+            )}
         </div>
     );
 };
