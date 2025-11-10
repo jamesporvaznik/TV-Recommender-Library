@@ -33,12 +33,12 @@ function SearchQuery({query, setQuery, onSearch, onSearchAdd}) {
     }
 
     // Let user view the added shows list
-    function handleSearchAdd() {
-        if (typeof onSearchAdd === 'function'){
-            onSearchAdd();
-        }
-        else console.log('Showing added shows list didn\'t work');
-    }
+    // function handleSearchAdd() {
+    //     if (typeof onSearchAdd === 'function'){
+    //         onSearchAdd();
+    //     }
+    //     else console.log('Showing added shows list didn\'t work');
+    // }
 
     // Generate recommendations based on filters and displays them
     function getRecommendations() {
@@ -82,12 +82,6 @@ function SearchQuery({query, setQuery, onSearch, onSearchAdd}) {
                     <input type="number" min="0" value={minReviews} onChange={e => setMinReviews(e.target.value)} className="mt-1 px-2 py-1 border rounded" />
                 </label>
 
-            </div>
-
-
-            {/* Button to generate recommendations */}
-            <div className="mt-1 text-sm text-gray-500 flex justify-center">
-                <button type="button" onClick={handleSearchAdd} className="mt-3 px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700">Search by Shows</button>
             </div>
         </form>
     );

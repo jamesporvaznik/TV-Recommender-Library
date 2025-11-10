@@ -2,6 +2,20 @@ import { useState, useEffect } from 'react';
 import React from 'react';
 import ShowCard from './ShowCard'; 
 
+const filterShows = (allShows, filters) => {
+    // Filtering logic 
+    return allShows.filter(show => {
+        if (!filters) return true;
+        const { q, genre, minRating, minReviews } = filters;
+        if (q && !show.title.toLowerCase().includes(q.toLowerCase())) return false;
+        if (genre && show.genres !== genre) return false;
+        if (minRating && show.rating_avg < minRating) return false;
+        if (minReviews && show.vote_count < minReviews) return false;
+
+        return true; 
+    });
+};
+
 
 // Function to group shows into rows of 5
 const groupIntoRows = (shows, chunkSize = 5) => {
@@ -17,10 +31,13 @@ const RecommendedShowsList = ({
     shows, 
     watchedIds, 
     bookmarkedIds, 
+    filters,
     onToggleList,
     onCardClick 
 }) => {
-    const groupedRows = groupIntoRows(shows);
+
+    const filteredShows = filterShows(shows, filters);
+    const groupedRows = groupIntoRows(filteredShows);
 
     const [visibleRows, setVisibleRows] = useState(3); 
     const ROWS_TO_LOAD = 3;
@@ -35,15 +52,15 @@ const RecommendedShowsList = ({
     };
 
     React.useEffect(() => {
-            setVisibleRows(3);
-        }, [shows]);
+        setVisibleRows(3);
+    }, [filters]);
 
     // Render the component
     return (
         <div className="container mx-auto px-4 py-8">
-            <h2 className="text-2xl font-bold mb-6">Recommended Shows ({shows.length})</h2>
+            <h2 className="text-2xl font-bold mb-6">Recommended Shows ({filteredShows.length})</h2>
 
-            {shows.length === 0 && (
+            {filteredShows.length === 0 && (
                 <p className="text-gray-500">You haven't added any shows to the list.</p>
             )}
 

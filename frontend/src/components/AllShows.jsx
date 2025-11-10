@@ -56,7 +56,7 @@ const AllShows = ({
     // Render the component
     return (
         <div className="container mx-auto px-4 py-8">
-            <h2 className="text-2xl font-bold mb-6">All Shows</h2>
+            <h2 className="text-2xl font-bold mb-6">All Shows ({filteredShows.length})</h2>
 
             {groupedRows.length === 0 && (
                 <p className="text-gray-500">No shows match your current filters.</p>
