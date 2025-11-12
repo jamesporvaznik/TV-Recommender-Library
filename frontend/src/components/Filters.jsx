@@ -1,70 +1,150 @@
 import React, { useState, useEffect } from 'react';
 
-const Filters = ({ onSearch }) => {
+const Filters = ({ onSearch, onSort, length, searchTerm: controlledTerm, setSearchTerm: setControlledTerm }) => {
     // Local state used when the parent doesn't control the search term
+    const [localTerm, setLocalTerm] = useState(controlledTerm || '');
     const [genre, setGenre] = useState('All');
-    const [minRating, setMinRating] = useState(0);
-    const [minReviews, setMinReviews] = useState(0);
+    const [minRating, setMinRating] = useState('');
+    const [minReviews, setMinReviews] = useState('');
+    const [sortOption, setSortOption] = useState('Default');
+
 
     // Options for dropdowns
     const genres = ['All', 'Action & Adventure', 'Animation', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Family', 'Kids', 'Mystery', 'News', 'Reality', 'Sci-Fi & Fantasy', 'Soap', 'Talk', 'War & Politics', 'Western'];
+    const sortOptions = ['Relevance','By Rating (High to Low)','By Rating (Low to High)','By Reviews (High to Low)','By Reviews (Low to High)','By Release Date (New to Old)','By Release Date (Old to New)',];
 
-    // Use useEffect to auto-submit filters on change
     useEffect(() => {
-        const handler = setTimeout(() => {
-            const payload = {
-                search: null,
-                genre: genre === 'All' ? null : genre,
-                minRating: Number(minRating) || null,
-                minReviews: Number(minReviews) || null,
-            };
+        if (typeof controlledTerm === 'string') setLocalTerm(controlledTerm);
+    }, [controlledTerm]);
 
-            if (typeof onSearch === 'function') {
-                console.log('Auto-submitting filters:', payload);
-                onSearch(payload);
-            } else {
-                console.log('Search function not provided. Payload:', payload);
-            }
-        }, 300); // 300ms delay
+    const term = typeof controlledTerm === 'string' ? controlledTerm : localTerm;
 
-        return () => {
-            clearTimeout(handler);
+    // Handles text input changes
+    function handleTermChange(e) {
+        const v = e.target.value;
+        if (typeof setControlledTerm === 'function') setControlledTerm(v);
+        else setLocalTerm(v);
+    }
+
+    //Handles form submission
+    function handleSubmit(e) {
+        e.preventDefault();
+        const payload = {
+            q: term.trim(),
+            genre: genre === 'All' ? null : genre,
+            minRating: Number(minRating) || null,
+            minReviews: Number(minReviews) || null,
         };
-        
-    }, [genre, minRating, minReviews, onSearch]); 
-    
 
+        if (typeof onSearch === 'function') onSearch(payload);
+        else console.log('search payload', payload);
+    }
+
+    const handleFilterChange = (field, value) => {
+    
+        const newFilterState = {
+            genre: genre,
+            minRating: minRating,
+            minReviews: minReviews,
+        };
+
+        newFilterState[field] = value; 
+
+        switch (field) {
+            case 'genre':
+                setGenre(value);
+                break;
+            case 'minRating':
+                setMinRating(value);
+                break;
+            case 'minReviews':
+                setMinReviews(value);
+                break;
+            default:
+                console.error(`Attempted to set unknown field: ${field}`);
+        }
+
+        const payload = {
+            q: term.trim(),
+            genre: newFilterState.genre === 'All' ? null : newFilterState.genre,
+            minRating: newFilterState.minRating === '' ? null : Number(newFilterState.minRating),
+            minReviews: newFilterState.minReviews === '' ? null : Number(newFilterState.minReviews),
+        };
+
+        if (typeof onSearch === 'function') {
+            console.log('Instant submitting filters (Synchronous fix):', payload);
+            onSearch(payload);
+        }
+    };
+
+    function handleSort(mode){
+
+        if (typeof onSort === 'function') {
+            
+            console.log('Sort function:', mode);
+            onSort(mode);
+            setSortOption(mode);
+        }
+        
+    }
 
     //Handles clearing the form (Still useful for resetting state)
     function handleClear() {
         setGenre('All');
-        setMinReviews(0);
-        setMinRating(0);
+        setMinReviews('');
+        setMinRating('');
+
+        const payload = {
+            q: null,
+            genre: genre === 'All' ? null : genre,
+            minRating: null,
+            minReviews: null,
+        };
+
+
+        if (typeof onSearch === 'function') {
+            console.log('Auto-submitting filters:', payload);
+            onSearch(payload);
+        } else {
+            console.log('Search function not provided. Payload:', payload);
+        }
     }
+
 
     // Render the form
     return (
-        // *** 4. Removed onSubmit={handleSubmit} from the form ***
-        <form className="w-full max-w-3xl mx-auto p-2"> 
+        <>
+        <form className="w-full max-w-3xl mx-auto p-2 mb-4" onSubmit={handleSubmit}> 
+
+            <div className="flex flex-col sm:flex-row gap-2 items-center">
+                <input
+                    type="search"
+                    value={term}
+                    onChange={handleTermChange}
+                    placeholder="Search shows by title..."
+                    className="flex-1 px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                />
+                <button type="submit" className="px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700">Search</button>
+            </div>
             
             {/* Dropdown filters */}
-            <div className="mt-3 grid grid-cols-1 sm:grid-cols-4 gap-2 text-sm">
+            <div className="mt-3 grid grid-cols-1 sm:grid-cols-4 gap-2 text-sm mt-6">
                 
                 <label className="flex flex-col">
                     <span className="text-xs text-gray-500">Genre</span>
-                    <select value={genre} onChange={e => setGenre(e.target.value)} className="mt-1 px-2 py-1 border rounded">
+                    <select value={genre} onChange={e => handleFilterChange('genre', e.target.value)} className="mt-1 px-2 py-1 border rounded">
                         {genres.map(g => <option key={g} value={g}>{g}</option>)}
                     </select>
                 </label>
 
                 <label className="flex flex-col">
                     <span className="text-xs text-gray-500">Min Rating</span>
-                    <input type="number" min="0" max="10" value={minRating} onChange={e => setMinRating(e.target.value)} className="mt-1 px-2 py-1 border rounded" />
+                    <input type="number" min="0" max="10" value={minRating} onChange={e => handleFilterChange('minRating', e.target.value)} className="mt-1 px-2 py-1 border rounded" />
                 </label>
 
                 <label className="flex flex-col">
                     <span className="text-xs text-gray-500">Min Raters</span>
-                    <input type="number" min="0" value={minReviews} onChange={e => setMinReviews(e.target.value)} className="mt-1 px-2 py-1 border rounded" />
+                    <input type="number" min="0" value={minReviews} onChange={e => handleFilterChange('minReviews', e.target.value)} className="mt-1 px-2 py-1 border rounded" />
                 </label>
                 
                 {/* Add a Clear button back since you still need the handleClear function */}
@@ -73,6 +153,17 @@ const Filters = ({ onSearch }) => {
                 </div>
             </div>
         </form>
+        {/* Sorting */}
+        <form className="flex justify-between w-full px-4 border-t mt-2">
+            <h2 className="text-lg font-semibold mt-4">{length} Shows</h2>
+            <label className="flex flex-col">
+                <span className="text-xs text-gray-500">Sort By</span>
+                <select value={sortOption} onChange={e => handleSort(e.target.value)} className="mt-1 px-2 py-1 border rounded">
+                    {sortOptions.map(g => <option key={g} value={g}>{g}</option>)}
+                </select>
+            </label>
+        </form>
+        </>
     );
 };
 

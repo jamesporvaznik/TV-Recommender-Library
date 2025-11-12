@@ -43,6 +43,7 @@ function App() {
     const [watchedShowIds, setWatchedShowIds] = useState([]);
     const [bookmarkedShowIds, setBookmarkedShowIds] = useState([]);
     const [recommendedShowIds, setRecommendedShowIds] = useState([]);
+    const [sortedShowIds, setSortedShowIds] = useState([]);
     const [isAddSearch, setIsAddSearch] = useState(true);
     const [ratedShowsMap, setRatedShowsMap] = useState(new Map());
     const [currentMode, setCurrentMode] = useState(RECOMMENDATION_MODES.SEARCH);
@@ -54,16 +55,26 @@ function App() {
         // You might want to close the drawer here: handleDrawerClose();
 
         if(newMode === RECOMMENDATION_MODES.LIST){
+            //alert("Create a list of shows that you can get recommendations on!");
             setFilters(null);
-            getRecommendationList(0, 0, false);
+            getRecommendationList(false);
         } 
         else if(newMode === RECOMMENDATION_MODES.WATCHED){
+            //alert("Get the shows recommended to you based on your watched shows!");
             setFilters(null);
-            getRecommendationList(0, 0, true);
+            getRecommendationList(true);
         }
         else if(newMode === RECOMMENDATION_MODES.SEARCH){ 
+            //alert("Get the shows recommended to you based on a search query!");
             setFilters(null);
             setShowRecommendations(false);
+        }
+        else if(newMode === RECOMMENDATION_MODES.ADD){
+            //alert("Get the shows recommended to you based on the list you created!");
+            setFilters(null);
+        }
+        else {
+            changeMode('Create List');
         }
     };
 
@@ -354,31 +365,45 @@ function App() {
         }
     }
 
-    const filteringRecommendations = async (minRating, minReviews, recommended) => {
-        console.log("Filtering recommendations with:", {minRating, minReviews, recommended});
 
-        let filteredRecommendations = [];
-        for(let i = 0; i < recommended.length; ++i){
+    // Sorting shows
+    const sortShows = (shows, mode) => {
 
-            const show = await getShowById(recommended[i]); 
+        const sortableArray = [...shows];
 
-            if(show && show.rating_avg !== undefined && show.vote_count !== undefined){
-                if(show.rating_avg >= minRating && show.vote_count >= minReviews){
-                    filteredRecommendations.push(show.tmdb_id);
-                }
-            }
-            
-            // if(filteredRecommendations.length >= 30){
-            //     break;
-            // }
+        // Sorting
+        if(mode === 'Relevance'){
+            setSortedShowIds(recommendedShowIds);
         }
-
-        return filteredRecommendations;
+        else if(mode === 'By Rating (High to Low)'){
+            const sorted = [...shows].sort((a, b) => b.rating_avg - a.rating_avg).map(show => show.tmdb_id);
+            setSortedShowIds(sorted);
+        }
+        else if(mode === 'By Rating (Low to High)'){
+            const sorted = [...shows].sort((a, b) => a.rating_avg - b.rating_avg).map(show => show.tmdb_id);
+            setSortedShowIds(sorted);
+        }
+        else if (mode === 'By Reviews (High to Low)'){
+            const sorted = [...shows].sort((a, b) => b.vote_count - a.vote_count).map(show => show.tmdb_id);
+            setSortedShowIds(sorted);
+        }
+        else if(mode === 'By Reviews (Low to High)'){
+            const sorted = [...shows].sort((a, b) => a.vote_count - b.vote_count).map(show => show.tmdb_id);
+            setSortedShowIds(sorted);
+        }
+        // else if(mode === 'By Release Date (New to Old)'){
+        //     const sorted = [...shows].sort((a, b) => String(b.release_date) - String(a.release_date)).map(show => show.tmdb_id);
+        //     setRecommendedShowIds(sorted);
+        // }
+        // else if(mode === 'By Release Date (Old to New)'){
+        //     const sorted = [...shows].sort((a, b) => String(a.release_date) - String(b.release_date)).map(show => show.tmdb_id);
+        //     setRecommendedShowIds(sorted);
+        // }
     }
 
     // Function to generate a recommendation list based on current filters and user lists (placeholder logic)
-    const getRecommendationList = async (minRating, minReviews, isWatched) => {
-        console.log("Generating recommendations with filters:", {minRating, minReviews, isWatched});
+    const getRecommendationList = async (isWatched) => {
+        console.log("Generating recommendations with filters:", {isWatched});
 
         const token = localStorage.userToken;
 
@@ -396,8 +421,7 @@ function App() {
             if (response.ok && data.success) {
                 console.log("Got recommended successgully:", data.message);
                 console.log('Contents of data.recommended:', data.recommended);
-                const recommended = await filteringRecommendations(minRating, minReviews, data.recommended);
-                setRecommendedShowIds(recommended);
+                setRecommendedShowIds(data.recommended);
                 return true; 
             } else {
                 // Failure: Invalid credentials
@@ -412,9 +436,9 @@ function App() {
         }
     }
 
-    const getRecommendationsBySearchQuery = async (query, minRating, minReviews) => {
+    const getRecommendationsBySearchQuery = async (query) => {
 
-        console.log("Generating recommendations with filters:", {query, minRating, minReviews});
+        console.log("Generating recommendations with filters:", {query});
 
         const token = localStorage.userToken;
 
@@ -438,8 +462,7 @@ function App() {
             if (response.ok && data.success) {
                 console.log("Got recommended successfully:", data.message);
                 console.log('Contents of data.recommended:', data.recommended);
-                const recommended = await filteringRecommendations(minRating, minReviews, data.recommended);
-                setRecommendedShowIds(recommended);
+                setRecommendedShowIds(data.recommended);
                 setShowRecommendations(true);
                 return true; 
             } else {
@@ -680,6 +703,7 @@ function App() {
     const bookmarkedShows = bookmarkedShowIds.map(getShowById).filter(Boolean);
     const addedShows = addedShowIds.map(getShowById).filter(Boolean);
     const recommendedShows = recommendedShowIds.map(getShowById).filter(Boolean);
+    const sortedShows = sortedShowIds.map(getShowById).filter(Boolean);
 
     // Render the component
     return (
@@ -698,7 +722,7 @@ function App() {
                 ) : (
                     <>  
                         {/* Search bar is hidden on Login/Signup & Recommendations pages */}
-                        {currentPage !== 'Login' && currentPage !== 'Signup' && currentPage !== 'Recommendations' && currentPage != 'Profile' && (
+                        {currentPage !== 'Login' && currentPage !== 'Signup' && currentPage !== 'Recommendations' && currentPage != 'Profile' && currentPage != 'All Shows' && currentPage != 'Watchlist' && currentPage != 'Watched' && (
                                 <Search onSearch={handleSearch} />
                             )}
                         
@@ -707,11 +731,14 @@ function App() {
                         {currentPage === 'All Shows' && (
                             <AllShows 
                                 allShows={allShows} 
+                                sortedShows={sortedShows}
                                 filters={filters} 
                                 watchedIds={watchedShowIds}
                                 bookmarkedIds={bookmarkedShowIds}
                                 onToggleList={updateShowList}
                                 onCardClick={handleOpenPopUp}
+                                onSearch={handleSearch}
+                                onSort={sortShows}
                             />
                         )}
 
@@ -719,12 +746,15 @@ function App() {
                             isLoggedIn ? (
                                 <Watched 
                                     // Pass arguments to Watched component
-                                    shows={watchedShows} 
+                                    shows={watchedShows}
+                                    sortedShows={sortedShows} 
                                     filters={filters} 
                                     watchedIds={watchedShowIds}
                                     bookmarkedIds={bookmarkedShowIds}
                                     onToggleList={updateShowList}
                                     onCardClick={handleOpenPopUp}
+                                    onSearch={handleSearch}
+                                    onSort={sortShows}
                                 /> 
                             ) : (
                                 setCurrentPage('Login')                        
@@ -736,11 +766,14 @@ function App() {
                                 <Watchlist 
                                     // Pass arguments to Watched component
                                     shows={bookmarkedShows} 
+                                    sortedShows={sortedShows}
                                     filters={filters} 
                                     watchedIds={watchedShowIds}
                                     bookmarkedIds={bookmarkedShowIds}
                                     onToggleList={updateShowList}
                                     onCardClick={handleOpenPopUp}
+                                    onSearch={handleSearch}
+                                    onSort={sortShows}
                                 /> 
                             ) : (
                                 setCurrentPage('Login')
@@ -785,47 +818,60 @@ function App() {
                                         </>
                                     ) : currentMode === RECOMMENDATION_MODES.SEARCH ? (
                                         <>
-                                            <SearchQuery
-                                                onSearch={getRecommendationsBySearchQuery}
-                                                onSearchAdd={showAddSearch}
-                                            />
+                                            {!showRecommendations && (
+                                                <SearchQuery
+                                                    onSearch={getRecommendationsBySearchQuery}
+                                                    onSearchAdd={showAddSearch}
+                                                />
+                                            )}
+
+                                            
 
                                             {showRecommendations && (
                                                 <RecommendedShowsList 
                                                     shows={recommendedShows} 
+                                                    sortedShows={sortedShows}
                                                     watchedIds={watchedShowIds}
                                                     bookmarkedIds={bookmarkedShowIds}
                                                     onToggleList={updateShowList}
                                                     onCardClick={handleOpenPopUp}
+                                                    onSearch={handleSearch}
+                                                    onSort={sortShows}
                                                 /> 
                                             )}
                                         </>
                                     ) : currentMode === RECOMMENDATION_MODES.LIST ? (
                                         <>
-                                            <Filters
-                                                onSearch={handleSearch}
-                                            />
+                                            {/* <Filters
+                                                
+                                            /> */}
                                             <RecommendedShowsList 
                                                 shows={recommendedShows} 
+                                                sortedShows={sortedShows}
                                                 watchedIds={watchedShowIds}
                                                 bookmarkedIds={bookmarkedShowIds}
                                                 filters={filters} 
                                                 onToggleList={updateShowList}
                                                 onCardClick={handleOpenPopUp}
+                                                onSearch={handleSearch}
+                                                onSort={sortShows}
                                             /> 
                                         </>
                                     ) : currentMode === RECOMMENDATION_MODES.WATCHED ? (
                                         <>
-                                            <Filters
+                                            {/* <Filters
                                                 onSearch={handleSearch}
-                                            />
+                                            /> */}
                                             <RecommendedShowsList 
                                                 shows={recommendedShows} 
+                                                sortedShows={sortedShows}
                                                 watchedIds={watchedShowIds}
                                                 bookmarkedIds={bookmarkedShowIds}
                                                 filters={filters} 
                                                 onToggleList={updateShowList}
                                                 onCardClick={handleOpenPopUp}
+                                                onSearch={handleSearch}
+                                                onSort={sortShows}
                                             /> 
                                         </>
                                     ) : (

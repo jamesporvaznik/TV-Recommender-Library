@@ -1,6 +1,7 @@
 import React from 'react';
 import ShowCard from './ShowCard'; 
 import { useState, useEffect } from 'react';
+import Filters from './Filters'
 
 const filterShows = (shows, filters) => {
 
@@ -31,21 +32,44 @@ const groupIntoRows = (shows, chunkSize = 5) => {
 // Watched component now receives the new user tracking props
 const Watched = ({ 
     shows, 
+    sortedShows,
     filters,
     watchedIds, 
     bookmarkedIds, 
     onToggleList,
-    onCardClick 
+    onCardClick,
+    onSearch,
+    onSort, 
 }) => {
 
     const [visibleRows, setVisibleRows] = useState(3); 
     const ROWS_TO_LOAD = 3;
 
-    const filteredShows = filterShows(shows, filters);
+    let filteredShows = [];
+
+    if(sortedShows.length === 0 || sortedShows.length != shows.length){
+        filteredShows = filterShows(shows, filters);
+    }
+    else{
+        filteredShows = filterShows(sortedShows, filters);
+    }
+
     const groupedRows = groupIntoRows(filteredShows);
 
     //checks if there are more shows to load
     const hasMoreToLoad = visibleRows < groupedRows.length;
+
+    function handleSearch(payload) {
+        if (typeof onSearch === 'function'){
+            onSearch(payload);
+        }
+    }
+
+    function handleSort(mode){
+        if (typeof onSort === 'function'){
+            onSort(shows, mode);
+        }
+    }
 
     // Function to increase the number of rows loaded
     const loadMore = () => {
@@ -59,14 +83,21 @@ const Watched = ({
     // Render the component
     return (
         <div className="container mx-auto px-4 py-8">
-            <h2 className="text-2xl font-bold mb-6">Watched Shows ({filteredShows.length})</h2>
+
+            <Filters 
+                onSearch={handleSearch}
+                onSort={handleSort}
+                length = {filteredShows.length}
+            />
+
+            {/* <h2 className="text-2xl font-bold mb-6">Watched Shows ({filteredShows.length})</h2>
 
             {shows.length === 0 && (
                 <p className="text-gray-500">You haven't marked any shows as watched yet.</p>
-            )}
+            )} */}
 
             {groupedRows.slice(0, visibleRows).map((row, rowIndex) => (
-                <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
+                <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8 mt-8">
                     {/* Iterate over the row chunk */}
                     {row.map((show) => (
                         <ShowCard 

@@ -62,9 +62,15 @@ const ShowDetails = ({
                 {/* Header Section */}
                 <div className="flex items-center justify-between gap-3 mb-6 flex-wrap">
 
-                    <div className="flex-1" weight="bold">
-                        <h1>User Rating: {userRating}</h1>
-                    </div> 
+                    {isWatched ? (
+                        <div className="flex-1 font-bold"> {/* Note: 'font-bold' should be in className, not 'weight' */}
+                            <h1>User Rating: {userRating}</h1>
+                        </div> 
+                    ) : (
+                        <div className="flex-1 font-bold"> {/* Note: 'font-bold' should be in className, not 'weight' */}
+                            <h1>User Rating: N/A</h1>
+                        </div> 
+                    )}
 
                     <h2 className="text-3xl font-bold mb-2 text-center">
                         {show.title} 

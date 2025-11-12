@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import React from 'react';
 import ShowCard from './ShowCard'; 
+import Filters from './Filters'
 
 const filterShows = (allShows, filters) => {
     // Filtering logic 
@@ -29,18 +30,41 @@ const groupIntoRows = (shows, chunkSize = 5) => {
 // AddedShowsList component now receives the new user tracking props
 const RecommendedShowsList = ({ 
     shows, 
+    sortedShows,
     watchedIds, 
     bookmarkedIds, 
     filters,
     onToggleList,
-    onCardClick 
+    onCardClick,
+    onSearch,
+    onSort
 }) => {
 
-    const filteredShows = filterShows(shows, filters);
+    let filteredShows = [];
+
+    if(sortedShows.length === 0 || sortedShows.length != shows.length){
+        filteredShows = filterShows(shows, filters);
+    }
+    else{
+        filteredShows = filterShows(sortedShows, filters);
+    }
+    
     const groupedRows = groupIntoRows(filteredShows);
 
     const [visibleRows, setVisibleRows] = useState(3); 
     const ROWS_TO_LOAD = 3;
+
+    function handleSearch(payload) {
+        if (typeof onSearch === 'function'){
+            onSearch(payload);
+        }
+    }
+
+    function handleSort(mode){
+        if (typeof onSort === 'function'){
+            onSort(shows, mode);
+        }
+    }
 
 
     //checks if there are more shows to load
@@ -57,15 +81,19 @@ const RecommendedShowsList = ({
 
     // Render the component
     return (
-        <div className="container mx-auto px-4 py-8">
-            <h2 className="text-2xl font-bold mb-6">Recommended Shows ({filteredShows.length})</h2>
+        <div className="container mx-auto px-4  ">
+            <Filters 
+                onSearch={handleSearch}
+                onSort={handleSort}
+                length = {filteredShows.length}
+            />
 
-            {filteredShows.length === 0 && (
+            {/* {filteredShows.length === 0 && (
                 <p className="text-gray-500">You haven't added any shows to the list.</p>
-            )}
+            )} */}
 
             {groupedRows.slice(0, visibleRows).map((row, rowIndex) => (
-                <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
+                <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8 mt-10">
                     {/* Iterate over the row chunk */}
                     {row.map((show) => (
                         <ShowCard 

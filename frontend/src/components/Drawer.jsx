@@ -16,6 +16,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
+import InfoIcon from '@mui/icons-material/Info';
 
 const drawerWidth = 310;
 const ICON_MARGIN = 20; // Used for spacing the icon from the edge
@@ -130,32 +131,60 @@ export default function PersistentDrawerLeft({ children, changeMode, currentMode
           </IconButton>
         </DrawerHeader>
         <Divider />
-        <List>
-            {navigationMap.map((item) => ( 
 
-                <ListItem key={item.mode} disablePadding> 
+        <List>
+          {navigationMap.map((item) => ( 
+            <ListItem key={item.mode} disablePadding> 
+            
+              <ListItemButton
+                onClick={() => changeMode(item.mode)}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  
+                  bgcolor: currentMode === item.mode ? 'action.selected' : 'inherit',
+                  '&:hover': {
+                    bgcolor: currentMode === item.mode ? 'action.selected' : 'action.hover',
+                  },
+                }}
+              >
+                <ListItemText primary={item.text} sx={{ mr: 1 }} /> 
                 
-                <ListItemButton
-                    onClick={() => changeMode(item.mode)}
-                    sx={{
-                      // Ensure the button spans the full width and handles padding
-                      display: 'flex',
-                      justifyContent: 'flex-start',
-                      
-                      // Conditional styling to highlight the active item
-                      bgcolor: currentMode === item.mode ? 'action.selected' : 'inherit',
-                      
-                      // Optional: Add hover effect for better UX
-                      '&:hover': {
-                        bgcolor: currentMode === item.mode ? 'action.selected' : 'action.hover',
-                      },
-                    }}
+                {/* Info Button at far right */}
+                <IconButton 
+                  size="small"
+                  onClick={(e) => { 
+                    e.stopPropagation(); 
+
+                    let helpMessage = "";
+                    // Use a switch statement to select the correct message
+                    switch (item.text) {
+                      case 'Create List':
+                        helpMessage = "Use this mode to manually search for and add shows to a list that you can get recommendations on!";
+                        break;
+                      case 'Get Recommendations by List':
+                        helpMessage = "This mode generates recommendations based on the list you have manually created!";
+                        break;
+                      case 'Get Recommendations by Search':
+                        helpMessage = "In this mode, enter a search query such as crime drama, and we will find similar shows instantly.";
+                        break;
+                      case 'Get Recommendations from Watched':
+                        helpMessage = "This mode generates recommendations based on all the shows you've marked as watched. Make sure to rate shows to weigh recommendations based on how much you like them.";
+                        break;
+                      default:
+                        break;
+                    }
+                    alert(helpMessage);
+                  }}
+                  sx={{ color: theme.palette.text.secondary }}
                 >
-                    <ListItemText primary={item.text} />
-                </ListItemButton>
-                </ListItem>
-            ))}
-        </List>
+                  <InfoIcon fontSize="small" />
+                </IconButton>
+                
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>    
       </Drawer>
       
       {/* Main content area now renders children (your page components) */}
