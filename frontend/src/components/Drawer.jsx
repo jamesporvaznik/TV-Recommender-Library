@@ -44,15 +44,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
 );
 
 // Define this inside or above your PersistentDrawerLeft/Drawer component
-const navigationMap = [
-  { 
-    text: 'Create List', 
-    mode: 'Create List' 
-  },
-  { 
-    text: 'Get Recommendations by List', 
-    mode: 'Get Recommendations by List' 
-  },
+const generatorMap = [
   { 
     text: 'Get Recommendations from Watched', 
     mode: 'Get Recommendations from Watched' 
@@ -61,7 +53,18 @@ const navigationMap = [
     text: 'Get Recommendations by Search', 
     mode: 'Get Recommendations by Search' 
   },
-  
+];
+
+// Group 2: User List Management & Generation (The part you want separate)
+const listMap = [
+  { 
+    text: 'Create List', 
+    mode: 'Create List' 
+  },
+  { 
+    text: 'Get Recommendations by List', 
+    mode: 'Get Recommendations by List' 
+  },
 ];
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -134,58 +137,39 @@ export default function PersistentDrawerLeft({ children, changeMode, currentMode
         <Divider />
 
         <List>
-          {navigationMap.map((item) => ( 
-            <ListItem key={item.mode} disablePadding> 
-            
-              <ListItemButton
-                onClick={() => changeMode(item.mode)}
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  
-                  bgcolor: currentMode === item.mode ? 'action.selected' : 'inherit',
-                  '&:hover': {
-                    bgcolor: currentMode === item.mode ? 'action.selected' : 'action.hover',
-                  },
-                }}
-              >
-                <ListItemText primary={item.text} sx={{ mr: 1 }} /> 
-                
-                {/* Info Button at far right */}
-                <IconButton 
-                  size="small"
-                  onClick={(e) => { 
-                    e.stopPropagation(); 
-
-                    let helpMessage = "";
-                    // Use a switch statement to select the correct message
-                    switch (item.text) {
-                      case 'Create List':
-                        helpMessage = "Use this mode to manually search for and add shows to a list that you can get recommendations on!";
-                        break;
-                      case 'Get Recommendations by List':
-                        helpMessage = "This mode generates recommendations based on the list you have manually created!";
-                        break;
-                      case 'Get Recommendations by Search':
-                        helpMessage = "In this mode, enter a search query such as crime drama, and we will find similar shows instantly.";
-                        break;
-                      case 'Get Recommendations from Watched':
-                        helpMessage = "This mode generates recommendations based on all the shows you've marked as watched. Make sure to rate shows to weigh recommendations based on how much you like them.";
-                        break;
-                      default:
-                        break;
-                    }
-                    alert(helpMessage);
-                  }}
-                  sx={{ color: theme.palette.text.secondary }}
-                >
-                  <InfoIcon fontSize="small" />
-                </IconButton>
-                
+          <ListItem sx={{ pt: 1, pb: 0 }}>
+            <Typography variant="overline" color="text.secondary">
+              Quick Recommendations
+            </Typography>
+          </ListItem>
+          
+          {generatorMap.map((item) => ( 
+            <ListItem key={item.mode} disablePadding>
+              <ListItemButton onClick={() => changeMode(item.mode)} sx={{ /* ... styling ... */ }}>
+                <ListItemText primary={item.text} />
+                {/* [Info Icon Button here if you re-add it] */}
               </ListItemButton>
             </ListItem>
           ))}
-        </List>    
+          
+          <Divider sx={{ my: 1 }} />
+          
+          {/* List Explanation */}
+          <ListItem sx={{ pt: 1, pb: 1 }}>
+            <Typography variant="body2" color="text.primary">
+              How to Use Your List: You must first use "Create List" to build your show list, then click "Get Recommendations by List" to generate results based on those shows.
+            </Typography>
+          </ListItem>
+          
+          {listMap.map((item) => (
+            <ListItem key={item.mode} disablePadding>
+              <ListItemButton onClick={() => changeMode(item.mode)} sx={{ /* ... styling ... */ }}>
+                <ListItemText primary={item.text} />
+                {/* [Info Icon Button here if you re-add it] */}
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>  
       </Drawer>
       
       {/* Main content area now renders children (your page components) */}

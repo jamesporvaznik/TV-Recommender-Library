@@ -319,7 +319,7 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
                 // Get the current accumulated score for this recommended ID, or 0 if it's new
                 const currentScore = myMap.get(hit._id) || 0;
 
-                //console.log(`Recommended ID: ${hit._id}, Current Score: ${currentScore}, Hit Score: ${hit._score}`);
+                // console.log(`Recommended ID: ${hit._id}, Current Score: ${currentScore}, Hit Score: ${hit._score}`);
 
                 // Add the new score to the current total
                 myMap.set(hit._id, currentScore + (ratingScore * hit._score));
@@ -377,11 +377,13 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
             //get the 50 most similar shows to the selected show
             const recommendedIds = await textSearch(showRecord.overview, 50);
 
+            console.log(addedIds[i]);
+
             recommendedIds.forEach(hit => {
                 // Get the current accumulated score for this recommended ID, or 0 if it's new
                 const currentScore = myMap.get(hit._id) || 0;
                 
-                //console.log(`Recommended ID: ${hit._id}, Current Score: ${currentScore}, Hit Score: ${hit._score}`);
+                console.log(`Recommended ID: ${hit._id}, Current Score: ${currentScore}, Hit Score: ${hit._score}`);
 
                 // Add the new score to the current total
                 myMap.set(hit._id, currentScore + hit._score);
