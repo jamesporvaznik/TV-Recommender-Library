@@ -50,14 +50,19 @@ function App() {
     const [showRecommendations, setShowRecommendations] = useState(false);
     const [isSearhQuery, setIsSearchQuery] = useState(false);
     
-    const changeMode = (newMode) => { 
+    const changeMode = async (newMode) => { 
         setCurrentMode(newMode);
         setIsSearchQuery(false);
         console.log(`Mode changed to: ${newMode}`);
         // You might want to close the drawer here: handleDrawerClose();
 
         if(newMode === RECOMMENDATION_MODES.LIST){
-            //alert("Create a list of shows that you can get recommendations on!");
+
+            if(addedShowIds.length == 0){
+                alert("Need to add at least 1 show to your list to get recommendations!");
+                setCurrentMode(RECOMMENDATION_MODES.ADD);
+                return;
+            }
             setFilters(null);
             getRecommendationList(false);
         } 
@@ -80,7 +85,6 @@ function App() {
 
     // Helper function to find a full show object by TMDB ID
     const getShowById = (id) => allShows.find(show => show.tmdb_id === id);
-
 
     // Get shows from database
     useEffect(() => {
@@ -280,19 +284,35 @@ function App() {
             console.error("Network error during retrieving rated shows:", error);
             return false;
         }
+
+        try {
+            const response = await fetch('/api/added', {
+                method: 'GET',
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` 
+                },
+
+            });
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                console.log("Added API success:", data.added);
+                setAddedShowIds(data.added);
+                console.log("Toggling added list view to visible");
+                return true; 
+            } else {
+                // Failure: Invalid credentials
+                console.error("getting added shows failed:", data.message);
+                return false;
+            }
+
+        } catch (error) {
+            console.error("Network error during login:", error);
+            alert("A network error occurred. Could not connect to the server.");
+            return false;
+        }
     }
-
-    // Helper function to check if a show (by title) exists in a list of shows
-    // const ifExistsInList = (showTitle, listName) => {
-
-    //     for(let i = 0; i < listName.length; i++){
-    //         const show = listName[i];
-    //         if(show.title.toLowerCase() === showTitle.toLowerCase()){
-    //             return show.tmdb_id;
-    //         }
-    //     }
-    //     return -1;
-    // }
 
     // Function to add shows to the user's addedShows list
     const addToList = async (showId) => {
@@ -700,8 +720,6 @@ function App() {
         }
     }
 
-    
-    
     // Data for Watched/Watchlist/Added Pages
     const watchedShows = watchedShowIds.map(getShowById).filter(Boolean);
     const bookmarkedShows = bookmarkedShowIds.map(getShowById).filter(Boolean);

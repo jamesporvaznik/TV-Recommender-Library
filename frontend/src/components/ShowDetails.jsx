@@ -21,6 +21,12 @@ const ShowDetails = ({
     const isWatched = watchedIds?.includes(show.tmdb_id);
     const isBookmarked = bookmarkedIds?.includes(show.tmdb_id);
 
+    const BASE_URL_ROOT = 'https://image.tmdb.org/t/p/';
+    const IMAGE_SIZE = 'w1280';
+    const PATH = show.backdrop_path;
+
+    const correctUrl = `${BASE_URL_ROOT}${IMAGE_SIZE}${PATH}`;
+
     // Handlers for the action buttons
     const handleToggleWatched = () => onToggleList(show.tmdb_id, 'watched');
     const handleToggleBookmark = () => onToggleList(show.tmdb_id, 'bookmarked');
@@ -60,7 +66,7 @@ const ShowDetails = ({
             {/* Pop-up Content */}
             <div className="bg-white rounded-lg p-6 max-w-2xl w-full shadow-2xl overflow-y-auto max-h-full" onClick={(e) => e.stopPropagation()}>
                 {/* Header Section */}
-                <div className="flex items-center justify-between gap-3 mb-6 flex-wrap">
+                <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">
 
                     {isWatched ? (
                         <div className="flex-1 font-bold"> {/* Note: 'font-bold' should be in className, not 'weight' */}
@@ -95,6 +101,15 @@ const ShowDetails = ({
                             </div>
                         )}
                     </div>
+                </div>
+
+                <div className="relative h-60 overflow-hidden">
+                    <img 
+                        src={`${correctUrl}`} 
+                        alt={show.title} 
+                        className="object-cover h-full w-full transition-opacity duration-300 rounded-lg" 
+                        style={{ display: 'block' }}
+                    />
                 </div>
 
                 {/* Show Details */}
