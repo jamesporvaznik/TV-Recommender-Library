@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import React from 'react';
 import ShowCard from './ShowCard'; 
 import Filters from './Filters'
+import RefreshSearchQuery from './RefreshSearchQuery';
 
 const filterShows = (allShows, filters) => {
     // Filtering logic 
@@ -34,10 +35,12 @@ const RecommendedShowsList = ({
     watchedIds, 
     bookmarkedIds, 
     filters,
+    isSearch,
     onToggleList,
     onCardClick,
     onSearch,
-    onSort
+    onSort,
+    onRefresh
 }) => {
 
     let filteredShows = [];
@@ -65,6 +68,14 @@ const RecommendedShowsList = ({
             onSort(shows, mode);
         }
     }
+    function handleRefresh(){
+        if (typeof onRefresh === 'function') {
+            console.log('Refreshes Search Query');
+            onRefresh();
+        } else {
+            console.log('Refresh Button doesn\'t work!');
+        }
+    }
 
 
     //checks if there are more shows to load
@@ -81,12 +92,18 @@ const RecommendedShowsList = ({
 
     // Render the component
     return (
-        <div className="container mx-auto px-4  ">
+        <div className="container mx-auto px-4 ">
             <Filters 
                 onSearch={handleSearch}
                 onSort={handleSort}
                 length = {filteredShows.length}
             />
+            {isSearch && (
+                <RefreshSearchQuery 
+                    onRefresh={handleRefresh}
+                /> 
+            )}
+            
 
             {/* {filteredShows.length === 0 && (
                 <p className="text-gray-500">You haven't added any shows to the list.</p>

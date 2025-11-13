@@ -54,13 +54,14 @@ const navigationMap = [
     mode: 'Get Recommendations by List' 
   },
   { 
-    text: 'Get Recommendations by Search', 
-    mode: 'Get Recommendations by Search' 
-  },
-  { 
     text: 'Get Recommendations from Watched', 
     mode: 'Get Recommendations from Watched' 
   },
+  { 
+    text: 'Get Recommendations by Search', 
+    mode: 'Get Recommendations by Search' 
+  },
+  
 ];
 
 const DrawerHeader = styled('div')(({ theme }) => ({

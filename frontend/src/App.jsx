@@ -46,11 +46,13 @@ function App() {
     const [sortedShowIds, setSortedShowIds] = useState([]);
     const [isAddSearch, setIsAddSearch] = useState(true);
     const [ratedShowsMap, setRatedShowsMap] = useState(new Map());
-    const [currentMode, setCurrentMode] = useState(RECOMMENDATION_MODES.SEARCH);
+    const [currentMode, setCurrentMode] = useState(RECOMMENDATION_MODES.ADD);
     const [showRecommendations, setShowRecommendations] = useState(false);
+    const [isSearhQuery, setIsSearchQuery] = useState(false);
     
     const changeMode = (newMode) => { 
         setCurrentMode(newMode);
+        setIsSearchQuery(false);
         console.log(`Mode changed to: ${newMode}`);
         // You might want to close the drawer here: handleDrawerClose();
 
@@ -67,14 +69,12 @@ function App() {
         else if(newMode === RECOMMENDATION_MODES.SEARCH){ 
             //alert("Get the shows recommended to you based on a search query!");
             setFilters(null);
+            setIsSearchQuery(true);
             setShowRecommendations(false);
         }
         else if(newMode === RECOMMENDATION_MODES.ADD){
             //alert("Get the shows recommended to you based on the list you created!");
             setFilters(null);
-        }
-        else {
-            changeMode('Create List');
         }
     };
 
@@ -434,6 +434,10 @@ function App() {
             alert("A network error occurred. Could not connect to the server.");
             return false;
         }
+    }
+
+    const hideRecommendations = () => {
+        setShowRecommendations(false);
     }
 
     const getRecommendationsBySearchQuery = async (query) => {
@@ -833,10 +837,12 @@ function App() {
                                                     sortedShows={sortedShows}
                                                     watchedIds={watchedShowIds}
                                                     bookmarkedIds={bookmarkedShowIds}
+                                                    isSearch={isSearhQuery}
                                                     onToggleList={updateShowList}
                                                     onCardClick={handleOpenPopUp}
                                                     onSearch={handleSearch}
                                                     onSort={sortShows}
+                                                    onRefresh={hideRecommendations}
                                                 /> 
                                             )}
                                         </>
@@ -851,10 +857,12 @@ function App() {
                                                 watchedIds={watchedShowIds}
                                                 bookmarkedIds={bookmarkedShowIds}
                                                 filters={filters} 
+                                                isSearch={isSearhQuery}
                                                 onToggleList={updateShowList}
                                                 onCardClick={handleOpenPopUp}
                                                 onSearch={handleSearch}
                                                 onSort={sortShows}
+                                                onRefresh={hideRecommendations}
                                             /> 
                                         </>
                                     ) : currentMode === RECOMMENDATION_MODES.WATCHED ? (
@@ -868,10 +876,12 @@ function App() {
                                                 watchedIds={watchedShowIds}
                                                 bookmarkedIds={bookmarkedShowIds}
                                                 filters={filters} 
+                                                isSearch={isSearhQuery}
                                                 onToggleList={updateShowList}
                                                 onCardClick={handleOpenPopUp}
                                                 onSearch={handleSearch}
                                                 onSort={sortShows}
+                                                onRefresh={hideRecommendations}
                                             /> 
                                         </>
                                     ) : (
