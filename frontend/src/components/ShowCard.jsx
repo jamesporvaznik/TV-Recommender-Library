@@ -6,6 +6,12 @@ const ShowCard = ({ show, watchedIds, bookmarkedIds, onToggleList, onCardClick }
     const isWatched = watchedIds.includes(show.tmdb_id);
     const isBookmarked = bookmarkedIds.includes(show.tmdb_id);
 
+    const BASE_URL_ROOT = 'https://image.tmdb.org/t/p/';
+    const IMAGE_SIZE = 'w1280';
+    const PATH = show.backdrop_path;
+
+    const correctUrl = `${BASE_URL_ROOT}${IMAGE_SIZE}${PATH}`;
+
     // Handler for the Bookmark/Watchlist button
     const handleToggleBookmark = () => {
         onToggleList(show.tmdb_id, 'bookmarked');
@@ -26,7 +32,7 @@ const ShowCard = ({ show, watchedIds, bookmarkedIds, onToggleList, onCardClick }
             {/* Image Section */}
             <div className="h-40 bg-gray-200 flex items-center justify-center">
                 <img 
-                    src={`https://placehold.co/200x280/1f2937/ffffff?text=${encodeURIComponent(show.title)}`} 
+                    src={`${correctUrl}`} 
                     alt={show.title} 
                     className="object-cover h-full w-full" 
                 />

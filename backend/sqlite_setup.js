@@ -50,6 +50,20 @@ async function getDbConnection() {
             release_date TEXT
         );
     `);
+
+    try {
+        await db.exec(`ALTER TABLE shows ADD COLUMN poster_path TEXT`);
+        console.log("Added column: poster_path");
+    } catch (e) {
+        // Expected error if the column already exists (ignore it)
+    }
+
+    try {
+        await db.exec(`ALTER TABLE shows ADD COLUMN backdrop_path TEXT`);
+        console.log("Added column: backdrop_path");
+    } catch (e) {
+        // Expected error if the column already exists (ignore it)
+    }
     
     return db;
 }
@@ -59,8 +73,8 @@ async function getDbConnection() {
 async function insertShowRecord(db, record) {
     const sql = `
         INSERT OR REPLACE INTO shows 
-        (tmdb_id, title, overview, genres, rating_avg, vote_count, release_date) 
-        VALUES (?, ?, ?, ?, ?, ?, ?)
+        (tmdb_id, title, overview, genres, rating_avg, vote_count, release_date, poster_path, backdrop_path) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     
     await db.run(sql, 
@@ -70,7 +84,9 @@ async function insertShowRecord(db, record) {
         record.genres.join(', '),
         record.rating,
         record.count,
-        record.release
+        record.release,
+        record.poster,
+        record.backdrop
     );
 }
 
@@ -135,7 +151,9 @@ async function fetchShows(page) {
                     genres: genresArray,
                     rating: show.vote_average || 0.0,
                     count: show.vote_count || 0,
-                    release: show.first_air_date || 'Unknown'
+                    release: show.first_air_date || 'Unknown',
+                    poster: show.poster_path || null,
+                    backdrop: show.backdrop_path || null 
                 };
                 
                 // B. Insert into SQLite

@@ -15,7 +15,7 @@ app.use(express.json());
 const initializeDatabase = require('./db.js');
 let db;
 
-const { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, insertAdded, clearAdded, toggleWatched, toggleBookmarked, getWatched, getBookmarked, getRecommendations, getRecommendationsBySearch, clearRecommendations, setRating, getRating} = require('./dbQueries.js');
+const { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, clearAdded, toggleWatched, toggleBookmarked, toggleAdded, getWatched, getBookmarked, getRecommendations, getRecommendationsBySearch, clearRecommendations, setRating, getRating} = require('./dbQueries.js');
 
 // checks that user is logged in
 function authenticateToken(req, res, next) {
@@ -280,6 +280,41 @@ app.get('/api/added', authenticateToken, async (req, res) => {
 });
 
 //adding a added show to the users account data
+// app.post('/api/added', authenticateToken, async (req, res) => {
+
+//     const { showId } = req.body;
+//     const userId = req.userId;
+
+//     // makes sure the showId variables is defined
+//     if (!showId) {
+//         return res.status(400).json({ success: false, message: 'Show title is required.' });
+//     }
+
+//     try {
+
+//         //gets the tmdb_id from the title
+//         const titleId = await getShowByTitle(db, showId);
+
+//         if(titleId === undefined || titleId === null){
+//             return res.status(404).json({ success: false, message: 'Show not found in DB.' });
+//         }
+        
+//         // adds the show to the added list and returns the new list
+//         const addedList = await insertAdded(db, userId, titleId.tmdb_id);
+
+//         return res.status(200).json({ 
+//             success: true, 
+//             message: 'Show added to your list successfully.',
+//             added: addedList
+//         });
+
+//     } catch (e) {
+//         console.error("Insert added error:", e.message);
+//         res.status(500).json({ success: false, message: 'Server error during inserted added ids.' });
+//     }
+// });
+
+//adding a bookmarked show to the users account data
 app.post('/api/added', authenticateToken, async (req, res) => {
 
     const { showId } = req.body;
@@ -291,16 +326,8 @@ app.post('/api/added', authenticateToken, async (req, res) => {
     }
 
     try {
-
-        //gets the tmdb_id from the title
-        const titleId = await getShowByTitle(db, showId);
-
-        if(titleId === undefined || titleId === null){
-            return res.status(404).json({ success: false, message: 'Show not found in DB.' });
-        }
-        
-        // adds the show to the added list and returns the new list
-        const addedList = await insertAdded(db, userId, titleId.tmdb_id);
+        // adds the show to the bookmarked list and returns the new list
+        const addedList = await toggleAdded(db, userId, showId);
 
         return res.status(200).json({ 
             success: true, 
