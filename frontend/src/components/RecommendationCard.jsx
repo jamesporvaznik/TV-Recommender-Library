@@ -3,19 +3,13 @@ import React, { useMemo, useState } from 'react';
 
 const RecommendationCard = ({ show, watchedIds, bookmarkedIds, addedIds, onToggleList, onCardClick }) => {
     // Check the current status of the show for the current user
-    const isWatched = watchedIds.includes(show.tmdb_id);
-    const isBookmarked = bookmarkedIds.includes(show.tmdb_id);
     const isAdded = addedIds.includes(show.tmdb_id);
 
-    // Handler for the Bookmark/Watchlist button
-    const handleToggleBookmark = () => {
-        onToggleList(show.tmdb_id, 'bookmarked');
-    };
+    const BASE_URL_ROOT = 'https://image.tmdb.org/t/p/';
+    const IMAGE_SIZE = 'w1280';
+    const PATH = show.backdrop_path;
 
-    // Handler for the Watched button
-    const handleToggleWatched = () => {
-        onToggleList(show.tmdb_id, 'watched');
-    };
+    const correctUrl = `${BASE_URL_ROOT}${IMAGE_SIZE}${PATH}`;
 
     const handleToggleAdd = () => {
         onToggleList(show.tmdb_id, 'added');
@@ -31,7 +25,7 @@ const RecommendationCard = ({ show, watchedIds, bookmarkedIds, addedIds, onToggl
             {/* Image Section */}
             <div className="h-40 bg-gray-200 flex items-center justify-center">
                 <img 
-                    src={`https://placehold.co/200x280/1f2937/ffffff?text=${encodeURIComponent(show.title)}`} 
+                    src={`${correctUrl}`} 
                     alt={show.title} 
                     className="object-cover h-full w-full" 
                 />
