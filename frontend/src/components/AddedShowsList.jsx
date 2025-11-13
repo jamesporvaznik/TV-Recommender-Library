@@ -1,5 +1,5 @@
 import React from 'react';
-import ShowCard from './ShowCard'; 
+import RecommendationCard from './RecommendationCard';
 
 
 // Function to group shows into rows of 5
@@ -16,6 +16,7 @@ const AddedShowsList = ({
     shows, 
     watchedIds, 
     bookmarkedIds, 
+    addedIds,
     onToggleList,
     onCardClick,
     onHide,
@@ -56,11 +57,11 @@ const AddedShowsList = ({
                 <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
                     {/* Iterate over the row chunk */}
                     {row.map((show) => (
-                        <ShowCard 
-                            key={show.id} 
+                        <RecommendationCard
                             show={show} 
                             watchedIds={watchedIds}
                             bookmarkedIds={bookmarkedIds}
+                            addedIds={addedIds}
                             onToggleList={onToggleList}
                             onCardClick={onCardClick}
                         />

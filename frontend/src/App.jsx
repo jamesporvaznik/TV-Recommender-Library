@@ -800,6 +800,7 @@ function App() {
                                                 shows={addedShows} 
                                                 watchedIds={watchedShowIds}
                                                 bookmarkedIds={bookmarkedShowIds}
+                                                addedIds={addedShowIds}
                                                 onToggleList={updateShowList}
                                                 onCardClick={handleOpenPopUp}
                                                 onHide={hideAddedListView}
@@ -945,44 +946,3 @@ function App() {
 
 // Export the App component
 export default App;
-
-
-
-
-// {isAddSearch ? (
-// <Recommendations 
-//     shows={allShows}
-//     onAdd={addToList}
-//     onClear={clearAddList}
-//     onView={toggleAddedListView}
-//     onHide={hideAddedListView}
-//     onGenerate={getRecommendationList}
-//     onSearchQuery={showSearchByQuery}
-// />
-// ) : (
-// // placeholder for recommendations shows list
-// <SearchQuery
-//     onSearch={getRecommendationsBySearchQuery}
-//     onSearchAdd={showAddSearch}
-// />
-// )}
-
-// {/* Conditional Rendering of the sub-content area */}
-// {isAddedListVisible ? (
-// <AddedShowsList 
-//     shows={addedShows} 
-//     watchedIds={watchedShowIds}
-//     bookmarkedIds={bookmarkedShowIds}
-//     onToggleList={updateShowList}
-//     onCardClick={handleOpenPopUp}
-// /> 
-// ) : (
-// // placeholder for recommendations shows list
-// <RecommendedShowsList 
-//     shows={recommendedShows} 
-//     watchedIds={watchedShowIds}
-//     bookmarkedIds={bookmarkedShowIds}
-//     onToggleList={updateShowList}
-//     onCardClick={handleOpenPopUp}
-// /> 
-// )}
