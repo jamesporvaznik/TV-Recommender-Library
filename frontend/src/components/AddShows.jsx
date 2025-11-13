@@ -2,6 +2,7 @@ import React from 'react';
 import ShowCard from './ShowCard';
 import { useState, useEffect } from 'react';
 import RecommendationCard from './RecommendationCard';
+import Filters from './Filters';
 
 const filterShows = (shows, filters) => {
     // Filtering logic 
@@ -29,22 +30,53 @@ const groupIntoRows = (shows, chunkSize = 5) => {
 // AllShows component now receives the new user tracking props
 const AddShows = ({ 
     shows, 
+    sortedShows,
     filters,
     watchedIds,
     bookmarkedIds,
     addedIds,
     onToggleList,
-    onCardClick
+    onCardClick,
+    onSearch,
+    onSort,
+    onView
 }) => {
 
     const [visibleRows, setVisibleRows] = useState(3); 
     const ROWS_TO_LOAD = 3;
 
-    const filteredShows = filterShows(shows, filters);
+    let filteredShows = [];
+
+    if(sortedShows.length === 0 || sortedShows.length != shows.length){
+        filteredShows = filterShows(shows, filters);
+    }
+    else{
+        filteredShows = filterShows(sortedShows, filters);
+    }
+
     const groupedRows = groupIntoRows(filteredShows);
 
     //checks if there are more shows to load
     const hasMoreToLoad = visibleRows < groupedRows.length;
+
+    function handleSearch(payload) {
+        if (typeof onSearch === 'function'){
+            onSearch(payload);
+        }
+    }
+
+    function handleSort(mode){
+        if (typeof onSort === 'function'){
+            onSort(shows, mode);
+        }
+    }
+
+    function handleViewAdded() {
+        if (typeof onView === 'function'){
+            onView();
+        }
+        else console.log('Showing added shows list');
+    }
 
     // Function to increase the number of rows loaded
     const loadMore = () => {
@@ -57,16 +89,27 @@ const AddShows = ({
 
     // Render the component
     return (
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4">
 
-            <h2 className="text-2xl font-bold mb-6">All Shows ({filteredShows.length})</h2>
+            <Filters 
+                onSearch={handleSearch}
+                onSort={handleSort}
+                length = {filteredShows.length}
+            />
+            <div className="flex justify-end w-full mt-4 pr-4">
+                <button className="px-3 py-2 bg-gray-100 rounded" onClick={handleViewAdded}>
+                    View Full List
+                </button>
+            </div>
 
-            {groupedRows.length === 0 && (
+            {/* <h2 className="text-2xl font-bold mb-6">All Shows ({filteredShows.length})</h2> */}
+
+            {/* {groupedRows.length === 0 && (
                 <p className="text-gray-500">No shows match your current filters.</p>
-            )}
+            )} */}
         
             {groupedRows.slice(0, visibleRows).map((row, rowIndex) => (
-                <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8">
+                <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8 mt-10">
                     {/* Iterate over the row chunk */}
                     {row.map((show) => (
                         <RecommendationCard

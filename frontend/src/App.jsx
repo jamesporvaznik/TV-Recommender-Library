@@ -807,15 +807,19 @@ function App() {
                                             /> 
                                         ) : (
                                             <div className="main-content-wrapper">
-                                                <AddSearch onSearch={handleSearch} onView={toggleAddedListView}  />
+                                                {/* <AddSearch onSearch={handleSearch} onView={toggleAddedListView}  /> */}
                                                 <AddShows 
                                                     shows={allShows} 
+                                                    sortedShows={sortedShows}
                                                     filters={filters} 
                                                     watchedIds={watchedShowIds}
                                                     bookmarkedIds={bookmarkedShowIds}
                                                     addedIds={addedShowIds}
                                                     onToggleList={updateShowList}
                                                     onCardClick={handleOpenPopUp}
+                                                    onSearch={handleSearch}
+                                                    onSort={sortShows}
+                                                    onView={toggleAddedListView}
                                                 />
                                             </div>
                                         )}
