@@ -8,7 +8,7 @@ const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) 
   // Filter shows so better shows are displayed
   const filteredShows = shows.filter(show => {
         
-        const meetsRating = show.rating_avg > 6;
+        const meetsRating = show.rating_avg >= 7;
         const meetsReviewCount = show.vote_count > 500;
         
         return meetsRating && meetsReviewCount;

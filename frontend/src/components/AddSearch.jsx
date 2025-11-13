@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Search = ({ searchTerm: controlledTerm, setSearchTerm: setControlledTerm, onSearch }) => {
+const Search = ({ searchTerm: controlledTerm, setSearchTerm: setControlledTerm, onSearch, onView }) => {
     // Local state used when the parent doesn't control the search term
     const [localTerm, setLocalTerm] = useState(controlledTerm || '');
     const [genre, setGenre] = useState('All');
@@ -45,10 +45,15 @@ const Search = ({ searchTerm: controlledTerm, setSearchTerm: setControlledTerm, 
         setMinRating(0);
     }
 
+    function handleViewAdded() {
+        if (typeof onView === 'function'){
+            onView();
+        }
+        else console.log('Showing added shows list');
+    }
+
     // Options for dropdowns
     const genres = ['All', 'Action & Adventure', 'Animation', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Family', 'Kids', 'Mystery', 'News', 'Reality', 'Sci-Fi & Fantasy', 'Soap', 'Talk', 'War & Politics', 'Western'];
-    const types = ['All', 'TV', 'Movie'];
-    const streamingOptions = ['Any', 'Netflix', 'Hulu', 'Disney+', 'Amazon Prime', 'HBO Max', 'Apple TV+', 'Peacock', 'Paramount+', 'YouTube', 'Crunchyroll', 'Tubi', 'Vudu', 'Sling TV', 'FuboTV', 'Philo', 'Acorn TV', 'BritBox', 'Shudder', 'Starz', 'Cinemax', 'Epix', 'Mubi', 'CuriosityStream', 'Kanopy', 'Plex', 'Xumo', 'Pluto TV', 'Roku Channel'];
 
     // Render the form
     return (
@@ -86,6 +91,10 @@ const Search = ({ searchTerm: controlledTerm, setSearchTerm: setControlledTerm, 
                     <span className="text-xs text-gray-500">Min Raters</span>
                     <input type="number" min="0" value={minReviews} onChange={e => setMinReviews(e.target.value)} className="mt-1 px-2 py-1 border rounded" />
                 </label>
+                {/* View Added Shows Button */}
+                <div className="flex flex-col mt-3 border rounded flex">
+                    <button type="button" onClick={handleViewAdded} className="px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700">View Full List</button>
+                </div>
 
             </div>
         </form>

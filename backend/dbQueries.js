@@ -209,6 +209,39 @@ async function toggleBookmarked(db, userId, showId){
     return currentList;  
 }
 
+// adds or removes a added show from the users list
+async function toggleAdded(db, userId, showId){
+    // Fetch only the bookmarked list from the user
+    const userRecord = await db.get(`SELECT added FROM users WHERE id = ?`, userId);
+
+    if (!userRecord) {
+        throw new Error("User not found.");
+    }
+
+    const currentJSON = userRecord.added || '[]';
+
+    // Get the current list of bookmarked id's
+    let currentList = JSON.parse(currentJSON);
+
+    // add the show id to the list if its not currently in there
+    if (!currentList.includes(showId)) {
+        currentList.push(showId);
+    }
+    else{
+        currentList = currentList.filter(id => id !== showId);
+    }
+
+    // turn the list into a string to insert into the database
+    const newListString = JSON.stringify(currentList); 
+    
+    // update the database
+    await db.run(`UPDATE users SET added = ? WHERE id = ?`, newListString, userId);
+    
+    console.log(`Successfully added show ID ${showId} to user ${userId}'s list.`);
+
+    return currentList;  
+}
+
 //Gets the users list of watched shows
 async function getWatched(db, userId){
 
@@ -434,4 +467,4 @@ async function getRating(db, userId){
 }
 
 
-module.exports = { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, insertAdded, clearAdded, toggleWatched, toggleBookmarked, getWatched, getBookmarked, getRecommendations, getRecommendationsBySearch, clearRecommendations, setRating, getRating };
+module.exports = { getAllShows, findUserByUsername, createAccount, findUserById, getShowByTitle, clearAdded, toggleWatched, toggleBookmarked, toggleAdded, getWatched, getBookmarked, getRecommendations, getRecommendationsBySearch, clearRecommendations, setRating, getRating };

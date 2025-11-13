@@ -1,10 +1,9 @@
 import React, { useMemo, useState } from 'react';
 
 
-const ShowCard = ({ show, watchedIds, bookmarkedIds, onToggleList, onCardClick }) => {
+const RecommendationCard = ({ show, watchedIds, bookmarkedIds, addedIds, onToggleList, onCardClick }) => {
     // Check the current status of the show for the current user
-    const isWatched = watchedIds.includes(show.tmdb_id);
-    const isBookmarked = bookmarkedIds.includes(show.tmdb_id);
+    const isAdded = addedIds.includes(show.tmdb_id);
 
     const BASE_URL_ROOT = 'https://image.tmdb.org/t/p/';
     const IMAGE_SIZE = 'w1280';
@@ -12,15 +11,9 @@ const ShowCard = ({ show, watchedIds, bookmarkedIds, onToggleList, onCardClick }
 
     const correctUrl = `${BASE_URL_ROOT}${IMAGE_SIZE}${PATH}`;
 
-    // Handler for the Bookmark/Watchlist button
-    const handleToggleBookmark = () => {
-        onToggleList(show.tmdb_id, 'bookmarked');
-    };
-
-    // Handler for the Watched button
-    const handleToggleWatched = () => {
-        onToggleList(show.tmdb_id, 'watched');
-    };
+    const handleToggleAdd = () => {
+        onToggleList(show.tmdb_id, 'added');
+    }
 
     return (
         // Made the entire article clickable
@@ -46,31 +39,18 @@ const ShowCard = ({ show, watchedIds, bookmarkedIds, onToggleList, onCardClick }
                 </div>
 
                 {/* Tracking Buttons */}
-                <div className="mt-3 flex justify-between gap-2">
-                    {/* Bookmark Button */}
-                    <button 
-                        onClick={(e) => {
-                            e.stopPropagation(); //  Stops modal pop up when pressing buttons
-                            handleToggleBookmark();
-                        }} 
-                        className={`text-xs px-2 py-1 rounded transition w-1/2 ${isBookmarked 
-                            ? 'bg-blue-600 text-white hover:bg-blue-700' 
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
-                    >
-                        {isBookmarked ? 'Bookmarked' : 'Watch Later'}
-                    </button>
-                    
-                    {/* Watched Button */}
+                <div className="mt-3 flex justify-center">
+                    {/* Added Button */}
                     <button 
                         onClick={(e) => {
                             e.stopPropagation();
-                            handleToggleWatched(); 
+                            handleToggleAdd(); 
                         }} 
-                        className={`text-xs px-2 py-1 rounded transition w-1/2 ${isWatched 
+                        className={`text-xs px-2 py-1 rounded transition w-1/2 ${isAdded
                             ? 'bg-green-600 text-white hover:bg-green-700' 
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
                     >
-                        {isWatched ? 'Watched' : 'Mark Watched'}
+                        {isAdded ? 'Added' : 'Add to List'}
                     </button>
                 </div>
             </div>
@@ -78,4 +58,4 @@ const ShowCard = ({ show, watchedIds, bookmarkedIds, onToggleList, onCardClick }
     );
 };
 
-export default ShowCard;
+export default RecommendationCard;
