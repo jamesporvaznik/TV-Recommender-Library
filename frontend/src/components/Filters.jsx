@@ -40,6 +40,7 @@ const Filters = ({ onSearch, onSort, length, searchTerm: controlledTerm, setSear
         else console.log('search payload', payload);
     }
 
+    // Handle changes in filters
     const handleFilterChange = (field, value) => {
     
         const newFilterState = {
@@ -77,6 +78,7 @@ const Filters = ({ onSearch, onSort, length, searchTerm: controlledTerm, setSear
         }
     };
 
+    // Gives the sort mode to the component that calls it
     function handleSort(mode){
 
         if (typeof onSort === 'function') {

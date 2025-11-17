@@ -59,12 +59,14 @@ const AddShows = ({
     //checks if there are more shows to load
     const hasMoreToLoad = visibleRows < groupedRows.length;
 
+    // Calls the search function to make a search based on filters and a search query
     function handleSearch(payload) {
         if (typeof onSearch === 'function'){
             onSearch(payload);
         }
     }
 
+    //Calls the sort function to sort the shows remaining from filters
     function handleSort(mode){
         if (typeof onSort === 'function'){
             onSort(shows, mode);
@@ -101,12 +103,6 @@ const AddShows = ({
                     View Full List
                 </button>
             </div>
-
-            {/* <h2 className="text-2xl font-bold mb-6">All Shows ({filteredShows.length})</h2> */}
-
-            {/* {groupedRows.length === 0 && (
-                <p className="text-gray-500">No shows match your current filters.</p>
-            )} */}
         
             {groupedRows.slice(0, visibleRows).map((row, rowIndex) => (
                 <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8 mt-10">

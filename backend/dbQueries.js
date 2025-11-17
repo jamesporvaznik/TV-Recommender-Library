@@ -97,38 +97,6 @@ async function getShowByTitle(db, addTerm){
     return db.get('SELECT tmdb_id, title, overview, genres, rating_avg, vote_count, release_date FROM shows WHERE LOWER(title) = LOWER(?)', addTerm);
 }
 
-// insert a show into a users added list
-async function insertAdded(db, userId, showId){
-
-    // Fetch only the added list from the user
-    const userRecord = await db.get(`SELECT added FROM users WHERE id = ?`, userId);
-
-    if (!userRecord) {
-        throw new Error("User not found.");
-    }   
-
-    const currentJSON = userRecord.added || '[]';
-
-    // Get the current list of added id's
-    let currentList = JSON.parse(currentJSON);
-
-    // add the show id to the list if its not currently in there
-    if (!currentList.includes(showId)) {
-        currentList.push(showId);
-    }
-
-    // turn the list into a string to insert into the database
-    const newListString = JSON.stringify(currentList);
-    
-    // update the database
-    await db.run(`UPDATE users SET added = ? WHERE id = ?`, newListString, userId);
-    
-    console.log(`Successfully added show ID ${showId} to user ${userId}'s list.`);
-
-    return currentList;
-
-}
-
 // Clears the added list 
 async function clearAdded(db, userId){
 
@@ -453,6 +421,7 @@ async function setRating(db, userId, showId, rating){
 
 }
 
+// Gets all the ratings for a specific user
 async function getRating(db, userId){
 
     const ratingRecords = await db.all('SELECT tmdb_id, rating FROM user_ratings WHERE user_id = ?', userId);

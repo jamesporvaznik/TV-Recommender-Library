@@ -5,13 +5,11 @@ import './App.css';
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Landing from "./components/Landing";
-import Search from './components/Search';
 import AllShows from './components/AllShows';
 import Watched from './components/Watched';
 import Watchlist from './components/Watchlist';
 import Login from './components/Login';
 import Signup from './components/Signup';   
-import Recommendations from './components/Recommendations';
 import AddedShowsList from './components/AddedShowsList';
 import RecommendedShowsList from './components/RecommendedShowsList';
 import ShowDetails from './components/ShowDetails';
@@ -19,9 +17,8 @@ import Profile from './components/Profile';
 import SearchQuery from './components/SearchQuery';
 import Drawer from './components/Drawer';
 import AddShows from './components/AddShows';
-import AddSearch from './components/AddSearch';
-import Filters from './components/Filters';
 
+// Recommendation modes on the sidebar
 export const RECOMMENDATION_MODES = {
     SEARCH: 'Get Recommendations by Search',
     LIST: 'Get Recommendations by List',
@@ -50,14 +47,14 @@ function App() {
     const [showRecommendations, setShowRecommendations] = useState(false);
     const [isSearhQuery, setIsSearchQuery] = useState(false);
     
+    //Function called when you click on a mode in the sidebar
     const changeMode = async (newMode) => { 
         setCurrentMode(newMode);
         setIsSearchQuery(false);
         console.log(`Mode changed to: ${newMode}`);
-        // You might want to close the drawer here: handleDrawerClose();
 
+        // Changes made depending on what page you go to
         if(newMode === RECOMMENDATION_MODES.LIST){
-
             if(addedShowIds.length == 0){
                 alert("Need to add at least 1 show to your list to get recommendations!");
                 setCurrentMode(RECOMMENDATION_MODES.ADD);
@@ -67,18 +64,15 @@ function App() {
             getRecommendationList(false);
         } 
         else if(newMode === RECOMMENDATION_MODES.WATCHED){
-            //alert("Get the shows recommended to you based on your watched shows!");
             setFilters(null);
             getRecommendationList(true);
         }
         else if(newMode === RECOMMENDATION_MODES.SEARCH){ 
-            //alert("Get the shows recommended to you based on a search query!");
             setFilters(null);
             setIsSearchQuery(true);
             setShowRecommendations(false);
         }
         else if(newMode === RECOMMENDATION_MODES.ADD){
-            //alert("Get the shows recommended to you based on the list you created!");
             setFilters(null);
         }
     };
@@ -109,30 +103,18 @@ function App() {
         return <div className="text-center p-10">Loading show data...</div>;
     }
 
-    // Open pop up
+    // Open pop up / show modal
     const handleOpenPopUp = (showData) => {
         setPopUpShow(showData);
     };
 
-    // Close pop up
+    // Close pop up / show modal
     const handleClosePopUp = () => {
         setPopUpShow(null);
     };
 
-    // Function to show when the user is logged out
+    // Function for when the user logs out
     const handleLogout = async() => {
-
-        // try {
-        //     await fetch('/api/logout', { 
-        //         method: 'POST',
-        //         headers: { 
-        //             'Authorization': `Bearer ${localStorage.getItem('userToken')}` 
-        //         }
-        //     });
-        // } catch (error) {
-        //     // Log the error but continue, as the local logout is still necessary
-        //     console.error("Server logout failed, but clearing local storage:", error);
-        // }
 
         localStorage.removeItem('userToken');
         localStorage.removeItem('currentUserId');
@@ -146,7 +128,7 @@ function App() {
         setCurrentPage('Home');
     };
 
-    // Function to show when logged in
+    // Function for when the user logs in
     const handleLogin = () => {
         setIsLoggedIn(true);
     };
@@ -176,12 +158,12 @@ function App() {
         }
     }
 
-    // Handler to receive the search payload from the Search component
+    // Handler to receive the filters/search from the Filters component
     const handleSearch = (newFilters) => {
         setFilters(newFilters);
     };
 
-    // Function that checks usr credentials against database
+    // Function that checks user credentials against database
     const checkUser = async (user) => {
         try {
             const response = await fetch('/api/login', {
@@ -216,10 +198,11 @@ function App() {
         }
     }
     
-    // Function to load the users watched and bookmarked shows
+    // Function to load the users watched,bookmarked and added shows upon login
     const loadData = async () => {
         const token = localStorage.userToken;
 
+        //get watched shows
         try{
             const response = await fetch('/api/watched', { 
                 method: 'GET',
@@ -241,7 +224,7 @@ function App() {
             alert("A network error occurred. Could not connect to the server.");
             return false;
         }
-
+        //get bookmarked shows
         try {
             const response = await fetch('/api/bookmarked', { 
                 method: 'GET',
@@ -263,7 +246,7 @@ function App() {
             alert("A network error occurred. Could not connect to the server.");
             return false;
         }
-
+        //get ratings of watched shows
         try{
             const response = await fetch('/api/rating', { 
                 method: 'GET',
@@ -284,7 +267,7 @@ function App() {
             console.error("Network error during retrieving rated shows:", error);
             return false;
         }
-
+        //get added shows of user
         try {
             const response = await fetch('/api/added', {
                 method: 'GET',
@@ -313,43 +296,6 @@ function App() {
             return false;
         }
     }
-
-    // Function to add shows to the user's addedShows list
-    const addToList = async (showId) => {
-
-        const token = localStorage.userToken;
-
-        const payload = {
-            showId: showId         
-        };
-
-        try {
-            const response = await fetch('/api/added', {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json', 
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(payload)
-            });
-            const data = await response.json();
-
-            if (response.ok && data.success) {
-                console.log("Insert Added API success:", data.message);
-                setAddedShowIds(data.added);
-                return true; 
-            } else {
-                // Failure: Invalid credentials
-                console.error("Inserting added failed:", data.message);
-                return false;
-            }
-
-        } catch (error) {
-            console.error("Network error during insert added:", error);
-            alert("A network error occurred. Could not connect to the server.");
-            return false;
-        }
-    };
 
     // Function to clear the user's addedShows list
     const clearAddList = async () => {
@@ -386,10 +332,8 @@ function App() {
     }
 
 
-    // Sorting shows
+    // Sorting shows by a few different ways
     const sortShows = (shows, mode) => {
-
-        const sortableArray = [...shows];
 
         // Sorting
         if(mode === 'Relevance'){
@@ -421,7 +365,7 @@ function App() {
         // }
     }
 
-    // Function to generate a recommendation list based on current filters and user lists (placeholder logic)
+    // Function to generate show recommendations based on the users created list
     const getRecommendationList = async (isWatched) => {
         console.log("Generating recommendations with filters:", {isWatched});
 
@@ -456,6 +400,7 @@ function App() {
         }
     }
 
+    // Lets user make a search query rather than viewing the recommended shows
     const hideRecommendations = () => {
         setShowRecommendations(false);
     }
@@ -503,6 +448,7 @@ function App() {
 
     };
 
+    // Function to set rating for watched shows
     const setRating = async (rating, showId) => {
 
         console.log("Setting rating to:", rating);
@@ -541,45 +487,9 @@ function App() {
         }
     };
 
-    // Function to hide the added shows list view
+    // Function to hide the added shows list view and go back to the view to search for shows to add
     const hideAddedListView = () => {
         setIsAddedListVisible(false);
-    };
-
-    // Function to hide the added shows list view
-    const showSearchByQuery = async() => {
-
-        setIsAddSearch(false);
-
-        const token = localStorage.userToken;
-
-        try {
-            const response = await fetch('/api/recommendations', {
-                method: 'DELETE',
-                headers: { 
-                    'Content-Type': 'application/json', 
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-
-            const data = await response.json();
-
-            if (response.ok && data.success) {
-                console.log("Got recommended successfully:", data.message);
-                setRecommendedShowIds([]);
-                setIsAddedListVisible(false);
-                return true; 
-            } else {
-                // Failure: Invalid credentials
-                console.error("Inserting added failed:", data.message);
-                return false;
-            }
-
-        } catch (error) {
-            console.error("Network error during insert added:", error);
-            alert("A network error occurred. Could not connect to the server.");
-            return false;
-        }
     };
 
     // Function to hide the added shows list view
@@ -587,47 +497,18 @@ function App() {
         setIsAddSearch(true);
     };
 
-    // Function to show the added shows list view and get it from the database
+    // Function to show the added shows list view
     const toggleAddedListView = async () => {
 
         console.log("Toggling added list view");
 
         const token = localStorage.userToken;
         console.log(token);
-
-        try {
-            const response = await fetch('/api/added', {
-                method: 'GET',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` 
-                },
-
-            });
-            const data = await response.json();
-
-            if (response.ok && data.success) {
-                console.log("Added API success:", data.added);
-                setAddedShowIds(data.added);
-                console.log("Toggling added list view to visible");
-                setIsAddedListVisible(true);
-                return true; 
-            } else {
-                // Failure: Invalid credentials
-                console.error("getting added shows failed:", data.message);
-                return false;
-            }
-
-        } catch (error) {
-            console.error("Network error during login:", error);
-            alert("A network error occurred. Could not connect to the server.");
-            return false;
-        }
+        setIsAddedListVisible(true);
     };
 
-    // Toggle function to add/remove show IDs from watched/bookmarked lists
+    // Toggle function to add/remove show IDs from watched/bookmarked/added lists
     const updateShowList = async (showId, listName) => {
-
 
         const token = localStorage.userToken;
 
@@ -742,14 +623,9 @@ function App() {
                         onCardClick={handleOpenPopUp}
                     />
                 ) : (
-                    <>  
-                        {/* Search bar is hidden on Login/Signup & Recommendations pages */}
-                        {currentPage !== 'Login' && currentPage !== 'Signup' && currentPage !== 'Recommendations' && currentPage != 'Profile' && currentPage != 'All Shows' && currentPage != 'Watchlist' && currentPage != 'Watched' && (
-                                <Search onSearch={handleSearch} />
-                            )}
-                        
+                    <>     
+
                         {/* Page Rendering based on currentPage state */}
-                        
                         {currentPage === 'All Shows' && (
                             <AllShows 
                                 allShows={allShows} 
@@ -767,7 +643,6 @@ function App() {
                         {currentPage === 'Watched' && (
                             isLoggedIn ? (
                                 <Watched 
-                                    // Pass arguments to Watched component
                                     shows={watchedShows}
                                     sortedShows={sortedShows} 
                                     filters={filters} 
@@ -786,7 +661,6 @@ function App() {
                         {currentPage === 'Watchlist' && (
                             isLoggedIn ? (
                                 <Watchlist 
-                                    // Pass arguments to Watched component
                                     shows={bookmarkedShows} 
                                     sortedShows={sortedShows}
                                     filters={filters} 
@@ -826,7 +700,6 @@ function App() {
                                             /> 
                                         ) : (
                                             <div className="main-content-wrapper">
-                                                {/* <AddSearch onSearch={handleSearch} onView={toggleAddedListView}  /> */}
                                                 <AddShows 
                                                     shows={allShows} 
                                                     sortedShows={sortedShows}
@@ -851,9 +724,6 @@ function App() {
                                                     onSearchAdd={showAddSearch}
                                                 />
                                             )}
-
-                                            
-
                                             {showRecommendations && (
                                                 <RecommendedShowsList 
                                                     shows={recommendedShows} 
@@ -871,9 +741,6 @@ function App() {
                                         </>
                                     ) : currentMode === RECOMMENDATION_MODES.LIST ? (
                                         <>
-                                            {/* <Filters
-                                                
-                                            /> */}
                                             <RecommendedShowsList 
                                                 shows={recommendedShows} 
                                                 sortedShows={sortedShows}
@@ -890,9 +757,6 @@ function App() {
                                         </>
                                     ) : currentMode === RECOMMENDATION_MODES.WATCHED ? (
                                         <>
-                                            {/* <Filters
-                                                onSearch={handleSearch}
-                                            /> */}
                                             <RecommendedShowsList 
                                                 shows={recommendedShows} 
                                                 sortedShows={sortedShows}

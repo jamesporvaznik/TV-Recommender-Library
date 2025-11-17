@@ -59,12 +59,14 @@ const Watchlist = ({
     //checks if there are more shows to load
     const hasMoreToLoad = visibleRows < groupedRows.length;
 
+    // Calls the search function
     function handleSearch(payload) {
         if (typeof onSearch === 'function'){
             onSearch(payload);
         }
     }
 
+    // Calls the sort function
     function handleSort(mode){
         if (typeof onSort === 'function'){
             onSort(shows, mode);
@@ -88,10 +90,6 @@ const Watchlist = ({
                 onSort={handleSort}
                 length = {filteredShows.length}
             />
-
-            {/* {shows.length === 0 && (
-                <p className="text-gray-500">Your watchlist is empty. Go to 'All Shows' to add some!</p>
-            )} */}
 
             {groupedRows.slice(0, visibleRows).map((row, rowIndex) => (
                 <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8 mt-8">

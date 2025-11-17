@@ -103,11 +103,6 @@ const RecommendedShowsList = ({
                     onRefresh={handleRefresh}
                 /> 
             )}
-            
-
-            {/* {filteredShows.length === 0 && (
-                <p className="text-gray-500">You haven't added any shows to the list.</p>
-            )} */}
 
             {groupedRows.slice(0, visibleRows).map((row, rowIndex) => (
                 <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8 mt-10">

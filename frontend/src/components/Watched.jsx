@@ -11,11 +11,8 @@ const filterShows = (shows, filters) => {
         const { q, genre, minRating, minReviews } = filters;
         if (q && !show.title.toLowerCase().includes(q.toLowerCase())) return false;
         if (genre && show.genres !== genre) return false;
-        // const targetType = type === 'TV' ? 'TV Series' : type;
-        // if (targetType && show.type !== targetType) return false;
         if (minRating && show.rating_avg < minRating) return false;
         if (minReviews && show.vote_count < minReviews) return false;
-        // if (isAiring && !show.is_airing) return false;
         return true; 
     });
 };
@@ -59,12 +56,14 @@ const Watched = ({
     //checks if there are more shows to load
     const hasMoreToLoad = visibleRows < groupedRows.length;
 
+    // Calls the search function
     function handleSearch(payload) {
         if (typeof onSearch === 'function'){
             onSearch(payload);
         }
     }
 
+    // Calls the sort function
     function handleSort(mode){
         if (typeof onSort === 'function'){
             onSort(shows, mode);
@@ -89,12 +88,6 @@ const Watched = ({
                 onSort={handleSort}
                 length = {filteredShows.length}
             />
-
-            {/* <h2 className="text-2xl font-bold mb-6">Watched Shows ({filteredShows.length})</h2>
-
-            {shows.length === 0 && (
-                <p className="text-gray-500">You haven't marked any shows as watched yet.</p>
-            )} */}
 
             {groupedRows.slice(0, visibleRows).map((row, rowIndex) => (
                 <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8 mt-8">

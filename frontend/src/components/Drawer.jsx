@@ -155,9 +155,14 @@ export default function PersistentDrawerLeft({ children, changeMode, currentMode
           <Divider sx={{ my: 1 }} />
           
           {/* List Explanation */}
+          <ListItem sx={{ pt: 1, pb: 0 }}>
+            <Typography variant="overline" color="text.secondary">
+              Create List for Recommendations
+            </Typography>
+          </ListItem>
           <ListItem sx={{ pt: 1, pb: 1 }}>
             <Typography variant="body2" color="text.primary">
-              How to Use Your List: You must first use "Create List" to build your show list, then click "Get Recommendations by List" to generate results based on those shows.
+              How to Use Your List: You must first use "Create List" to build your show list, then click "Get Recommendations by List" to generate recommendations based on the list you created.
             </Typography>
           </ListItem>
           
