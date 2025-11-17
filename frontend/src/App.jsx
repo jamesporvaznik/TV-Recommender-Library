@@ -730,6 +730,7 @@ function App() {
                                                     sortedShows={sortedShows}
                                                     watchedIds={watchedShowIds}
                                                     bookmarkedIds={bookmarkedShowIds}
+                                                    filters={filters}
                                                     isSearch={isSearhQuery}
                                                     onToggleList={updateShowList}
                                                     onCardClick={handleOpenPopUp}
