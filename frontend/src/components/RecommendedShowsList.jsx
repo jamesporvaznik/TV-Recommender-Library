@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import React from 'react';
-import ShowCard from './ShowCard'; 
+import RecommendedCard from './RecommendedCard'; 
 import Filters from './Filters'
 import RefreshSearchQuery from './RefreshSearchQuery';
 
@@ -36,6 +36,7 @@ const RecommendedShowsList = ({
     bookmarkedIds, 
     filters,
     isSearch,
+    sourceIds,
     onToggleList,
     onCardClick,
     onSearch,
@@ -108,11 +109,12 @@ const RecommendedShowsList = ({
                 <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8 mt-10">
                     {/* Iterate over the row chunk */}
                     {row.map((show) => (
-                        <ShowCard 
+                        <RecommendedCard 
                             key={show.id} 
                             show={show} 
                             watchedIds={watchedIds}
                             bookmarkedIds={bookmarkedIds}
+                            sourceIds={sourceIds}
                             onToggleList={onToggleList}
                             onCardClick={onCardClick}
                         />

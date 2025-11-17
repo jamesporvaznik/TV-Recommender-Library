@@ -17,6 +17,7 @@ import Profile from './components/Profile';
 import SearchQuery from './components/SearchQuery';
 import Drawer from './components/Drawer';
 import AddShows from './components/AddShows';
+import SourceDetails from './components/sourceDetails';
 
 // Recommendation modes on the sidebar
 export const RECOMMENDATION_MODES = {
@@ -33,6 +34,7 @@ function App() {
     const [filters, setFilters] = useState(null);
     const [isAddedListVisible, setIsAddedListVisible] = useState(false);
     const [popUpShow, setPopUpShow] = useState(null);
+    const [recommendedPopUp ,setRecommendedPopUp] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [allShows, setAllShows] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -40,6 +42,7 @@ function App() {
     const [watchedShowIds, setWatchedShowIds] = useState([]);
     const [bookmarkedShowIds, setBookmarkedShowIds] = useState([]);
     const [recommendedShowIds, setRecommendedShowIds] = useState([]);
+    const [sourceShowIds, setSourceShowIds] = useState([]);
     const [sortedShowIds, setSortedShowIds] = useState([]);
     const [isAddSearch, setIsAddSearch] = useState(true);
     const [ratedShowsMap, setRatedShowsMap] = useState(new Map());
@@ -112,6 +115,17 @@ function App() {
     const handleClosePopUp = () => {
         setPopUpShow(null);
     };
+
+    const handleOpenRecommendedPopUp = (showData, sourceIds) => {
+        console.log("hello")
+        // console.log(sourceIds.get("202297"));
+        setRecommendedPopUp(showData);
+    };
+
+    const handleCloseRecommendedPopUp = () => {
+        setRecommendedPopUp(null);
+    };
+
 
     // Function for when the user logs out
     const handleLogout = async() => {
@@ -386,6 +400,7 @@ function App() {
                 console.log("Got recommended successgully:", data.message);
                 console.log('Contents of data.recommended:', data.recommended);
                 setRecommendedShowIds(data.recommended);
+                setSourceShowIds(data.sources)
                 return true; 
             } else {
                 // Failure: Invalid credentials
@@ -732,8 +747,9 @@ function App() {
                                                     bookmarkedIds={bookmarkedShowIds}
                                                     filters={filters}
                                                     isSearch={isSearhQuery}
+                                                    sourceIds={sourceShowIds}
                                                     onToggleList={updateShowList}
-                                                    onCardClick={handleOpenPopUp}
+                                                    onCardClick={handleOpenRecommendedPopUp}
                                                     onSearch={handleSearch}
                                                     onSort={sortShows}
                                                     onRefresh={hideRecommendations}
@@ -749,8 +765,9 @@ function App() {
                                                 bookmarkedIds={bookmarkedShowIds}
                                                 filters={filters} 
                                                 isSearch={isSearhQuery}
+                                                sourceIds={sourceShowIds}
                                                 onToggleList={updateShowList}
-                                                onCardClick={handleOpenPopUp}
+                                                onCardClick={handleOpenRecommendedPopUp}
                                                 onSearch={handleSearch}
                                                 onSort={sortShows}
                                                 onRefresh={hideRecommendations}
@@ -765,8 +782,9 @@ function App() {
                                                 bookmarkedIds={bookmarkedShowIds}
                                                 filters={filters} 
                                                 isSearch={isSearhQuery}
+                                                sourceIds={sourceShowIds}
                                                 onToggleList={updateShowList}
-                                                onCardClick={handleOpenPopUp}
+                                                onCardClick={handleOpenRecommendedPopUp}
                                                 onSearch={handleSearch}
                                                 onSort={sortShows}
                                                 onRefresh={hideRecommendations}
@@ -820,6 +838,18 @@ function App() {
                     onToggleList={updateShowList}
                     setRating={setRating}
                     userRating={ratedShowsMap.get(String(popUpShow.tmdb_id))}
+                />
+            )}
+
+            {recommendedPopUp && (
+                <SourceDetails 
+                    show={recommendedPopUp}
+                    onClose={handleCloseRecommendedPopUp}
+                    watchedIds={watchedShowIds}
+                    bookmarkedIds={bookmarkedShowIds}
+                    onToggleList={updateShowList}
+                    setRating={setRating}
+                    userRating={ratedShowsMap.get(String(recommendedPopUp.tmdb_id))}
                 />
             )}
             

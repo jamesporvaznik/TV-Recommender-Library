@@ -334,13 +334,39 @@ app.post('/api/recommendations/shows', authenticateToken, async (req, res) => {
         const addedIds = JSON.parse(rawAdded);
         const watchedIds = JSON.parse(rawWatched);
 
+        excludedAddedIdsSet = new Set([
+            ...addedIds.map(String)
+        ]);
+
+        excludedWatchedIdsSet = new Set([
+            ...watchedIds.map(String)
+        ]);
+
         const recommendations = await getRecommendations(db, userId, addedIds, watchedIds, isWatched, ratingsMap);
 
-        return res.status(200).json({ 
+        console.log(recommendations);
+
+        if(!isWatched){
+            const newRecommendations = recommendations.filter(item => !excludedAddedIdsSet.has(item.id)).map(item => parseInt(item.id, 10));
+            return res.status(200).json({ 
             success: true, 
             message: 'recommendations added successfully.',
-            recommended: recommendations
+            recommended: newRecommendations,
+            sources: recommendations
         });
+        }
+        else{
+            const newRecommendations = recommendations.filter(item => !excludedWatchedIdsSet.has(item.id)).map(item => parseInt(item.id, 10));
+            return res.status(200).json({ 
+            success: true, 
+            message: 'recommendations added successfully.',
+            recommended: newRecommendations,
+            sources: recommendations
+        });
+        }
+        
+
+        
         
 
     } catch (e) {
