@@ -347,22 +347,38 @@ app.post('/api/recommendations/shows', authenticateToken, async (req, res) => {
         console.log(recommendations);
 
         if(!isWatched){
-            const newRecommendations = recommendations.filter(item => !excludedAddedIdsSet.has(item.id)).map(item => parseInt(item.id, 10));
+            const sortedRecommendations = Array.from(recommendations.entries())
+            .map(([id, record]) => ({
+                id: id,
+                score: record.totalScore,
+                sources: record.contributors 
+            }))
+            .sort((a, b) => b.score - a.score);
+            const newRecommendations = sortedRecommendations.filter(item => !excludedAddedIdsSet.has(item.id)).map(item => parseInt(item.id, 10));
+            const sourcesObject = Object.fromEntries(recommendations);
             return res.status(200).json({ 
-            success: true, 
-            message: 'recommendations added successfully.',
-            recommended: newRecommendations,
-            sources: recommendations
-        });
+                success: true, 
+                message: 'recommendations added successfully.',
+                recommended: newRecommendations,
+                sources: sourcesObject
+            });
         }
         else{
-            const newRecommendations = recommendations.filter(item => !excludedWatchedIdsSet.has(item.id)).map(item => parseInt(item.id, 10));
+            const sortedRecommendations = Array.from(recommendations.entries())
+            .map(([id, record]) => ({
+                id: id,
+                score: record.totalScore,
+                sources: record.contributors
+            }))
+            .sort((a, b) => b.score - a.score);
+            const newRecommendations = sortedRecommendations.filter(item => !excludedWatchedIdsSet.has(item.id)).map(item => parseInt(item.id, 10));
+            const sourcesObject = Object.fromEntries(recommendations);
             return res.status(200).json({ 
-            success: true, 
-            message: 'recommendations added successfully.',
-            recommended: newRecommendations,
-            sources: recommendations
-        });
+                success: true, 
+                message: 'recommendations added successfully.',
+                recommended: newRecommendations,
+                sources: sourcesObject
+            });
         }
         
 

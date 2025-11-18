@@ -12,14 +12,15 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
-import InfoIcon from '@mui/icons-material/Info';
+import ListItemText from '@mui/material/ListItemText'
+
 
 const drawerWidth = 310;
 const ICON_MARGIN = 20; // Used for spacing the icon from the edge
+
+const NEUTRAL_900 = '#171717'; 
+const GRAY_400 = '#9ca3af'; 
+const ZINC_800 = '#3f3f46';
 
 // Main content area styling remains the same for shifting
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -39,6 +40,7 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
       marginLeft: 0,
     }),
     // Add top padding equivalent to the icon's fixed position/margin
+    backgroundColor: NEUTRAL_900,
     paddingTop: theme.spacing(3) + ICON_MARGIN, 
   }),
 );
@@ -72,6 +74,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   alignItems: 'center',
   padding: theme.spacing(0, 1),
   justifyContent: 'flex-end',
+  
 }));
 
 // Accept the children prop here
@@ -88,7 +91,8 @@ export default function PersistentDrawerLeft({ children, changeMode, currentMode
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    
+    <Box sx={{ display: 'flex', backgroundColor: NEUTRAL_900 }}>
       <CssBaseline />
       
       {/* Fixed Toggle Button Container */}
@@ -123,6 +127,8 @@ export default function PersistentDrawerLeft({ children, changeMode, currentMode
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
+            backgroundColor: '#2c2c2eff', 
+            color: '#9ca3af',
           },
         }}
         variant="persistent"
@@ -138,7 +144,7 @@ export default function PersistentDrawerLeft({ children, changeMode, currentMode
 
         <List>
           <ListItem sx={{ pt: 1, pb: 0 }}>
-            <Typography variant="overline" color="text.secondary">
+            <Typography variant="overline" color="white">
               Quick Recommendations
             </Typography>
           </ListItem>
@@ -156,12 +162,13 @@ export default function PersistentDrawerLeft({ children, changeMode, currentMode
           
           {/* List Explanation */}
           <ListItem sx={{ pt: 1, pb: 0 }}>
-            <Typography variant="overline" color="text.secondary">
+            <Typography variant="overline" color="white">
               Create List for Recommendations
             </Typography>
           </ListItem>
           <ListItem sx={{ pt: 1, pb: 1 }}>
-            <Typography variant="body2" color="text.primary">
+            <Typography variant="body2" color="#9ca3af',
+          },">
               How to Use Your List: You must first use "Create List" to build your show list, then click "Get Recommendations by List" to generate recommendations based on the list you created.
             </Typography>
           </ListItem>

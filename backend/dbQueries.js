@@ -350,7 +350,7 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
         // update the database
         await db.run(`UPDATE users SET recommended = ? WHERE id = ?`, oldListString, userId);
 
-        return sortedRecommendations;  
+        return newMap;  
 
     }
     // recommend based on the added list
@@ -473,7 +473,7 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
 
         const newRecommendations = sortedRecommendations.filter(item => !excludedIdsSet.has(item.id)).map(item => parseInt(item.id, 10));
         const oldListString = JSON.stringify(newRecommendations); 
-        console.log(oldListString);
+        // console.log(oldListString);
 
 
         
@@ -496,7 +496,7 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
         // update the database
         await db.run(`UPDATE users SET recommended = ? WHERE id = ?`, oldListString, userId);
 
-        return sortedRecommendations; 
+        return newMap; 
     }
 }
 

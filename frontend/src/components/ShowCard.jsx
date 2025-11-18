@@ -27,7 +27,7 @@ const ShowCard = ({ show, watchedIds, bookmarkedIds, onToggleList, onCardClick }
         <article 
             key={show.id} 
             onClick={() => onCardClick(show)} // This triggers the modal open function
-            className="border rounded overflow-hidden bg-white shadow-md transition-shadow hover:shadow-lg cursor-pointer" 
+            className="border rounded-md overflow-hidden bg-zinc-800 shadow-md transition-shadow hover:shadow-lg cursor-pointer border-zinc-800" 
         >
             {/* Image Section */}
             <div className="h-40 bg-gray-200 flex items-center justify-center">
@@ -40,8 +40,8 @@ const ShowCard = ({ show, watchedIds, bookmarkedIds, onToggleList, onCardClick }
             
             {/* Text Content and Buttons */}
             <div className="p-3">
-                <h3 className="text-sm font-semibold truncate">{show.title}</h3>
-                <div className="text-xs text-gray-500">
+                <h3 className="text-sm text-gray-400 font-semibold truncate">{show.title}</h3>
+                <div className="text-xs text-gray-400">
                     Rating: {show.rating_avg}
                 </div>
 
@@ -54,8 +54,8 @@ const ShowCard = ({ show, watchedIds, bookmarkedIds, onToggleList, onCardClick }
                             handleToggleBookmark();
                         }} 
                         className={`text-xs px-2 py-1 rounded transition w-1/2 ${isBookmarked 
-                            ? 'bg-blue-600 text-white hover:bg-blue-700' 
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                            ? 'bg-neutral-700 text-gray-400 hover:bg-neutral-700' 
+                            : 'bg-zinc-800 text-gray-400 hover:bg-neutral-700'}`}
                     >
                         {isBookmarked ? 'Bookmarked' : 'Watch Later'}
                     </button>
@@ -67,8 +67,8 @@ const ShowCard = ({ show, watchedIds, bookmarkedIds, onToggleList, onCardClick }
                             handleToggleWatched(); 
                         }} 
                         className={`text-xs px-2 py-1 rounded transition w-1/2 ${isWatched 
-                            ? 'bg-green-600 text-white hover:bg-green-700' 
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                            ? 'bg-neutral-700 text-gray-400 hover:bg-neutral-700' 
+                            : 'bg-zinc-800 text-gray-400 hover:bg-neutral-700'}`}
                     >
                         {isWatched ? 'Watched' : 'Mark Watched'}
                     </button>

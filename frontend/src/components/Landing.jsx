@@ -25,7 +25,7 @@ const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) 
           <div className="mt-2 sm:mt-0 sm:ml-4">
             {/* Refresh button */}
             <button
-              className="px-3 py-1 text-sm font-semibold bg-gray-100 rounded"
+              className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300"
               onClick={() => setRefreshKey(k => k + 1)}
             >
               Refresh

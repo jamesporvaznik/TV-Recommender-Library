@@ -49,12 +49,14 @@ function App() {
     const [currentMode, setCurrentMode] = useState(RECOMMENDATION_MODES.ADD);
     const [showRecommendations, setShowRecommendations] = useState(false);
     const [isSearhQuery, setIsSearchQuery] = useState(false);
+    const [isWatched, setIsWatched] = useState(false);
     
     //Function called when you click on a mode in the sidebar
     const changeMode = async (newMode) => { 
         setCurrentMode(newMode);
         setIsSearchQuery(false);
         console.log(`Mode changed to: ${newMode}`);
+        setIsWatched(false);
 
         // Changes made depending on what page you go to
         if(newMode === RECOMMENDATION_MODES.LIST){
@@ -69,6 +71,7 @@ function App() {
         else if(newMode === RECOMMENDATION_MODES.WATCHED){
             setFilters(null);
             getRecommendationList(true);
+            setIsWatched(true);
         }
         else if(newMode === RECOMMENDATION_MODES.SEARCH){ 
             setFilters(null);
@@ -118,7 +121,7 @@ function App() {
 
     const handleOpenRecommendedPopUp = (showData, sourceIds) => {
         console.log("hello")
-        // console.log(sourceIds.get("202297"));
+        console.log(sourceIds.get(String(showData.tmdb_id)));
         setRecommendedPopUp(showData);
     };
 
@@ -400,7 +403,13 @@ function App() {
                 console.log("Got recommended successgully:", data.message);
                 console.log('Contents of data.recommended:', data.recommended);
                 setRecommendedShowIds(data.recommended);
-                setSourceShowIds(data.sources)
+                //setSourceShowIds(data.sources);
+
+                const recommendationMap = new Map(Object.entries(data.sources));
+                // console.log(data.sources);
+                // console.log(recommendationMap);
+                setSourceShowIds(recommendationMap);
+                // console.log(recommendationMap.get("206"));
                 return true; 
             } else {
                 // Failure: Invalid credentials
@@ -625,7 +634,7 @@ function App() {
 
     // Render the component
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen bg-neutral-900">
             <Header currentPage={currentPage} setCurrentPage={setCurrentPage} isLoggedIn={isLoggedIn} onLogout={handleLogout} />
             
             <main className="flex-grow">
@@ -844,9 +853,12 @@ function App() {
             {recommendedPopUp && (
                 <SourceDetails 
                     show={recommendedPopUp}
+                    allShows={allShows}
                     onClose={handleCloseRecommendedPopUp}
                     watchedIds={watchedShowIds}
                     bookmarkedIds={bookmarkedShowIds}
+                    sourceIds={sourceShowIds}
+                    isWatchedList={isWatched}
                     onToggleList={updateShowList}
                     setRating={setRating}
                     userRating={ratedShowsMap.get(String(recommendedPopUp.tmdb_id))}

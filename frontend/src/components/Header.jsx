@@ -37,8 +37,8 @@ const Header = ({
                                 shadow-sm whitespace-nowrap
                                 ${
                                     currentPage === page 
-                                        ? 'bg-cyan-600 text-white shadow-md hover:bg-cyan-700' 
-                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                        ? "px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-neutral-900 border-gray-300" 
+                                        : 'bg-neutral-900 text-white hover:bg-zinc-800'
                                 }
                             `}
                         >
@@ -63,13 +63,13 @@ const Header = ({
                     <div className="w-full md:w-1/5 flex justify-end gap-2 pr-4 md:pr-0">
                 <button
                     onClick={() => setCurrentPage?.('Login')}
-                    className="px-5 py-1 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"  
+                    className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300"  
                 >
                     Login
                 </button>
                 <button
                     onClick={() => setCurrentPage?.('Signup')}
-                    className="px-5 py-1 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"
+                    className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300"
                 >
                     Signup
                 </button>

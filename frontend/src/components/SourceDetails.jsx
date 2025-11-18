@@ -5,9 +5,12 @@ import ConfirmationModal from './ConfirmationModal';
 // arguments passed to ShowDetails component
 const sourceDetails = ({ 
     show, 
+    allShows,
     onClose, 
     watchedIds, 
     bookmarkedIds, 
+    sourceIds,
+    isWatchedList,
     onToggleList,
     setRating,
     userRating,
@@ -16,6 +19,7 @@ const sourceDetails = ({
 
     const [ratingValue, setRatingValue] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isShowDetails, setIsShowDetails] = useState(true);
 
     // Current status of watched and bookmarked
     const isWatched = watchedIds?.includes(show.tmdb_id);
@@ -27,9 +31,72 @@ const sourceDetails = ({
 
     const correctUrl = `${BASE_URL_ROOT}${IMAGE_SIZE}${PATH}`;
 
+    const getShowById = (id) => allShows.find(show => show.tmdb_id === id);
+
+    const recommendedShowId = String(show.tmdb_id);
+
+    const recommendationRecord = sourceIds.get(recommendedShowId);
+
+    let sourceShowList = [];
+
+    if (recommendationRecord && recommendationRecord.contributors && Array.isArray(recommendationRecord.contributors)) {
+    
+        recommendationRecord.contributors.sort((a, b) => b.score - a.score);
+
+        const topContributors = recommendationRecord.contributors;
+        
+        topContributors.forEach(contributor => {
+            const sourceShowDetails = getShowById(Number(contributor.sourceId));
+            // console.log(sourceShowDetails);
+            
+            if (sourceShowDetails) {
+                sourceShowList.push({
+                    title: sourceShowDetails.title,
+                    tmdb_id: sourceShowDetails.tmdb_id,
+                    contributed_score: contributor.score
+                });
+            }
+        });
+    }
+
+    // sourceShowList now contains the titles of the shows used for the recommendation.
+    console.log(sourceShowList);
+    let explanation;
+
+    if(sourceShowList.length == 1){
+        explanation = show.title + " is semantically similar to " + sourceShowList[0].title + " with a score of " + sourceShowList[0].contributed_score.toFixed(3);
+    }
+    else{
+        explanation = show.title + " is semantically similar to "
+        for(let i = 0; i<sourceShowList.length; ++i){
+            if(i == sourceShowList.length - 1){
+                explanation += sourceShowList[i].title + "(" + sourceShowList[i].contributed_score.toFixed(3) + ").";
+            }
+            else if(i == sourceShowList.length - 2){
+                explanation += sourceShowList[i].title + "(" + sourceShowList[i].contributed_score.toFixed(3) + ") and ";
+            }
+            else{
+                explanation += sourceShowList[i].title + "(" + sourceShowList[i].contributed_score.toFixed(3) + "), ";
+            }
+        } 
+    }
+
+    if(isWatchedList){
+        explanation += " For recommendations based on watched list, your rating is multiplied by the semantic score which takes into account the shows you like more."
+    }
+
     // Handlers for the action buttons
     const handleToggleWatched = () => onToggleList(show.tmdb_id, 'watched');
     const handleToggleBookmark = () => onToggleList(show.tmdb_id, 'bookmarked');
+
+    const handleToggleDetails = () => {
+        if(isShowDetails){
+            setIsShowDetails(false);
+        }
+        else{
+            setIsShowDetails(true);
+        }
+    }
 
     const handleCancel = () => {
         setIsModalOpen(false); 
@@ -112,20 +179,31 @@ const sourceDetails = ({
                     />
                 </div>
 
-                {/* Show Details */}
-                <div className="grid grid-cols-2 gap-4 mt-10 mb-10 text-gray-700">
-                    <div className="space-y-4">
-                        <p><strong>Rating:</strong> {show.rating_avg} ({show.vote_count})</p>
-                        <p><strong>Genre:</strong> {show.genres || 'N/A'}</p>
-                    </div>
-                    <div className="space-y-4">
-                        <p><strong>Release Date:</strong> {show.release_date} </p>
-                    </div>
-                </div>
+                {isShowDetails && (
+                    <>
+                        {/* Show Details */}
+                        <div className="grid grid-cols-2 gap-4 mt-10 mb-10 text-gray-700">
+                            <div className="space-y-4">
+                                <p><strong>Rating:</strong> {show.rating_avg} ({show.vote_count})</p>
+                                <p><strong>Genre:</strong> {show.genres || 'N/A'}</p>
+                            </div>
+                            <div className="space-y-4">
+                                <p><strong>Release Date:</strong> {show.release_date} </p>
+                            </div>
+                        </div>
 
-                {/* Description */}
-                <h3 className="text-xl font-semibold mt-4 mb-2">Description</h3>
-                <p className="text-gray-600 mb-6"> {show.overview || 'N/A'} </p>
+                        {/* Description */}
+                        <h3 className="text-xl font-semibold mt-4 mb-2">Description</h3>
+                        <p className="text-gray-600 mb-6"> {show.overview || 'N/A'} </p>
+                    </>
+                )}
+
+                {!isShowDetails && (
+                    <>
+                        <h3 className="text-xl font-semibold mt-4 mb-2">Similar Shows</h3>
+                        <p className="text-gray-600 mb-6"> {explanation || 'N/A'} </p>
+                    </>
+                )}
 
                 {/* Buttons */}
                 <div className="flex space-x-3 justify-between border-t pt-4">
@@ -146,6 +224,14 @@ const sourceDetails = ({
                             className={`px-4 py-2 text-sm rounded transition ${isBookmarked ? 'bg-blue-700 text-white' : 'bg-gray-200 text-gray-800 hover:bg-blue-100'}`}
                         >
                             {isBookmarked ? 'Remove from Watchlist' : 'Add to Watchlist'}
+                        </button>
+
+                        {/* Toggle Watchlist Button */}
+                        <button 
+                            onClick={handleToggleDetails} 
+                            className={`px-4 py-2 text-sm rounded transition ${isBookmarked ? 'bg-blue-700 text-white' : 'bg-gray-200 text-gray-800 hover:bg-blue-100'}`}
+                        >
+                            {isShowDetails ? 'Explain Recommendations' : 'Show Details'}
                         </button>
                     </div>
                     

@@ -124,34 +124,39 @@ const Filters = ({ onSearch, onSort, length, searchTerm: controlledTerm, setSear
                     value={term}
                     onChange={handleTermChange}
                     placeholder="Search shows by title..."
-                    className="flex-1 px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                    className="bg-neutral-900 flex-1 px-3 py-2 border-b border-gray-700 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
                 />
-                <button type="submit" className="px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700">Search</button>
+                <button type="submit" className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300">Search</button>
             </div>
             
             {/* Dropdown filters */}
-            <div className="mt-3 grid grid-cols-1 sm:grid-cols-4 gap-2 text-sm mt-6">
+            <div className="mt-3 grid grid-cols-1 sm:grid-cols-4 gap-x-4 gap-y-2 text-sm mt-6">
                 
                 <label className="flex flex-col">
-                    <span className="text-xs text-gray-500">Genre</span>
-                    <select value={genre} onChange={e => handleFilterChange('genre', e.target.value)} className="mt-1 px-2 py-1 border rounded">
+                    <span className="text-xs text-gray-500 ">Genre</span>
+                    <select value={genre} onChange={e => handleFilterChange('genre', e.target.value)} className="mt-1 px-2 py-1 border-zinc-800 rounded-lg bg-zinc-800 text-gray-400 w-full">
                         {genres.map(g => <option key={g} value={g}>{g}</option>)}
                     </select>
                 </label>
 
                 <label className="flex flex-col">
                     <span className="text-xs text-gray-500">Min Rating</span>
-                    <input type="number" min="0" max="10" value={minRating} onChange={e => handleFilterChange('minRating', e.target.value)} className="mt-1 px-2 py-1 border rounded" />
+                    <input type="number" min="0" max="10" value={minRating} placeholder="e.g., 7" onChange={e => handleFilterChange('minRating', e.target.value)} className="placeholder:italic mt-1 px-2 py-1 border-zinc-800 rounded-lg bg-zinc-800 text-gray-400 w-full" />
                 </label>
 
                 <label className="flex flex-col">
                     <span className="text-xs text-gray-500">Min Raters</span>
-                    <input type="number" min="0" value={minReviews} onChange={e => handleFilterChange('minReviews', e.target.value)} className="mt-1 px-2 py-1 border rounded" />
+                    <input type="number" min="0" value={minReviews} placeholder="e.g., 500" onChange={e => handleFilterChange('minReviews', e.target.value)} className="placeholder:italic mt-1 px-2 py-1 border-zinc-800 rounded-lg bg-zinc-800 text-gray-400 w-full" />
                 </label>
-                
-                {/* Add a Clear button back since you still need the handleClear function */}
-                <div className="mt-auto">
-                    <button type="button" onClick={handleClear} className="px-3 py-2 bg-gray-100 rounded w-full">Clear Filters</button>
+
+                <div className="mt-auto flex justify-end items-end w-full">
+                    <button 
+                        type="button" 
+                        onClick={handleClear} 
+                        className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300"
+                    >
+                        Clear Filters
+                    </button>
                 </div>
             </div>
         </form>
@@ -159,8 +164,8 @@ const Filters = ({ onSearch, onSort, length, searchTerm: controlledTerm, setSear
         <form className="flex justify-between w-full px-4 border-t mt-2">
             <h2 className="text-lg font-semibold mt-4">{length} Shows</h2>
             <label className="flex flex-col">
-                <span className="text-xs text-gray-500">Sort By</span>
-                <select value={sortOption} onChange={e => handleSort(e.target.value)} className="mt-1 px-2 py-1 border rounded">
+                <span className="text-xs text-gray-500 mt-1">Sort By</span>
+                <select value={sortOption} onChange={e => handleSort(e.target.value)} className="px-5  mt-1 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300">
                     {sortOptions.map(g => <option key={g} value={g}>{g}</option>)}
                 </select>
             </label>
