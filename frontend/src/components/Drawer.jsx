@@ -15,7 +15,8 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemText from '@mui/material/ListItemText'
 
 
-const drawerWidth = 310;
+
+const drawerWidth = 320;
 const ICON_MARGIN = 20; // Used for spacing the icon from the edge
 
 // Main content area styling remains the same for shifting
@@ -43,11 +44,11 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
 // Define this inside or above your PersistentDrawerLeft/Drawer component
 const generatorMap = [
   { 
-    text: 'Get Recommendations from Watched', 
+    text: 'Recommendations from Watched', 
     mode: 'Get Recommendations from Watched' 
   },
   { 
-    text: 'Get Recommendations by Search', 
+    text: 'Recommendations by Search', 
     mode: 'Get Recommendations by Search' 
   },
 ];
@@ -59,7 +60,7 @@ const listMap = [
     mode: 'Create List' 
   },
   { 
-    text: 'Get Recommendations by List', 
+    text: 'Recommendations by List', 
     mode: 'Get Recommendations by List' 
   },
 ];
@@ -84,6 +85,64 @@ export default function PersistentDrawerLeft({ children, changeMode, currentMode
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+const getListItemStyles = (item, currentMode) => {
+  const isActive = item.mode === currentMode;
+
+  return {
+      margin: '3px 12px 2px 12px',
+      borderRadius: '6px',
+      border: `solid, #5f626eff, 1px`,
+      backgroundColor: '#101011ff',
+      justifyContent: 'center',
+      
+      // Active State Styles
+      ...(isActive && { 
+          backgroundColor: '#f1f1f1ff',
+          text: '#e0e0e0ff'
+      }),
+      
+      // Hover State Styles
+      '&:hover': {
+          // backgroundColor: '#4a4b50ff' 
+          backgroundColor: '#272727ff',
+          text: '#e0e0e0ff'
+      },
+  };
+};
+
+const getTextStyles = (item, currentMode) => {
+    const isActive = item.mode === currentMode;
+    
+    const defaultColor = '#faf9f9ff';
+    const activeHoverColor = '#080000ff';
+    
+    const containerStyles = {
+        flex: 'initial',
+        
+        '& .MuiListItemText-primary': {
+            fontFamily: 'Inter, sans-serif',
+            fontWeight: 600, 
+            textAlign: 'center',
+            color: defaultColor,
+
+            '&.Mui-selected, &.Mui-selected:hover': { 
+                color: activeHoverColor, 
+            },
+            
+            '&:hover': {
+                // color: activeHoverColor,
+            },
+            ...(isActive && { 
+                color: activeHoverColor,
+            })
+        }
+    };
+
+    // If you need to change the style of the overall ListItemText wrapper
+    // You can add more styles here if necessary, but the primary text is targeted above.
+    return containerStyles;
+};
 
   return (
     
@@ -122,7 +181,8 @@ export default function PersistentDrawerLeft({ children, changeMode, currentMode
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
-            backgroundColor: '#2c2c2eff', 
+            // backgroundColor: '#2c2c2eff', 
+            backgroundColor: '#28282bff',
             color: '#9ca3af',
           },
         }}
@@ -146,8 +206,8 @@ export default function PersistentDrawerLeft({ children, changeMode, currentMode
           
           {generatorMap.map((item) => ( 
             <ListItem key={item.mode} disablePadding>
-              <ListItemButton onClick={() => changeMode(item.mode)} sx={{ /* ... styling ... */ }}>
-                <ListItemText primary={item.text} />
+              <ListItemButton onClick={() => changeMode(item.mode)} sx={getListItemStyles(item, currentMode)}>
+                <ListItemText primary={item.text} sx={getTextStyles(item, currentMode)}/>
                 {/* [Info Icon Button here if you re-add it] */}
               </ListItemButton>
             </ListItem>
@@ -170,8 +230,8 @@ export default function PersistentDrawerLeft({ children, changeMode, currentMode
           
           {listMap.map((item) => (
             <ListItem key={item.mode} disablePadding>
-              <ListItemButton onClick={() => changeMode(item.mode)} sx={{ /* ... styling ... */ }}>
-                <ListItemText primary={item.text} />
+              <ListItemButton onClick={() => changeMode(item.mode)} sx={getListItemStyles(item, currentMode)} >
+                <ListItemText primary={item.text} sx={getTextStyles(item, currentMode)} />
                 {/* [Info Icon Button here if you re-add it] */}
               </ListItemButton>
             </ListItem>

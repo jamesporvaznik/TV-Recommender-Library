@@ -47,8 +47,7 @@ const RecommendationCard = ({ show, watchedIds, bookmarkedIds, addedIds, onToggl
                             handleToggleAdd(); 
                         }} 
                         className={`text-xs px-2 py-1 rounded transition w-1/2 ${isAdded
-                            ? 'bg-neutral-700 text-gray-400 hover:bg-neutral-700' 
-                            : 'bg-zinc-800 text-gray-400 hover:bg-neutral-700'}`}
+                            ? 'bg-green-700 text-white hover:bg-green-700 border border-bg-white' : 'bg-zinc-800 text-gray-400 hover:bg-green-700 hover:text-white border border-bg-white'}`}
                     >
                         {isAdded ? 'Added' : 'Add to List'}
                     </button>

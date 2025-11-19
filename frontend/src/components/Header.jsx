@@ -2,9 +2,9 @@ import React from 'react';
 import { FaUserCircle } from 'react-icons/fa'; 
 
 const Header = ({ 
-    currentPage, setCurrentPage, isLoggedIn
+    currentPage, setCurrentPage, isLoggedIn, onLogout
 }) => {
-    // Navigation items for the multi-page feel (P1-T7)
+    // Navigation items for the multi-page feel
     const NAVIGATION_PAGES = ['All Shows', 'Watched', 'Watchlist', 'Recommendations'];
 
      const handleProfileClick = () => {
@@ -53,10 +53,9 @@ const Header = ({
                 {isLoggedIn ? (
                     // Profile View
                     <>
-                        <FaUserCircle
-                            onClick={handleProfileClick}
-                            className="text-4xl cursor-pointer hover:text-cyan-700 transition"
-                        />
+                        <button onClick={onLogout} className="ml-4 px-5 py-1 text-sm border rounded-xl bg-red-800 font-semibold shadow-sm hover:bg-red-900 border-gray-300">
+                            Logout
+                        </button>
                     </>
                 ) : (
                     // Signup / Login Button View

@@ -47,7 +47,7 @@ function SearchQuery({query, setQuery, onSearch, onSearchAdd}) {
                     value={term}
                     onChange={handleQueryChange}
                     placeholder="Generate recommendations by search query..."
-                    className="bg-neutral-900 flex-1 px-3 py-2 border-b border-gray-700 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                    className="bg-neutral-900 flex-1 px-3 py-2 border-b border-neutral-700 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
                 />
                 <button type="submit" className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300">Get Recommendations</button>
 

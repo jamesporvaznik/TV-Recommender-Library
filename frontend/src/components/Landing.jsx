@@ -11,7 +11,7 @@ const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) 
         const meetsRating = show.rating_avg >= 7;
         const meetsReviewCount = show.vote_count > 500;
         
-        return meetsRating && meetsReviewCount;
+        return meetsRating && meetsReviewCount
     });
   
   return (
@@ -62,11 +62,11 @@ const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) 
         {/* left col */}
         <div className="md:w-1/2">
           <div className="font-bold text-3xl md:text-6xl max-w-lg text-left">
-            <p className="text-gray-700">
+            <p className="text-white">
               Track and Rate Your Watchlist
             </p>
           </div>
-          <div className="mt-5 font-semibold text-gray-600 max-w-md text-left">
+          <div className="mt-5 font-semibold text-gray-400 max-w-md text-left">
             <p>This feature will allow you to keep track of all the shows you have watched and rate them so you remember and can find similar shows to your favorites.</p>
           </div>
         </div>
@@ -97,11 +97,11 @@ const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) 
 
         <div className="md:w-1/2 flex flex-col items-center md:items-end md:text-right">
           <div className="font-bold text-3xl md:text-6xl max-w-lg">
-            <p className="text-gray-700">
+            <p className="text-white">
                 Bookmark Shows to Watch Later
             </p>
           </div>
-          <div className="mt-5 font-semibold text-gray-600 max-w-md">
+          <div className="mt-5 font-semibold text-gray-400 max-w-md">
             <p>This feature will allow you to keep track of the shows you want to watch next. Users will also be able to access information on the show like where they can watch it and key details</p>
           </div>
         </div>
@@ -111,11 +111,11 @@ const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) 
       <div className="mt-72 max-w-5xl mx-auto px-4 md:px-0 flex flex-col md:flex-row md:items-start md:justify-between gap-8">
         <div className="md:w-1/2">
           <div className="font-bold text-3xl md:text-6xl max-w-lg text-left">
-            <p className="text-gray-700">
+            <p className="text-white">
               Search and Discover new Shows
             </p>
           </div>
-          <div className="mt-5 font-semibold text-gray-600 max-w-md text-left">
+          <div className="mt-5 font-semibold text-gray-400 max-w-md text-left">
             <p>In this search feature you can filter by many key features to find new shows or search shows by name to find familiar shows</p>
           </div>
         </div>
@@ -145,11 +145,11 @@ const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) 
 
         <div className="md:w-1/2 flex flex-col items-center md:items-end md:text-right">
           <div className="font-bold text-3xl md:text-6xl max-w-lg">
-            <p className="text-gray-700">
+            <p className="text-white">
                 Find New Shows with Custom Recommendations
             </p>
           </div>
-          <div className="mt-5 font-semibold text-gray-600 max-w-md">
+          <div className="mt-5 font-semibold text-gray-400 max-w-md">
             <p>This recommendation engine takes into account key details from your favorite shows to find new shows with similarites </p>
           </div>
         </div>

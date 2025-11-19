@@ -54,8 +54,7 @@ const RecommendedCard = ({ show, watchedIds, bookmarkedIds, sourceIds, onToggleL
                             handleToggleBookmark();
                         }} 
                         className={`text-xs px-2 py-1 rounded transition w-1/2 ${isBookmarked 
-                            ? 'bg-neutral-700 text-gray-400 hover:bg-neutral-700' 
-                            : 'bg-zinc-800 text-gray-400 hover:bg-neutral-700'}`}
+                            ? 'bg-blue-700 text-white hover:bg-blue-700 border border-bg-white' : 'bg-zinc-800 text-gray-400 hover:bg-blue-700 hover:text-white border border-bg-white'}`}
                     >
                         {isBookmarked ? 'Bookmarked' : 'Watch Later'}
                     </button>
@@ -67,8 +66,7 @@ const RecommendedCard = ({ show, watchedIds, bookmarkedIds, sourceIds, onToggleL
                             handleToggleWatched(); 
                         }} 
                         className={`text-xs px-2 py-1 rounded transition w-1/2 ${isWatched 
-                            ? 'bg-neutral-700 text-gray-400 hover:bg-neutral-700' 
-                            : 'bg-zinc-800 text-gray-400 hover:bg-neutral-700'}`}
+                            ? 'bg-green-700 text-white hover:bg-green-700 border border-bg-white' : 'bg-zinc-800 text-gray-400 hover:bg-green-700 hover:text-white border border-bg-white'}`}
                     >
                         {isWatched ? 'Watched' : 'Mark Watched'}
                     </button>

@@ -124,7 +124,7 @@ const Filters = ({ onSearch, onSort, length, searchTerm: controlledTerm, setSear
                     value={term}
                     onChange={handleTermChange}
                     placeholder="Search shows by title..."
-                    className="bg-neutral-900 flex-1 px-3 py-2 border-b border-gray-700 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                    className="bg-neutral-900 flex-1 px-3 py-2 border-b border-neutral-700 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
                 />
                 <button type="submit" className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300">Search</button>
             </div>
@@ -153,7 +153,7 @@ const Filters = ({ onSearch, onSort, length, searchTerm: controlledTerm, setSear
                     <button 
                         type="button" 
                         onClick={handleClear} 
-                        className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300"
+                        className="placeholder:italic mt-1 px-2 py-1 border-zinc-800 rounded-lg bg-zinc-800 text-gray-400 w-full hover:bg-gray-700"
                     >
                         Clear Filters
                     </button>
@@ -161,11 +161,11 @@ const Filters = ({ onSearch, onSort, length, searchTerm: controlledTerm, setSear
             </div>
         </form>
         {/* Sorting */}
-        <form className="flex justify-between w-full px-4 border-t mt-2">
+        <form className="flex justify-between w-full px-4 border-t border-neutral-700 mt-2">
             <h2 className="text-lg font-semibold mt-4">{length} Shows</h2>
             <label className="flex flex-col">
                 <span className="text-xs text-gray-500 mt-1">Sort By</span>
-                <select value={sortOption} onChange={e => handleSort(e.target.value)} className="px-5  mt-1 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300">
+                <select value={sortOption} onChange={e => handleSort(e.target.value)} className="px-5  mt-1 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-stone-900 border-gray-300">
                     {sortOptions.map(g => <option key={g} value={g}>{g}</option>)}
                 </select>
             </label>

@@ -146,20 +146,21 @@ const ShowDetails = ({
 
                     {/* Left: Watched and Watchlist Buttons */}
                     <div className="flex space-x-3">
-                        {/* Toggle Watched Button */}
-                        <button 
-                            onClick={handleToggleWatched} 
-                            className={`px-4 py-2 text-sm rounded transition ${isWatched ? 'bg-neutral-700 text-gray-400 hover:bg-neutral-700' : 'bg-zinc-800 text-gray-400 hover:bg-neutral-700'}`}
-                        >
-                            {isWatched ? 'Unmark Watched' : 'Mark Watched'}
-                        </button>
 
                         {/* Toggle Watchlist Button */}
                         <button 
                             onClick={handleToggleBookmark} 
-                            className={`px-4 py-2 text-sm rounded transition ${isBookmarked ? 'bg-neutral-700 text-gray-400 hover:bg-neutral-700' : 'bg-zinc-800 text-gray-400 hover:bg-neutral-700'}`}
+                            className={`px-4 py-2 text-sm rounded transition ${isBookmarked ? 'bg-blue-700 text-white hover:bg-blue-700 border border-bg-white' : 'bg-zinc-800 text-gray-400 hover:bg-blue-700 hover:text-white border border-bg-white'}`}
                         >
-                            {isBookmarked ? 'Remove from Watchlist' : 'Add to Watchlist'}
+                            {isBookmarked ? 'Bookmarked' : 'Watch Later'}
+                        </button>
+
+                        {/* Toggle Watched Button */}
+                        <button 
+                            onClick={handleToggleWatched} 
+                            className={`px-4 py-2 text-sm rounded transition ${isWatched ? 'bg-green-700 text-white hover:bg-green-700 border border-bg-white' : 'bg-zinc-800 text-gray-400 hover:bg-green-700 hover:text-white border border-bg-white'}`}
+                        >
+                            {isWatched ? 'Watched' : 'Mark Watched'}
                         </button>
                     </div>
                     
