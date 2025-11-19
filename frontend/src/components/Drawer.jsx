@@ -95,19 +95,24 @@ const getListItemStyles = (item, currentMode) => {
       border: `solid, #5f626eff, 1px`,
       backgroundColor: '#101011ff',
       justifyContent: 'center',
-      
-      // Active State Styles
-      ...(isActive && { 
-          backgroundColor: '#f1f1f1ff',
-          text: '#e0e0e0ff'
-      }),
-      
+
       // Hover State Styles
       '&:hover': {
           // backgroundColor: '#4a4b50ff' 
           backgroundColor: '#272727ff',
           text: '#e0e0e0ff'
       },
+      
+      // Active State Styles
+      ...(isActive && { 
+          backgroundColor: '#f1f1f1ff',
+          text: '#e0e0e0ff',
+          '&:hover': {
+            // backgroundColor: '#4a4b50ff' 
+            backgroundColor: '#f1f1f1ff',
+            text: '#e0e0e0ff',
+        },
+      }),
   };
 };
 
@@ -191,7 +196,7 @@ const getTextStyles = (item, currentMode) => {
         open={open}
       >
         <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={handleDrawerClose} sx={{ color: 'white' }}>
             {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
           </IconButton>
         </DrawerHeader>

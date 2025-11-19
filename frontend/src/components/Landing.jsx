@@ -21,16 +21,24 @@ const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) 
       <div className="mt-10 max-w-5xl mx-auto">
         
         <div className="flex flex-col sm:flex-row items-center mb-8">
-          <h2 className="text-xl font-semibold text-gray-400 mx-auto">Discover shows you love</h2>
-          <div className="mt-2 sm:mt-0 sm:ml-4">
-            {/* Refresh button */}
-            <button
-              className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300"
-              onClick={() => setRefreshKey(k => k + 1)}
-            >
-              Refresh
-            </button>
-          </div>
+    
+            {/* 1. Placeholder Div (Balances the Button's space) */}
+            <div className="hidden sm:block sm:w-20"></div> 
+            
+            {/* 2. The Title (Centered) */}
+            <h2 className="text-xl font-semibold text-gray-400 mx-auto">
+                Discover shows you love
+            </h2>
+            
+            {/* 3. The Button Wrapper */}
+            <div className="mt-2 sm:mt-0 sm:ml-4 sm:w-20 text-right mr-4"> 
+                <button
+                    className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300"
+                    onClick={() => setRefreshKey(k => k + 1)}
+                >
+                    Refresh
+                </button>
+            </div>
         </div>
 
         {/* Displaying some random shows for the users to see */}
