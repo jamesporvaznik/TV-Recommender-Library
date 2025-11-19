@@ -2,7 +2,7 @@ import * as React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
+
 import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
@@ -17,10 +17,6 @@ import ListItemText from '@mui/material/ListItemText'
 
 const drawerWidth = 310;
 const ICON_MARGIN = 20; // Used for spacing the icon from the edge
-
-const NEUTRAL_900 = '#171717'; 
-const GRAY_400 = '#9ca3af'; 
-const ZINC_800 = '#3f3f46';
 
 // Main content area styling remains the same for shifting
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
@@ -40,7 +36,6 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })(
       marginLeft: 0,
     }),
     // Add top padding equivalent to the icon's fixed position/margin
-    backgroundColor: NEUTRAL_900,
     paddingTop: theme.spacing(3) + ICON_MARGIN, 
   }),
 );
@@ -92,8 +87,8 @@ export default function PersistentDrawerLeft({ children, changeMode, currentMode
 
   return (
     
-    <Box sx={{ display: 'flex', backgroundColor: NEUTRAL_900 }}>
-      <CssBaseline />
+    <Box sx={{ display: 'flex'}}>
+      
       
       {/* Fixed Toggle Button Container */}
       <Box 

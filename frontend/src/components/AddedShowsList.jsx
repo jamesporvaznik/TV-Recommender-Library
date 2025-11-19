@@ -43,8 +43,8 @@ const AddedShowsList = ({
         <div className="container mx-auto px-4">
 
             <div className="flex justify-between w-full">
-                <button onClick={hideAddedListView} className="px-5 py-1 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300">Go Back</button>
-                <button onClick={clearAddList} className="px-5 py-1 text-sm border rounded bg-red-800 font-semibold shadow-sm hover:bg-red-900">Clear List</button>
+                <button onClick={hideAddedListView} className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300">Go Back</button>
+                <button onClick={clearAddList} className="px-5 py-1 text-sm border rounded-xl bg-red-800 font-semibold shadow-sm hover:bg-red-900 border-gray-300">Clear List</button>
             </div>
 
             <h2 className="text-2xl font-bold mt-4 mb-6">Added Shows ({shows.length})</h2>

@@ -39,7 +39,7 @@ function SearchQuery({query, setQuery, onSearch, onSearchAdd}) {
     // Render the form
     return (
         // Entire form
-        <form className="w-full max-w-3xl mx-auto p-2 " onSubmit={getRecommendations}>
+        <form className="w-full max-w-4xl mx-auto " onSubmit={getRecommendations}>
             {/* Add bar and clear button */}
             <div className="flex flex-col sm:flex-row gap-2 items-center">
                 <input
@@ -47,9 +47,9 @@ function SearchQuery({query, setQuery, onSearch, onSearchAdd}) {
                     value={term}
                     onChange={handleQueryChange}
                     placeholder="Generate recommendations by search query..."
-                    className="flex-1 px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                    className="bg-neutral-900 flex-1 px-3 py-2 border-b border-gray-700 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
                 />
-                <button type="submit" className="px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700">Get Recommendations</button>
+                <button type="submit" className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300">Get Recommendations</button>
 
             </div>
         </form>

@@ -28,12 +28,29 @@ function Profile({user, watchedShows, bookmarkedShows, watchedIds, bookmarkedIds
                     className="w-[15rem] h-[15rem] cursor-pointer"
                 />
             </div>
-            <div className ="flex justify-center text-3xl font-bold mt-5">
-                <p>{user}</p>
-                <button onClick={onLogout} className="px-4 py-2 ml-4 text-base font-semibold bg-red-600 text-white rounded transition hover:bg-red-700 shadow-md">
+
+
+
+            <div className="flex items-center justify-between gap-3 mt-2 mb-2 flex-wrap">
+
+                <div><p></p></div>
+
+                <p className="text-3xl font-bold">{user}</p>
+
+                <button onClick={onLogout} className="ml-4 px-5 py-1 text-sm border rounded-xl bg-red-800 font-semibold shadow-sm hover:bg-red-900 border-gray-300">
                     Logout
                 </button>
             </div>
+
+
+
+
+            {/* <div className ="flex justify-center text-3xl font-bold mt-5">
+                <p>{user}</p>
+                <button onClick={onLogout} className="ml-4 px-5 py-1 text-sm border rounded-xl bg-red-800 font-semibold shadow-sm hover:bg-red-900 border-gray-300">
+                    Logout
+                </button>
+            </div> */}
 
             {/* Toggle buttons to show watched or bookmarked shows */}
             <div className="space-x-4 mt-20 mb-12 mx-0 text-left">
@@ -41,8 +58,8 @@ function Profile({user, watchedShows, bookmarkedShows, watchedIds, bookmarkedIds
                     onClick={() => setActiveList('WATCHED')}
                     className={`px-6 py-2 rounded-lg font-semibold transition ${
                         activeList === 'WATCHED' 
-                            ? 'bg-cyan-600 text-white shadow-lg' 
-                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            ? "px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-neutral-900 border-gray-300" 
+                            : 'bg-neutral-900 text-white hover:bg-zinc-800'
                     }`}
                 >
                     Watched Shows
@@ -51,8 +68,8 @@ function Profile({user, watchedShows, bookmarkedShows, watchedIds, bookmarkedIds
                     onClick={() => setActiveList('BOOKMARKED')}
                     className={`px-6 py-2 rounded-lg font-semibold transition ${
                         activeList === 'BOOKMARKED' 
-                            ? 'bg-cyan-600 text-white shadow-lg' 
-                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                            ? "px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-neutral-900 border-gray-300" 
+                            : 'bg-neutral-900 text-white hover:bg-zinc-800'
                     }`}
                 >
                     Bookmarked Shows

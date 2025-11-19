@@ -166,7 +166,7 @@ const ShowDetails = ({
                     {/* Right: Optional Remove and Close Buttons */}
                     <div className="flex space-x-3">
                         {/* Close Button */}
-                        <button onClick={onClose} className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300">
+                        <button onClick={onClose} className="px-5 py-1 text-sm border rounded-xl bg-red-800 font-semibold shadow-sm hover:bg-red-900 border-gray-300">
                             Close
                         </button>
                     </div>

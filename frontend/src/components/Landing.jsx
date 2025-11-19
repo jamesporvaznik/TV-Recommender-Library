@@ -21,7 +21,7 @@ const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) 
       <div className="mt-10 max-w-5xl mx-auto">
         
         <div className="flex flex-col sm:flex-row items-center mb-8">
-          <h2 className="text-xl font-semibold text-gray-500 mx-auto">Discover shows you love</h2>
+          <h2 className="text-xl font-semibold text-gray-400 mx-auto">Discover shows you love</h2>
           <div className="mt-2 sm:mt-0 sm:ml-4">
             {/* Refresh button */}
             <button

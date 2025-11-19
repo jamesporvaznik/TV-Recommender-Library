@@ -131,7 +131,7 @@ const sourceDetails = ({
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" onClick={onClose}>
             {/* Pop-up Content */}
-            <div className="bg-white rounded-lg p-6 max-w-2xl w-full shadow-2xl overflow-y-auto max-h-full" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-zinc-800 rounded-lg p-6 max-w-2xl w-full shadow-2xl overflow-y-auto max-h-full" onClick={(e) => e.stopPropagation()}>
                 {/* Header Section */}
                 <div className="flex items-center justify-between gap-3 mb-2 flex-wrap">
 
@@ -182,26 +182,40 @@ const sourceDetails = ({
                 {isShowDetails && (
                     <>
                         {/* Show Details */}
-                        <div className="grid grid-cols-2 gap-4 mt-10 mb-10 text-gray-700">
+                        <div className="grid grid-cols-1 gap-4 mt-10 mb-4 text-gray-400 px-6 text-lg">
                             <div className="space-y-4">
-                                <p><strong>Rating:</strong> {show.rating_avg} ({show.vote_count})</p>
-                                <p><strong>Genre:</strong> {show.genres || 'N/A'}</p>
+                                {/* Rating: Use flex and justify-between for space */}
+                                <p className="flex justify-between">
+                                    <strong className="text-gray-400">Rating:</strong> 
+                                    <span className="text-white">{show.rating_avg} ({show.vote_count})</span>
+                                </p>
+                                
+                                {/* Genre: Use flex and justify-between for space */}
+                                <p className="flex justify-between">
+                                    <strong className="text-gray-400">Genre:</strong> 
+                                    <span className="text-white">{show.genres || 'N/A'}</span>
+                                </p>
                             </div>
+                            
                             <div className="space-y-4">
-                                <p><strong>Release Date:</strong> {show.release_date} </p>
+                                {/* Release Date: Use flex and justify-between for space */}
+                                <p className="flex justify-between">
+                                    <strong className="text-gray-400">Release Date:</strong> 
+                                    <span className="text-white">{show.release_date}</span>
+                                </p>
                             </div>
                         </div>
 
                         {/* Description */}
                         <h3 className="text-xl font-semibold mt-4 mb-2">Description</h3>
-                        <p className="text-gray-600 mb-6"> {show.overview || 'N/A'} </p>
+                        <p className="text-gray-400 mb-6"> {show.overview || 'N/A'} </p>
                     </>
                 )}
 
                 {!isShowDetails && (
                     <>
                         <h3 className="text-xl font-semibold mt-4 mb-2">Similar Shows</h3>
-                        <p className="text-gray-600 mb-6"> {explanation || 'N/A'} </p>
+                        <p className="text-gray-400 mb-6"> {explanation || 'N/A'} </p>
                     </>
                 )}
 
@@ -213,7 +227,7 @@ const sourceDetails = ({
                         {/* Toggle Watched Button */}
                         <button 
                             onClick={handleToggleWatched} 
-                            className={`px-4 py-2 text-sm rounded transition ${isWatched ? 'bg-green-700 text-white' : 'bg-gray-200 text-gray-800 hover:bg-green-100'}`}
+                            className={`px-4 py-2 text-sm rounded transition ${isWatched ? 'bg-neutral-700 text-gray-400 hover:bg-neutral-700' : 'bg-zinc-800 text-gray-400 hover:bg-neutral-700'}`}
                         >
                             {isWatched ? 'Unmark Watched' : 'Mark Watched'}
                         </button>
@@ -221,7 +235,7 @@ const sourceDetails = ({
                         {/* Toggle Watchlist Button */}
                         <button 
                             onClick={handleToggleBookmark} 
-                            className={`px-4 py-2 text-sm rounded transition ${isBookmarked ? 'bg-blue-700 text-white' : 'bg-gray-200 text-gray-800 hover:bg-blue-100'}`}
+                            className={`px-4 py-2 text-sm rounded transition ${isBookmarked ? 'bg-neutral-700 text-gray-400 hover:bg-neutral-700' : 'bg-zinc-800 text-gray-400 hover:bg-neutral-700'}`}
                         >
                             {isBookmarked ? 'Remove from Watchlist' : 'Add to Watchlist'}
                         </button>
@@ -229,7 +243,7 @@ const sourceDetails = ({
                         {/* Toggle Watchlist Button */}
                         <button 
                             onClick={handleToggleDetails} 
-                            className={`px-4 py-2 text-sm rounded transition ${isBookmarked ? 'bg-blue-700 text-white' : 'bg-gray-200 text-gray-800 hover:bg-blue-100'}`}
+                            className={`px-4 py-2 text-sm rounded transition ${isBookmarked ? 'bg-neutral-700 text-gray-400 hover:bg-neutral-700' : 'bg-zinc-800 text-gray-400 hover:bg-neutral-700'}`}
                         >
                             {isShowDetails ? 'Explain Recommendations' : 'Show Details'}
                         </button>
@@ -238,7 +252,7 @@ const sourceDetails = ({
                     {/* Right: Optional Remove and Close Buttons */}
                     <div className="flex space-x-3">
                         {/* Close Button */}
-                        <button onClick={onClose} className="px-4 py-2 text-sm bg-gray-500 text-white rounded hover:bg-gray-600 transition">
+                        <button onClick={onClose} className="px-5 py-1 text-sm border rounded-xl bg-red-800 font-semibold shadow-sm hover:bg-red-900 border-gray-300">
                             Close
                         </button>
                     </div>

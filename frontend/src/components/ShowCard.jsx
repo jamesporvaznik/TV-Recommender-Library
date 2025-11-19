@@ -27,7 +27,7 @@ const ShowCard = ({ show, watchedIds, bookmarkedIds, onToggleList, onCardClick }
         <article 
             key={show.id} 
             onClick={() => onCardClick(show)} // This triggers the modal open function
-            className="border rounded-md overflow-hidden bg-zinc-800 shadow-md transition-shadow hover:shadow-lg cursor-pointer border-zinc-800" 
+            className="border rounded-lg overflow-hidden bg-zinc-800 shadow-md transition-shadow hover:shadow-lg cursor-pointer border-zinc-800" 
         >
             {/* Image Section */}
             <div className="h-40 bg-gray-200 flex items-center justify-center">
@@ -40,8 +40,8 @@ const ShowCard = ({ show, watchedIds, bookmarkedIds, onToggleList, onCardClick }
             
             {/* Text Content and Buttons */}
             <div className="p-3">
-                <h3 className="text-sm text-gray-400 font-semibold truncate">{show.title}</h3>
-                <div className="text-xs text-gray-400">
+                <h3 className="text-sm text-white font-semibold truncate">{show.title}</h3>
+                <div className="text-xs text-white">
                     Rating: {show.rating_avg}
                 </div>
 
