@@ -20,7 +20,7 @@ const RecommendationCard = ({ show, watchedIds, bookmarkedIds, addedIds, onToggl
         <article 
             key={show.id} 
             onClick={() => onCardClick(show)} // This triggers the modal open function
-            className="border rounded overflow-hidden bg-white shadow-md transition-shadow hover:shadow-lg cursor-pointer" 
+            className="border rounded-lg overflow-hidden bg-zinc-800 shadow-md transition-shadow hover:shadow-lg cursor-pointer border-zinc-800"
         >
             {/* Image Section */}
             <div className="h-40 bg-gray-200 flex items-center justify-center">
@@ -33,8 +33,8 @@ const RecommendationCard = ({ show, watchedIds, bookmarkedIds, addedIds, onToggl
             
             {/* Text Content and Buttons */}
             <div className="p-3">
-                <h3 className="text-sm font-semibold truncate">{show.title}</h3>
-                <div className="text-xs text-gray-500">
+                <h3 className="text-sm text-white font-semibold truncate">{show.title}</h3>
+                <div className="text-xs text-white">
                     Rating: {show.rating_avg}
                 </div>
 
@@ -47,8 +47,7 @@ const RecommendationCard = ({ show, watchedIds, bookmarkedIds, addedIds, onToggl
                             handleToggleAdd(); 
                         }} 
                         className={`text-xs px-2 py-1 rounded transition w-1/2 ${isAdded
-                            ? 'bg-green-600 text-white hover:bg-green-700' 
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                            ? 'bg-green-700 text-white hover:bg-green-700 border border-bg-white' : 'bg-zinc-800 text-gray-400 hover:bg-green-700 hover:text-white border border-bg-white'}`}
                     >
                         {isAdded ? 'Added' : 'Add to List'}
                     </button>

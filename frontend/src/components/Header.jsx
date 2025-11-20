@@ -2,9 +2,9 @@ import React from 'react';
 import { FaUserCircle } from 'react-icons/fa'; 
 
 const Header = ({ 
-    currentPage, setCurrentPage, isLoggedIn
+    currentPage, setCurrentPage, isLoggedIn, onLogout
 }) => {
-    // Navigation items for the multi-page feel (P1-T7)
+    // Navigation items for the multi-page feel
     const NAVIGATION_PAGES = ['All Shows', 'Watched', 'Watchlist', 'Recommendations'];
 
      const handleProfileClick = () => {
@@ -37,8 +37,8 @@ const Header = ({
                                 shadow-sm whitespace-nowrap
                                 ${
                                     currentPage === page 
-                                        ? 'bg-cyan-600 text-white shadow-md hover:bg-cyan-700' 
-                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                        ? "px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-neutral-900 border-gray-300" 
+                                        : 'bg-neutral-900 text-white hover:bg-zinc-800'
                                 }
                             `}
                         >
@@ -53,23 +53,22 @@ const Header = ({
                 {isLoggedIn ? (
                     // Profile View
                     <>
-                        <FaUserCircle
-                            onClick={handleProfileClick}
-                            className="text-4xl cursor-pointer hover:text-cyan-700 transition"
-                        />
+                        <button onClick={onLogout} className="ml-4 px-5 py-1 text-sm border rounded-xl bg-red-800 font-semibold shadow-sm hover:bg-red-900 border-gray-300">
+                            Logout
+                        </button>
                     </>
                 ) : (
                     // Signup / Login Button View
                     <div className="w-full md:w-1/5 flex justify-end gap-2 pr-4 md:pr-0">
                 <button
                     onClick={() => setCurrentPage?.('Login')}
-                    className="px-5 py-1 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"  
+                    className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300"  
                 >
                     Login
                 </button>
                 <button
                     onClick={() => setCurrentPage?.('Signup')}
-                    className="px-5 py-1 text-sm border rounded bg-gray-200 font-semibold shadow-sm hover:bg-gray-300"
+                    className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300"
                 >
                     Signup
                 </button>

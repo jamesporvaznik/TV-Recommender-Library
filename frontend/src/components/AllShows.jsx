@@ -108,7 +108,7 @@ const AllShows = ({
                 <div className="text-center mt-4">
                     <button
                         onClick={loadMore}
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+                        className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300"
                     >
                         Load More Shows 
                     </button>

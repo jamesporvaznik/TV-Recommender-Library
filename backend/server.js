@@ -334,13 +334,55 @@ app.post('/api/recommendations/shows', authenticateToken, async (req, res) => {
         const addedIds = JSON.parse(rawAdded);
         const watchedIds = JSON.parse(rawWatched);
 
+        excludedAddedIdsSet = new Set([
+            ...addedIds.map(String)
+        ]);
+
+        excludedWatchedIdsSet = new Set([
+            ...watchedIds.map(String)
+        ]);
+
         const recommendations = await getRecommendations(db, userId, addedIds, watchedIds, isWatched, ratingsMap);
 
-        return res.status(200).json({ 
-            success: true, 
-            message: 'recommendations added successfully.',
-            recommended: recommendations
-        });
+        console.log(recommendations);
+
+        if(!isWatched){
+            const sortedRecommendations = Array.from(recommendations.entries())
+            .map(([id, record]) => ({
+                id: id,
+                score: record.totalScore,
+                sources: record.contributors 
+            }))
+            .sort((a, b) => b.score - a.score);
+            const newRecommendations = sortedRecommendations.filter(item => !excludedAddedIdsSet.has(item.id)).map(item => parseInt(item.id, 10));
+            const sourcesObject = Object.fromEntries(recommendations);
+            return res.status(200).json({ 
+                success: true, 
+                message: 'recommendations added successfully.',
+                recommended: newRecommendations,
+                sources: sourcesObject
+            });
+        }
+        else{
+            const sortedRecommendations = Array.from(recommendations.entries())
+            .map(([id, record]) => ({
+                id: id,
+                score: record.totalScore,
+                sources: record.contributors
+            }))
+            .sort((a, b) => b.score - a.score);
+            const newRecommendations = sortedRecommendations.filter(item => !excludedWatchedIdsSet.has(item.id)).map(item => parseInt(item.id, 10));
+            const sourcesObject = Object.fromEntries(recommendations);
+            return res.status(200).json({ 
+                success: true, 
+                message: 'recommendations added successfully.',
+                recommended: newRecommendations,
+                sources: sourcesObject
+            });
+        }
+        
+
+        
         
 
     } catch (e) {
