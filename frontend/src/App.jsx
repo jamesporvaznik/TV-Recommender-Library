@@ -376,21 +376,16 @@ function App() {
         }
         else if (mode === 'By Release Date (New to Old)') {
             const sorted = [...shows].sort((a, b) => 
-                // Convert both date strings to timestamps (numbers) for reliable subtraction
                 dateToTimestamp(b.release_date) - dateToTimestamp(a.release_date)
             ).map(show => show.tmdb_id);
             
-            // IMPORTANT: Change the state variable here if you intended to update sortedShowIds
-            // The original code updated setRecommendedShowIds, which might be wrong.
             setSortedShowIds(sorted); 
         }
         else if (mode === 'By Release Date (Old to New)') {
             const sorted = [...shows].sort((a, b) => 
-                // Convert both date strings to timestamps (numbers) and subtract (Old to New = Ascending)
                 dateToTimestamp(a.release_date) - dateToTimestamp(b.release_date)
             ).map(show => show.tmdb_id);
             
-            // IMPORTANT: Change the state variable here if you intended to update sortedShowIds
             setSortedShowIds(sorted); 
         }
     }
