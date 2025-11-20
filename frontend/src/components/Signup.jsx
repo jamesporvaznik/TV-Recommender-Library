@@ -74,7 +74,7 @@ function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSu
                 value={userTerm}
                 onChange={handleUserChange}
                 placeholder="Enter username"
-                className="flex-1 px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                className="bg-zinc-800 flex-1 px-3 py-3 border border-zinc-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
             />
         </div> 
         {/* Password field */}
@@ -84,7 +84,7 @@ function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSu
                 value={passwordTerm}
                 onChange={handlePasswordChange}
                 placeholder="Enter password"
-                className="flex-1 px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                className="bg-zinc-800 flex-1 px-3 py-3 border border-zinc-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
             />
         </div>
         {/* Confirm password field */}
@@ -94,12 +94,12 @@ function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSu
                 value={confirmTerm}
                 onChange={handleConfirmChange}
                 placeholder="Confirm your password"
-                className="flex-1 px-3 py-2 border rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
+                className="bg-zinc-800 flex-1 px-3 py-3 border border-zinc-800 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-200"
             />
         </div>
         {/* Signup button */}
         <div className="flex justify-center items-center px-20 mt-8">
-            <button type="submit" className="px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700 w-full">Create Account</button>
+            <button type="submit" className="px-7 py-3 mt-2 w-full text-white text-sm border rounded-md bg-zinc-800 font-semibold shadow-sm hover:bg-zinc-800 border-zinc-800">Create Account</button>
         </div>
             
      </form>
