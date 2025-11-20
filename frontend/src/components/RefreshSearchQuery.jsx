@@ -17,7 +17,7 @@ const RefreshSearchQuery = ({onRefresh}) => {
     // Render the component
     return (
         <div className="flex justify-end w-full mt-4 pr-4">
-            <button className="px-3 py-2 bg-gray-100 rounded" onClick={Refresh}>
+            <button className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300" onClick={Refresh}>
                 Refresh Search Query
             </button>
         </div>
