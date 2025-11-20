@@ -352,6 +352,8 @@ function App() {
     // Sorting shows by a few different ways
     const sortShows = (shows, mode) => {
 
+        const dateToTimestamp = (dateString) => new Date(dateString).getTime();
+
         // Sorting
         if(mode === 'Relevance'){
             setSortedShowIds(recommendedShowIds);
@@ -372,14 +374,25 @@ function App() {
             const sorted = [...shows].sort((a, b) => a.vote_count - b.vote_count).map(show => show.tmdb_id);
             setSortedShowIds(sorted);
         }
-        // else if(mode === 'By Release Date (New to Old)'){
-        //     const sorted = [...shows].sort((a, b) => String(b.release_date) - String(a.release_date)).map(show => show.tmdb_id);
-        //     setRecommendedShowIds(sorted);
-        // }
-        // else if(mode === 'By Release Date (Old to New)'){
-        //     const sorted = [...shows].sort((a, b) => String(a.release_date) - String(b.release_date)).map(show => show.tmdb_id);
-        //     setRecommendedShowIds(sorted);
-        // }
+        else if (mode === 'By Release Date (New to Old)') {
+            const sorted = [...shows].sort((a, b) => 
+                // Convert both date strings to timestamps (numbers) for reliable subtraction
+                dateToTimestamp(b.release_date) - dateToTimestamp(a.release_date)
+            ).map(show => show.tmdb_id);
+            
+            // IMPORTANT: Change the state variable here if you intended to update sortedShowIds
+            // The original code updated setRecommendedShowIds, which might be wrong.
+            setSortedShowIds(sorted); 
+        }
+        else if (mode === 'By Release Date (Old to New)') {
+            const sorted = [...shows].sort((a, b) => 
+                // Convert both date strings to timestamps (numbers) and subtract (Old to New = Ascending)
+                dateToTimestamp(a.release_date) - dateToTimestamp(b.release_date)
+            ).map(show => show.tmdb_id);
+            
+            // IMPORTANT: Change the state variable here if you intended to update sortedShowIds
+            setSortedShowIds(sorted); 
+        }
     }
 
     // Function to generate show recommendations based on the users created list
