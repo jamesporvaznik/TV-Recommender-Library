@@ -17,7 +17,7 @@ import Profile from './components/Profile';
 import SearchQuery from './components/SearchQuery';
 import Drawer from './components/Drawer';
 import AddShows from './components/AddShows';
-import SourceDetails from './components/sourceDetails';
+import SourceDetails from './components/SourceDetails';
 
 // Recommendation modes on the sidebar
 export const RECOMMENDATION_MODES = {
