@@ -264,7 +264,8 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
             ...watchedIds.map(String)
         ]);
 
-        let myMap = new Map();
+        // let myMap = new Map();
+        let newMap = new Map();
 
         // Iterate through each watched show
         for(let i = 0; i < watchedIds.length; i++){
@@ -284,30 +285,72 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
             const recommendedIds = await textSearch(showRecord.overview, 50);
 
             recommendedIds.forEach(hit => {
+
+
+                const recommendedId = hit._id;
+                const hitScore = hit._score * ratingScore;
+
+                const newCurrentRecord = newMap.get(recommendedId) || { 
+                    totalScore: 0, 
+                    contributors: [] // Initialize an array to track sources
+                };
+
+                newCurrentRecord.totalScore += hitScore;
+
+                newCurrentRecord.contributors.push({
+                    sourceId: String(watchedIds[i]),
+                    score: hitScore
+                });
+
+                newMap.set(recommendedId, newCurrentRecord);
+
+
+
+
+
+
+
+
                 // Get the current accumulated score for this recommended ID, or 0 if it's new
-                const currentScore = myMap.get(hit._id) || 0;
+                // const currentScore = myMap.get(hit._id) || 0;
 
                 // console.log(`Recommended ID: ${hit._id}, Current Score: ${currentScore}, Hit Score: ${hit._score}`);
 
                 // Add the new score to the current total
-                myMap.set(hit._id, currentScore + (ratingScore * hit._score));
-                //myMap.set(hit._id, currentScore + hit._score);
+                // myMap.set(hit._id, currentScore + (ratingScore * hit._score));
+                
             });
         }
 
-        // Sort the recommendations by their accumulated scores and convert to an array
-        const combinedRecommendations = Array.from(myMap.entries())
-            .map(([id, score]) => ({ id, score }))
+        const sortedRecommendations = Array.from(newMap.entries())
+            .map(([id, record]) => ({
+                id: id,
+                score: record.totalScore,    // Use the totalScore for ranking
+                sources: record.contributors // Keep the contributor array
+            }))
+            // 2. Sort the array by the 'score' property (descending order)
             .sort((a, b) => b.score - a.score);
 
-        //put those shows into a list excluding any shows already in the watched list
-        const recommendations = combinedRecommendations.filter(item => !excludedIdsSet.has(item.id)).map(item => parseInt(item.id, 10));
-        const newListString = JSON.stringify(recommendations); 
+        // console.log(sortedRecommendations);
+
+        const newRecommendations = sortedRecommendations.filter(item => !excludedIdsSet.has(item.id)).map(item => parseInt(item.id, 10));
+        const oldListString = JSON.stringify(newRecommendations); 
+        console.log(oldListString);
+
+
+        // Sort the recommendations by their accumulated scores and convert to an array
+        // const combinedRecommendations = Array.from(myMap.entries())
+        //     .map(([id, score]) => ({ id, score }))
+        //     .sort((a, b) => b.score - a.score);
+
+        // //put those shows into a list excluding any shows already in the watched list
+        // const recommendations = combinedRecommendations.filter(item => !excludedIdsSet.has(item.id)).map(item => parseInt(item.id, 10));
+        // const newListString = JSON.stringify(recommendations); 
 
         // update the database
-        await db.run(`UPDATE users SET recommended = ? WHERE id = ?`, newListString, userId);
+        await db.run(`UPDATE users SET recommended = ? WHERE id = ?`, oldListString, userId);
 
-        return recommendations;  
+        return newMap;  
 
     }
     // recommend based on the added list
@@ -322,6 +365,7 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
         ]);
 
         let myMap = new Map();
+        let newMap = new Map();
 
         // Iterate through each added show
         for(let i = 0; i < addedIds.length; i++){
@@ -332,6 +376,25 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
             if (!showRecord) {
                 throw new Error("Show not found.");
             }
+
+            // const recommendedId = hit._id;
+            // const hitScore = hit._score;
+
+            // const newCurrentRecord = myMap.get(recommendedId) || { 
+            //     totalScore: 0, 
+            //     contributors: [] // Initialize an array to track sources
+            // };
+
+            // newCurrentRecord.totalScore += hitScore;
+
+            // newCurrentRecord.contributors.push({
+            //     sourceId: String(addedShowId),
+            //     score: hitScore
+            // });
+
+            // newMap.set(recommendedId, currentRecord);
+
+            // console.log(newMap);
 
             // for(let j = 0; j < 1; j++){
             //     //watchedRecord = await db.get(`SELECT overview FROM shows WHERE tmdb_id = ?`, watchedIds[j]);
@@ -348,33 +411,92 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
             console.log(addedIds[i]);
 
             recommendedIds.forEach(hit => {
+
+
+
+                const recommendedId = hit._id;
+                const hitScore = hit._score;
+
+                const newCurrentRecord = newMap.get(recommendedId) || { 
+                    totalScore: 0, 
+                    contributors: [] // Initialize an array to track sources
+                };
+
+                newCurrentRecord.totalScore += hitScore;
+
+                newCurrentRecord.contributors.push({
+                    sourceId: String(addedIds[i]),
+                    score: hitScore
+                });
+
+                newMap.set(recommendedId, newCurrentRecord);
+
+                //console.log(newMap);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 // Get the current accumulated score for this recommended ID, or 0 if it's new
-                const currentScore = myMap.get(hit._id) || 0;
+                // const currentScore = myMap.get(hit._id) || 0;
                 
-                console.log(`Recommended ID: ${hit._id}, Current Score: ${currentScore}, Hit Score: ${hit._score}`);
+                // console.log(`Recommended ID: ${hit._id}, Current Score: ${currentScore}, Hit Score: ${hit._score}`);
 
                 // Add the new score to the current total
-                myMap.set(hit._id, currentScore + hit._score);
+                // myMap.set(hit._id, currentScore + hit._score);
             });
         }
 
-        // Sort the recommendations by their accumulated scores and convert to an array
-        const combinedRecommendations = Array.from(myMap.entries())
-            .map(([id, score]) => ({ id, score }))
+        const sortedRecommendations = Array.from(newMap.entries())
+            .map(([id, record]) => ({
+                id: id,
+                score: record.totalScore,    // Use the totalScore for ranking
+                sources: record.contributors // Keep the contributor array
+            }))
+            // 2. Sort the array by the 'score' property (descending order)
             .sort((a, b) => b.score - a.score);
+
+        // console.log(sortedRecommendations);
+
+        const newRecommendations = sortedRecommendations.filter(item => !excludedIdsSet.has(item.id)).map(item => parseInt(item.id, 10));
+        const oldListString = JSON.stringify(newRecommendations); 
+        // console.log(oldListString);
+
+
+        
+
+
+
+        // Sort the recommendations by their accumulated scores and convert to an array
+        // const combinedRecommendations = Array.from(myMap.entries())
+        //     .map(([id, score]) => ({ id, score }))
+        //     .sort((a, b) => b.score - a.score);
     
         //console.log(combinedRecommendations.slice(0, 10)); // Print just the top 10 for a cleaner look
 
         //put those shows into a list excluding any shows already in the added list
-        const recommendations = combinedRecommendations.filter(item => !excludedIdsSet.has(item.id)).map(item => parseInt(item.id, 10));
-        const newListString = JSON.stringify(recommendations); 
+        // const recommendations = combinedRecommendations.filter(item => !excludedIdsSet.has(item.id)).map(item => parseInt(item.id, 10));
+        // const newListString = JSON.stringify(recommendations); 
 
         //console.log(recommendations.slice(0, 10));
 
         // update the database
-        await db.run(`UPDATE users SET recommended = ? WHERE id = ?`, newListString, userId);
+        await db.run(`UPDATE users SET recommended = ? WHERE id = ?`, oldListString, userId);
 
-        return recommendations; 
+        return newMap; 
     }
 }
 
