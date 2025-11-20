@@ -99,7 +99,7 @@ const AddShows = ({
                 length = {filteredShows.length}
             />
             <div className="flex justify-end w-full mt-4 pr-4">
-                <button className="px-3 py-2 bg-gray-100 rounded" onClick={handleViewAdded}>
+                <button className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300" onClick={handleViewAdded}>
                     View Full List
                 </button>
             </div>
@@ -125,7 +125,7 @@ const AddShows = ({
                 <div className="text-center mt-4">
                     <button
                         onClick={loadMore}
-                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300"
+                        className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300"
                     >
                         Load More Shows 
                     </button>
