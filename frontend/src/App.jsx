@@ -19,6 +19,10 @@ import Drawer from './components/Drawer';
 import AddShows from './components/AddShows';
 import SourceDetails from './components/SourceDetails';
 
+import Grid from '@mui/material/Box';
+import { styled, useTheme } from '@mui/material/styles';
+
+
 // Recommendation modes on the sidebar
 export const RECOMMENDATION_MODES = {
     SEARCH: 'Get Recommendations by Search',
@@ -640,6 +644,101 @@ function App() {
     const recommendedShows = recommendedShowIds.map(getShowById).filter(Boolean);
     const sortedShows = sortedShowIds.map(getShowById).filter(Boolean);
 
+
+
+
+
+
+
+
+    // const RenderRecommendationsContent = () => {
+    //     // This wrapper is the main content area inside the Drawer.
+    //     // Use a Grid container to manage the layout of the inner components.
+    //     return (
+    //         <Grid container spacing={3}>
+    //             {/* The primary content will take the full width of the drawer's content area */}
+    //             <Grid item xs={12}>
+                    
+    //                 {currentMode === RECOMMENDATION_MODES.ADD ? (
+    //                     <>
+    //                         {isAddedListVisible ? (
+    //                             <AddedShowsList 
+    //                                 shows={addedShows} 
+    //                                 watchedIds={watchedShowIds}
+    //                                 bookmarkedIds={bookmarkedShowIds}
+    //                                 addedIds={addedShowIds}
+    //                                 onToggleList={updateShowList}
+    //                                 onCardClick={handleOpenPopUp}
+    //                                 onHide={hideAddedListView}
+    //                                 onClear={clearAddList}
+    //                             /> 
+    //                         ) : (
+    //                             // Removed the extra 'main-content-wrapper' div here for cleaner structure
+    //                             <AddShows 
+    //                                 shows={allShows} 
+    //                                 sortedShows={sortedShows}
+    //                                 filters={filters} 
+    //                                 watchedIds={watchedShowIds}
+    //                                 bookmarkedIds={bookmarkedShowIds}
+    //                                 addedIds={addedShowIds}
+    //                                 onToggleList={updateShowList}
+    //                                 onCardClick={handleOpenPopUp}
+    //                                 onSearch={handleSearch}
+    //                                 onSort={sortShows}
+    //                                 onView={toggleAddedListView}
+    //                             />
+    //                         )}
+    //                     </>
+    //                 ) : currentMode === RECOMMENDATION_MODES.SEARCH ? (
+    //                     <>
+    //                         {!showRecommendations && (
+    //                             <SearchQuery
+    //                                 onSearch={getRecommendationsBySearchQuery}
+    //                                 onSearchAdd={showAddSearch}
+    //                             />
+    //                         )}
+    //                         {showRecommendations && (
+    //                             <RecommendedShowsList 
+    //                                 shows={recommendedShows} 
+    //                                 sortedShows={sortedShows}
+    //                                 watchedIds={watchedShowIds}
+    //                                 bookmarkedIds={bookmarkedShowIds}
+    //                                 filters={filters}
+    //                                 isSearch={isSearhQuery}
+    //                                 sourceIds={sourceShowIds}
+    //                                 onToggleList={updateShowList}
+    //                                 onCardClick={handleOpenRecommendedPopUp}
+    //                                 onSearch={handleSearch}
+    //                                 onSort={sortShows}
+    //                                 onRefresh={hideRecommendations}
+    //                             /> 
+    //                         )}
+    //                     </>
+    //                 ) : (currentMode === RECOMMENDATION_MODES.LIST || currentMode === RECOMMENDATION_MODES.WATCHED) ? (
+    //                     <RecommendedShowsList 
+    //                         shows={recommendedShows} 
+    //                         sortedShows={sortedShows}
+    //                         watchedIds={watchedShowIds}
+    //                         bookmarkedIds={bookmarkedShowIds}
+    //                         filters={filters} 
+    //                         isSearch={isSearhQuery}
+    //                         sourceIds={sourceShowIds}
+    //                         onToggleList={updateShowList}
+    //                         onCardClick={handleOpenRecommendedPopUp}
+    //                         onSearch={handleSearch}
+    //                         onSort={sortShows}
+    //                         onRefresh={hideRecommendations}
+    //                     /> 
+    //                 ) : (
+    //                     <p>Select a recommendation mode from the sidebar.</p>
+    //                 )}
+    //             </Grid>
+    //         </Grid>
+    //     );
+    // };
+
+
+
     // Render the component
     return (
         <div className="flex flex-col min-h-screen bg-neutral-900">
@@ -658,7 +757,7 @@ function App() {
                     <>     
 
                         {/* Page Rendering based on currentPage state */}
-                        {currentPage === 'All Shows' && (
+                        {currentPage === 'Explore' && (
                             <AllShows 
                                 allShows={allShows} 
                                 sortedShows={sortedShows}
@@ -877,5 +976,120 @@ function App() {
     );
 }
 
+// Render the component
+// return (
+//     <div className="flex flex-col min-h-screen bg-neutral-900">
+//         <Header currentPage={currentPage} setCurrentPage={setCurrentPage} isLoggedIn={isLoggedIn} onLogout={handleLogout} />
+        
+//         <main className="flex-grow">
+//             {currentPage === 'Home' ? (
+//                 <Landing
+//                     shows = {allShows}
+//                     watchedIds={watchedShowIds}
+//                     bookmarkedIds={bookmarkedShowIds}
+//                     onToggleList={updateShowList}
+//                     onCardClick={handleOpenPopUp}
+//                 />
+//             ) : (
+//                 <> 
+//                     {/* Pages WITHOUT Drawer (All Shows, Watched, Watchlist) */}
+//                     {(currentPage === 'All Shows' || currentPage === 'Watched' || currentPage === 'Watchlist') && (
+//                         // Apply a Grid structure to these pages if needed, otherwise leave them as is
+//                         <Grid container spacing={3} sx={{ padding: 2 }}> 
+//                             <Grid item xs={12}>
+//                                 {currentPage === 'All Shows' && <AllShows 
+//                                     allShows={allShows} 
+//                                     sortedShows={sortedShows}
+//                                     filters={filters} 
+//                                     watchedIds={watchedShowIds}
+//                                     bookmarkedIds={bookmarkedShowIds}
+//                                     onToggleList={updateShowList}
+//                                     onCardClick={handleOpenPopUp}
+//                                     onSearch={handleSearch}
+//                                     onSort={sortShows}
+//                                 />}
+//                                 {currentPage === 'Watched' && isLoggedIn && <Watched 
+//                                     shows={watchedShows}
+//                                     sortedShows={sortedShows} 
+//                                     filters={filters} 
+//                                     watchedIds={watchedShowIds}
+//                                     bookmarkedIds={bookmarkedShowIds}
+//                                     onToggleList={updateShowList}
+//                                     onCardClick={handleOpenPopUp}
+//                                     onSearch={handleSearch}
+//                                     onSort={sortShows}
+//                                 />}
+//                                 {currentPage === 'Watchlist' && isLoggedIn && <Watchlist 
+//                                     shows={bookmarkedShows} 
+//                                     sortedShows={sortedShows}
+//                                     filters={filters} 
+//                                     watchedIds={watchedShowIds}
+//                                     bookmarkedIds={bookmarkedShowIds}
+//                                     onToggleList={updateShowList}
+//                                     onCardClick={handleOpenPopUp}
+//                                     onSearch={handleSearch}
+//                                     onSort={sortShows}
+//                                 />}
+//                             </Grid>
+//                             {/* Handle redirect outside of render logic */}
+//                             {(currentPage === 'Watched' || currentPage === 'Watchlist') && !isLoggedIn && setCurrentPage('Login')} 
+//                         </Grid>
+//                     )}
+
+//                     {/* Pages for Login/Signup/Profile */}
+//                     {currentPage === 'Login' && <Login setCurrentPage={setCurrentPage} onLoginSuccess={handleLogin} onLogin={checkUser} />}
+//                     {currentPage === 'Signup' && <Signup setCurrentPage={setCurrentPage} onSubmit={handleSignUp}/>}
+//                     {currentPage === 'Profile' && <Profile 
+//                         // ... props
+//                     />}
+
+//                     {/* Recommendations Page (WITH Drawer) */}
+//                     {currentPage === 'Recommendations' && (
+//                         isLoggedIn ? (
+//                             // WRAPPER: Drawer renders the sidebar and controls the main content shift
+//                             <Drawer 
+//                                 changeMode={changeMode} 
+//                                 currentMode={currentMode}
+//                             >
+//                                 {/* The content returned by the helper function goes inside the Drawer's shifting area */}
+//                                 {RenderRecommendationsContent()} 
+//                             </Drawer>
+//                         ) : (
+//                             setCurrentPage('Login') // Handle redirect if not logged in
+//                         )
+//                     )}
+//                 </>
+//             )}
+//         </main>
+        
+//         <Footer />
+        
+//         {/* Render popups */}
+//         {popUpShow && (
+//             <ShowDetails 
+//                 show={popUpShow}
+//                 onClose={handleClosePopUp}
+//                 watchedIds={watchedShowIds}
+//                 bookmarkedIds={bookmarkedShowIds}
+//                 onToggleList={updateShowList}
+//                 setRating={setRating}
+//                 userRating={ratedShowsMap.get(String(popUpShow.tmdb_id))}
+//             />)}
+//         {recommendedPopUp && (
+//             <SourceDetails 
+//                 show={recommendedPopUp}
+//                 allShows={allShows}
+//                 onClose={handleCloseRecommendedPopUp}
+//                 watchedIds={watchedShowIds}
+//                 bookmarkedIds={bookmarkedShowIds}
+//                 sourceIds={sourceShowIds}
+//                 isWatchedList={isWatched}
+//                 onToggleList={updateShowList}
+//                 setRating={setRating}
+//                 userRating={ratedShowsMap.get(String(recommendedPopUp.tmdb_id))}
+//             />)}
+//     </div>
+// );
+// }
 // Export the App component
 export default App;

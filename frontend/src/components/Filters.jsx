@@ -149,7 +149,7 @@ const Filters = ({ onSearch, onSort, length, searchTerm: controlledTerm, setSear
                     <input type="number" min="0" value={minReviews} placeholder="e.g., 500" onChange={e => handleFilterChange('minReviews', e.target.value)} className="placeholder:italic mt-1 px-2 py-1 border-zinc-800 rounded-lg bg-zinc-800 text-gray-400 w-full" />
                 </label>
 
-                <div className="mt-auto flex justify-end items-end w-full">
+                {/* <div className="mt-auto flex justify-end items-end w-full">
                     <button 
                         type="button" 
                         onClick={handleClear} 
@@ -157,6 +157,25 @@ const Filters = ({ onSearch, onSort, length, searchTerm: controlledTerm, setSear
                     >
                         Clear Filters
                     </button>
+                </div> */}
+                <div className="flex flex-col"> {/* <-- CHANGE 1: Use flex-col to stack vertically */}
+    
+                    {/* NEW: Text/Label above the button */}
+                    <span className="text-xs text-gray-500 mb-1"> 
+                        Clear
+                    </span>
+                    
+                    {/* The button container (was used for aligning to bottom, now handles full width) */}
+                    <div className="flex justify-end items-end w-full"> 
+                        <button 
+                            type="button" 
+                            onClick={handleClear} 
+                            // Note: Removed 'mt-auto' and 'mt-1' which are no longer needed for spacing
+                            className="px-2 py-1 border-zinc-800 rounded-lg bg-zinc-800 text-gray-400 w-full hover:bg-gray-700 font-semibold"
+                        >
+                            Clear Filters
+                        </button>
+                    </div>
                 </div>
             </div>
         </form>

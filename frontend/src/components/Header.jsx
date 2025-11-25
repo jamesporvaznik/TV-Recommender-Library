@@ -5,7 +5,7 @@ const Header = ({
     currentPage, setCurrentPage, isLoggedIn, onLogout
 }) => {
     // Navigation items for the multi-page feel
-    const NAVIGATION_PAGES = ['All Shows', 'Watched', 'Watchlist', 'Recommendations'];
+    const NAVIGATION_PAGES = ['Explore', 'Watched', 'Watchlist', 'Recommendations'];
 
      const handleProfileClick = () => {
         setCurrentPage?.('Profile'); // Navigate to the placeholder Profile page

@@ -19,7 +19,7 @@ const filterShows = (shows, filters) => {
 };
 
 // Function to group shows into rows of 5
-const groupIntoRows = (shows, chunkSize = 5) => {
+const groupIntoRows = (shows, chunkSize = 4) => {
     const groupedRows = [];
     for (let i = 0; i < shows.length; i += chunkSize) {
         groupedRows.push(shows.slice(i, i + chunkSize));
@@ -105,7 +105,7 @@ const AddShows = ({
             </div>
         
             {groupedRows.slice(0, visibleRows).map((row, rowIndex) => (
-                <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mb-8 mt-10">
+                <div key={rowIndex} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4 mb-8 mt-10">
                     {/* Iterate over the row chunk */}
                     {row.map((show) => (
                         <RecommendationCard
