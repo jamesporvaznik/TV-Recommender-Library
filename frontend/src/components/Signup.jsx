@@ -59,7 +59,7 @@ function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSu
 
   // Render the component's UI
   return (
-     <form className="w-full max-w-2xl mx-auto p-2 mt-40" onSubmit={handleSubmit}>
+     <form className="w-full max-w-2xl mx-auto p-2 mt-[11vh]" onSubmit={handleSubmit}>
         {/* Title/subtitle text */}
         <div className="flex justify-between items-center px-20">
             <h1 className="text-4xl font-bold mb-6 ">Welcome</h1>

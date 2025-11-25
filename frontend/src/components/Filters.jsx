@@ -11,7 +11,7 @@ const Filters = ({ onSearch, onSort, length, searchTerm: controlledTerm, setSear
 
     // Options for dropdowns
     const genres = ['All', 'Action & Adventure', 'Animation', 'Comedy', 'Crime', 'Documentary', 'Drama', 'Family', 'Kids', 'Mystery', 'News', 'Reality', 'Sci-Fi & Fantasy', 'Soap', 'Talk', 'War & Politics', 'Western'];
-    const sortOptions = ['Relevance','By Rating (High to Low)','By Rating (Low to High)','By Reviews (High to Low)','By Reviews (Low to High)','By Release Date (New to Old)','By Release Date (Old to New)',];
+    const sortOptions = ['Relevance','By Rating (↓)','By Rating (↑)','By Reviews (↓)','By Reviews (↑)','By Date (↓)','By Date (↑)',];
 
     useEffect(() => {
         if (typeof controlledTerm === 'string') setLocalTerm(controlledTerm);
