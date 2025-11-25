@@ -361,30 +361,30 @@ function App() {
         if(mode === 'Relevance'){
             setSortedShowIds(recommendedShowIds);
         }
-        else if(mode === 'By Rating (High to Low)'){
+        else if(mode === 'By Rating (↓)'){
             const sorted = [...shows].sort((a, b) => b.rating_avg - a.rating_avg).map(show => show.tmdb_id);
             setSortedShowIds(sorted);
         }
-        else if(mode === 'By Rating (Low to High)'){
+        else if(mode === 'By Rating (↑)'){
             const sorted = [...shows].sort((a, b) => a.rating_avg - b.rating_avg).map(show => show.tmdb_id);
             setSortedShowIds(sorted);
         }
-        else if (mode === 'By Reviews (High to Low)'){
+        else if (mode === 'By Reviews (↓)'){
             const sorted = [...shows].sort((a, b) => b.vote_count - a.vote_count).map(show => show.tmdb_id);
             setSortedShowIds(sorted);
         }
-        else if(mode === 'By Reviews (Low to High)'){
+        else if(mode === 'By Reviews (↑)'){
             const sorted = [...shows].sort((a, b) => a.vote_count - b.vote_count).map(show => show.tmdb_id);
             setSortedShowIds(sorted);
         }
-        else if (mode === 'By Release Date (New to Old)') {
+        else if (mode === 'By Date (↓)') {
             const sorted = [...shows].sort((a, b) => 
                 dateToTimestamp(b.release_date) - dateToTimestamp(a.release_date)
             ).map(show => show.tmdb_id);
             
             setSortedShowIds(sorted); 
         }
-        else if (mode === 'By Release Date (Old to New)') {
+        else if (mode === 'By Date (↑)') {
             const sorted = [...shows].sort((a, b) => 
                 dateToTimestamp(a.release_date) - dateToTimestamp(b.release_date)
             ).map(show => show.tmdb_id);
