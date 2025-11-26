@@ -8,8 +8,9 @@ const Header = ({
     const NAVIGATION_PAGES = ['Explore', 'Watched', 'Watchlist', 'Recommendations'];
 
     return (
-        // Outer div with three columns
-        <nav className="flex items-center justify-between gap-3 mb-6 flex-wrap">
+        // Outer div that has 3 cols for logo, nav buttons and auth buttons
+        <nav className="flex items-center justify-between gap-3 mb-6 p-4">
+        
             {/* Left: logo */}
             <div className="flex-shrink-0">
                 <button
@@ -22,7 +23,8 @@ const Header = ({
             </div>
 
             {/* Center: navigation buttons */}
-            <div className="w-full md:w-3/5 flex justify-center">
+            <div className="flex-grow flex justify-center"> 
+                {/* Inner Scroll Container */}
                 <div className="flex flex-nowrap overflow-x-auto gap-6 mx-auto">
                     {NAVIGATION_PAGES.map(page => (
                         <button
@@ -45,33 +47,30 @@ const Header = ({
             </div>
 
             {/* Right: login / signup / logout */}
-            <div className="w-full md:w-1/5 flex justify-end gap-2 pr-4 md:pr-0">
+            <div className="flex-shrink-0 flex justify-end gap-2">
                 {isLoggedIn ? (
                     // Logout View
-                    <>
-                        <button onClick={onLogout} className="ml-4 px-5 py-1 text-xs border rounded-xl bg-red-800 font-semibold shadow-sm hover:bg-red-900 border-gray-300">
-                            Logout
-                        </button>
-                    </>
+                    <button onClick={onLogout} className="px-5 py-1 text-xs border rounded-xl bg-red-800 font-semibold shadow-sm hover:bg-red-900 border-gray-300">
+                        Logout
+                    </button>
                 ) : (
                     // Signup / Login Button View
-                    <div className="w-full md:w-1/5 flex justify-end gap-2 pr-4 md:pr-0">
-                <button
-                    onClick={() => setCurrentPage?.('Login')}
-                    className="px-5 py-1 text-xs border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300"  
-                >
-                    Login
-                </button>
-                <button
-                    onClick={() => setCurrentPage?.('Signup')}
-                    className="px-5 py-1 text-xs border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300"
-                >
-                    Signup
-                </button>
-            </div>
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => setCurrentPage?.('Login')}
+                            className="px-5 py-1 text-xs border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300"  
+                        >
+                            Login
+                        </button>
+                        <button
+                            onClick={() => setCurrentPage?.('Signup')}
+                            className="px-5 py-1 text-xs border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300"
+                        >
+                            Signup
+                        </button>
+                    </div>
                 )}
             </div>
-
         </nav>
     );
 };
