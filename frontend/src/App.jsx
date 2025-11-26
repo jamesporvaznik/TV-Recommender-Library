@@ -414,13 +414,9 @@ function App() {
                 console.log("Got recommended successgully:", data.message);
                 console.log('Contents of data.recommended:', data.recommended);
                 setRecommendedShowIds(data.recommended);
-                //setSourceShowIds(data.sources);
 
                 const recommendationMap = new Map(Object.entries(data.sources));
-                // console.log(data.sources);
-                // console.log(recommendationMap);
                 setSourceShowIds(recommendationMap);
-                // console.log(recommendationMap.get("206"));
                 return true; 
             } else {
                 // Failure: Invalid credentials
