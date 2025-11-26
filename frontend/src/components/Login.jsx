@@ -56,7 +56,7 @@ function Login({user, password, setUser, setPassword, onLoginSuccess, onLogin, s
 
   // Renders the component's UI
   return (
-     <form className="w-full max-w-2xl mx-auto p-2 mt-48" onSubmit={handleSubmit}>
+     <form className="w-full max-w-2xl mx-auto p-2 mt-[15vh]" onSubmit={handleSubmit}>
         {/* Title/subtitle text */}
         <div className="flex justify-between items-center px-20">
             <h1 className="text-4xl font-bold mb-6 ">Welcome Back</h1>

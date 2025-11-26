@@ -42,7 +42,7 @@ const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) 
         </div>
 
         {/* Displaying some random shows for the users to see */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
           {useMemo(() => {
             // Picks random unique shows
             const arr = filteredShows.slice();
@@ -50,7 +50,7 @@ const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) 
               const j = Math.floor(Math.random() * (i + 1));
               [arr[i], arr[j]] = [arr[j], arr[i]];
             }
-            return arr.slice(0, Math.min(5, arr.length));
+            return arr.slice(0, Math.min(4, arr.length));
           }, [refreshKey]).map(show => (
             <ShowCard
               key={show.id}
