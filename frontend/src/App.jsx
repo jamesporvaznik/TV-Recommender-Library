@@ -18,6 +18,8 @@ import SearchQuery from './components/SearchQuery';
 import Drawer from './components/Drawer';
 import AddShows from './components/AddShows';
 import SourceDetails from './components/SourceDetails';
+import MobileHeader from './components/MobileHeader'
+import useScreenSize from './hooks/useScreenSize';
 
 // Recommendation modes on the sidebar
 export const RECOMMENDATION_MODES = {
@@ -50,6 +52,7 @@ function App() {
     const [showRecommendations, setShowRecommendations] = useState(false);
     const [isSearhQuery, setIsSearchQuery] = useState(false);
     const [isWatched, setIsWatched] = useState(false);
+    const isMobile = useScreenSize(768);
     
     //Function called when you click on a mode in the sidebar
     const changeMode = async (newMode) => { 
@@ -352,34 +355,42 @@ function App() {
     // Sorting shows by a few different ways
     const sortShows = (shows, mode) => {
 
+        const dateToTimestamp = (dateString) => new Date(dateString).getTime();
+
         // Sorting
         if(mode === 'Relevance'){
             setSortedShowIds(recommendedShowIds);
         }
-        else if(mode === 'By Rating (High to Low)'){
+        else if(mode === 'By Rating (↓)'){
             const sorted = [...shows].sort((a, b) => b.rating_avg - a.rating_avg).map(show => show.tmdb_id);
             setSortedShowIds(sorted);
         }
-        else if(mode === 'By Rating (Low to High)'){
+        else if(mode === 'By Rating (↑)'){
             const sorted = [...shows].sort((a, b) => a.rating_avg - b.rating_avg).map(show => show.tmdb_id);
             setSortedShowIds(sorted);
         }
-        else if (mode === 'By Reviews (High to Low)'){
+        else if (mode === 'By Reviews (↓)'){
             const sorted = [...shows].sort((a, b) => b.vote_count - a.vote_count).map(show => show.tmdb_id);
             setSortedShowIds(sorted);
         }
-        else if(mode === 'By Reviews (Low to High)'){
+        else if(mode === 'By Reviews (↑)'){
             const sorted = [...shows].sort((a, b) => a.vote_count - b.vote_count).map(show => show.tmdb_id);
             setSortedShowIds(sorted);
         }
-        // else if(mode === 'By Release Date (New to Old)'){
-        //     const sorted = [...shows].sort((a, b) => String(b.release_date) - String(a.release_date)).map(show => show.tmdb_id);
-        //     setRecommendedShowIds(sorted);
-        // }
-        // else if(mode === 'By Release Date (Old to New)'){
-        //     const sorted = [...shows].sort((a, b) => String(a.release_date) - String(b.release_date)).map(show => show.tmdb_id);
-        //     setRecommendedShowIds(sorted);
-        // }
+        else if (mode === 'By Date (↓)') {
+            const sorted = [...shows].sort((a, b) => 
+                dateToTimestamp(b.release_date) - dateToTimestamp(a.release_date)
+            ).map(show => show.tmdb_id);
+            
+            setSortedShowIds(sorted); 
+        }
+        else if (mode === 'By Date (↑)') {
+            const sorted = [...shows].sort((a, b) => 
+                dateToTimestamp(a.release_date) - dateToTimestamp(b.release_date)
+            ).map(show => show.tmdb_id);
+            
+            setSortedShowIds(sorted); 
+        }
     }
 
     // Function to generate show recommendations based on the users created list
@@ -635,7 +646,13 @@ function App() {
     // Render the component
     return (
         <div className="flex flex-col min-h-screen bg-neutral-900">
-            <Header currentPage={currentPage} setCurrentPage={setCurrentPage} isLoggedIn={isLoggedIn} onLogout={handleLogout} />
+
+            {isMobile ? (
+                <MobileHeader currentPage={currentPage} setCurrentPage={setCurrentPage} isLoggedIn={isLoggedIn} onLogout={handleLogout} />
+            ) : (
+                <Header currentPage={currentPage} setCurrentPage={setCurrentPage} isLoggedIn={isLoggedIn} onLogout={handleLogout} />                  
+            )}
+            
             
             <main className="flex-grow">
                 {currentPage === 'Home' ? (
@@ -650,7 +667,7 @@ function App() {
                     <>     
 
                         {/* Page Rendering based on currentPage state */}
-                        {currentPage === 'All Shows' && (
+                        {currentPage === 'Explore' && (
                             <AllShows 
                                 allShows={allShows} 
                                 sortedShows={sortedShows}
