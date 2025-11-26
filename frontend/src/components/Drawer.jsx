@@ -16,7 +16,7 @@ import ListItemText from '@mui/material/ListItemText'
 
 
 
-const drawerWidth = 320;
+const drawerWidth = 300;
 const ICON_MARGIN = 20; // Used for spacing the icon from the edge
 
 // Main content area styling remains the same for shifting
@@ -90,28 +90,20 @@ const getListItemStyles = (item, currentMode) => {
   const isActive = item.mode === currentMode;
 
   return {
-      margin: '3px 12px 2px 12px',
-      borderRadius: '6px',
-      border: `solid, #5f626eff, 1px`,
-      backgroundColor: '#101011ff',
-      justifyContent: 'center',
+    margin: '3px 12px 2px 12px',
+    border: `solid, #66666bff ,1px`,
+    borderRadius: '6px',
 
-      // Hover State Styles
-      '&:hover': {
-          // backgroundColor: '#4a4b50ff' 
-          backgroundColor: '#272727ff',
+    '&:hover': {
+          backgroundColor: '#515152ff', 
+          border:  `solid, #95959eff ,1px`,
           text: '#e0e0e0ff'
       },
-      
-      // Active State Styles
+
       ...(isActive && { 
-          backgroundColor: '#f1f1f1ff',
+          backgroundColor: '#515152ff', 
+          border:  `solid, #95959eff ,1px`,
           text: '#e0e0e0ff',
-          '&:hover': {
-            // backgroundColor: '#4a4b50ff' 
-            backgroundColor: '#f1f1f1ff',
-            text: '#e0e0e0ff',
-        },
       }),
   };
 };
@@ -120,7 +112,6 @@ const getTextStyles = (item, currentMode) => {
     const isActive = item.mode === currentMode;
     
     const defaultColor = '#faf9f9ff';
-    const activeHoverColor = '#080000ff';
     
     const containerStyles = {
         flex: 'initial',
@@ -130,16 +121,18 @@ const getTextStyles = (item, currentMode) => {
             fontWeight: 600, 
             textAlign: 'center',
             color: defaultColor,
+            fontSize: '14px',
+            
 
             '&.Mui-selected, &.Mui-selected:hover': { 
-                color: activeHoverColor, 
+                color: defaultColor, 
             },
             
             '&:hover': {
                 // color: activeHoverColor,
             },
             ...(isActive && { 
-                color: activeHoverColor,
+                color: defaultColor,
             })
         }
     };
