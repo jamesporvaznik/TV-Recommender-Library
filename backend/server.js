@@ -45,6 +45,7 @@ app.get('/api/shows', async (req, res) => {
 
         // gets shows from database
         const shows = await getAllShows(db); 
+
         res.json({
             data: shows
         });

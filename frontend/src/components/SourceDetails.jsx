@@ -5,7 +5,7 @@ import ConfirmationModal from './ConfirmationModal';
 // arguments passed to ShowDetails component
 const SourceDetails = ({ 
     show, 
-    allShows,
+    showsMap,
     onClose, 
     watchedIds, 
     bookmarkedIds, 
@@ -31,7 +31,11 @@ const SourceDetails = ({
 
     const correctUrl = `${BASE_URL_ROOT}${IMAGE_SIZE}${PATH}`;
 
-    const getShowById = (id) => allShows.find(show => show.tmdb_id === id);
+    const getShowById = (id) => {
+        const key = String(id);
+        
+        return showsMap.get(key);
+    };
 
     const recommendedShowId = String(show.tmdb_id);
 
