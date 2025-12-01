@@ -381,10 +381,6 @@ app.post('/api/recommendations/shows', authenticateToken, async (req, res) => {
                 sources: sourcesObject
             });
         }
-        
-
-        
-        
 
     } catch (e) {
         console.error("Recommended error:", e.message);

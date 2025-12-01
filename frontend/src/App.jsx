@@ -88,9 +88,6 @@ function App() {
     };
 
     // Helper function to find a full show object by TMDB ID
-    // const getShowById = (id) => allShows.find(show => show.tmdb_id === id);
-
-    // Helper function to find a full show object by TMDB ID
     const getShowById = (id) => {
         const key = String(id);
         
