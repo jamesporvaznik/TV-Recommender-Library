@@ -51,16 +51,22 @@ async function textSearch(queryText, topK = 20) {
 
 // Function to return all shows in the database
 async function getAllShows(db) {
-    return db.all('SELECT * FROM shows'); 
+    const result = await db.execute('SELECT * FROM shows'); 
+    return result.rows;
 }
 
 //Function to return a user record by username if it is valid
 async function findUserByUsername(db, username) {
     // This query fetches the user record based on the provided username
-    const user = await db.get('SELECT id, username, password, watched, bookmarked, added, recommended FROM users WHERE username = ?', username);
+    const result = await db.execute({
+        sql: 'SELECT id, username, password, watched, bookmarked, added, recommended FROM users WHERE username = ?',
+        args: [username]
+    });
 
-    if (user && user.id) {
-        return user;
+    const userRecord = result.rows[0];
+
+    if (userRecord) {
+        return userRecord;
     }
 
     return null;
@@ -75,26 +81,55 @@ async function createAccount(db, username, password){
         VALUES (?, ?, ?, ?, ?, ?)
     `;
 
-    const result = await db.run(sql, 
-        username,
-        password,
-        '[]',
-        '[]',
-        '[]',
-        '[]'
-    );
+    const result = await db.execute({
+        sql: sql,
+        args: [
+            username,
+            password,
+            '[]', 
+            '[]', 
+            '[]', 
+            '[]'
+        ]
+    });
 
     return result.lastID;
 }
 
 //Function to return a user record by id if it is valid
 async function findUserById(db, userId){
-    return db.get('SELECT id, username, password, watched, bookmarked, added, recommended FROM users WHERE id = ?', userId);
+    //return db.execute('SELECT id, username, password, watched, bookmarked, added, recommended FROM users WHERE id = ?', userId);
+
+    const result = await db.execute({
+        sql: 'SELECT id, username, password, watched, bookmarked, added, recommended FROM users WHERE id = ?',
+        args: [userId]
+    });
+
+    const userRecord = result.rows[0];
+
+    if (userRecord) {
+        return userRecord;
+    }
+
+    return null;
 }
 
 // Get a shows record from the database by title (May want to add functionality to search by lowercase)
 async function getShowByTitle(db, addTerm){
-    return db.get('SELECT tmdb_id, title, overview, genres, rating_avg, vote_count, release_date FROM shows WHERE LOWER(title) = LOWER(?)', addTerm);
+    //return db.execute('SELECT tmdb_id, title, overview, genres, rating_avg, vote_count, release_date FROM shows WHERE LOWER(title) = LOWER(?)', addTerm);
+
+    const result = await db.execute({
+        sql: 'SELECT tmdb_id, title, overview, genres, rating_avg, vote_count, release_date FROM shows WHERE LOWER(title) = LOWER(?)',
+        args: [addTerm]
+    });
+
+    const showRecord = result.rows[0];
+
+    if (showRecord) {
+        return showRecord;
+    }
+
+    return null;
 }
 
 // Clears the added list 
@@ -102,19 +137,32 @@ async function clearAdded(db, userId){
 
     const emptyListJSON = '[]';
 
-    const userRecord = await db.get(`SELECT added FROM users WHERE id = ?`, userId);
+    const result = await db.execute({
+        sql: `SELECT added FROM users WHERE id = ?`,
+        args: [userId]
+    });
+
+    const userRecord = result.rows[0];
 
     if (!userRecord) {
         throw new Error("User not found.");
     }   
 
-    await db.run(`UPDATE users SET added = ? WHERE id = ?`, emptyListJSON, userId);
+    await db.execute({
+        sql: 'UPDATE users SET added = ? WHERE id = ?',
+        args: [emptyListJSON, userId]
+    });
 }
 
 // adds or removes a watched show from the users list
 async function toggleWatched(db, userId, showId){
-    // Fetch only the watched list from the user
-    const userRecord = await db.get(`SELECT watched FROM users WHERE id = ?`, userId);
+
+    const result = await db.execute({
+        sql: `SELECT watched FROM users WHERE id = ?`,
+        args: [userId]
+    });
+
+    const userRecord = result.rows[0];
 
     if (!userRecord) {
         throw new Error("User not found.");
@@ -137,7 +185,10 @@ async function toggleWatched(db, userId, showId){
     const newListString = JSON.stringify(currentList); 
     
     // update the database
-    await db.run(`UPDATE users SET watched = ? WHERE id = ?`, newListString, userId);
+    await db.execute({
+        sql: 'UPDATE users SET watched = ? WHERE id = ?',
+        args: [newListString, userId]
+    });
     
     console.log(`Successfully added show ID ${showId} to user ${userId}'s list.`);
 
@@ -147,7 +198,12 @@ async function toggleWatched(db, userId, showId){
 // adds or removes a bookmarked show from the users list
 async function toggleBookmarked(db, userId, showId){
     // Fetch only the bookmarked list from the user
-    const userRecord = await db.get(`SELECT bookmarked FROM users WHERE id = ?`, userId);
+    const result = await db.execute({
+        sql: `SELECT bookmarked FROM users WHERE id = ?`,
+        args: [userId]
+    });
+
+    const userRecord = result.rows[0];
 
     if (!userRecord) {
         throw new Error("User not found.");
@@ -170,7 +226,10 @@ async function toggleBookmarked(db, userId, showId){
     const newListString = JSON.stringify(currentList); 
     
     // update the database
-    await db.run(`UPDATE users SET bookmarked = ? WHERE id = ?`, newListString, userId);
+    await db.execute({
+        sql: 'UPDATE users SET bookmarked = ? WHERE id = ?',
+        args: [newListString, userId]
+    });
     
     console.log(`Successfully added show ID ${showId} to user ${userId}'s list.`);
 
@@ -180,7 +239,12 @@ async function toggleBookmarked(db, userId, showId){
 // adds or removes a added show from the users list
 async function toggleAdded(db, userId, showId){
     // Fetch only the bookmarked list from the user
-    const userRecord = await db.get(`SELECT added FROM users WHERE id = ?`, userId);
+    const result = await db.execute({
+        sql: `SELECT added FROM users WHERE id = ?`,
+        args: [userId]
+    });
+
+    const userRecord = result.rows[0];
 
     if (!userRecord) {
         throw new Error("User not found.");
@@ -203,7 +267,10 @@ async function toggleAdded(db, userId, showId){
     const newListString = JSON.stringify(currentList); 
     
     // update the database
-    await db.run(`UPDATE users SET added = ? WHERE id = ?`, newListString, userId);
+    await db.execute({
+        sql: 'UPDATE users SET added = ? WHERE id = ?',
+        args: [newListString, userId]
+    });
     
     console.log(`Successfully added show ID ${showId} to user ${userId}'s list.`);
 
@@ -214,7 +281,12 @@ async function toggleAdded(db, userId, showId){
 async function getWatched(db, userId){
 
     // Fetch only the necessary column
-    const userRecord = await db.get(`SELECT watched FROM users WHERE id = ?`, userId);
+    const result = await db.execute({
+        sql: `SELECT watched FROM users WHERE id = ?`,
+        args: [userId]
+    });
+
+    const userRecord = result.rows[0];
 
     if (!userRecord) {
         throw new Error("User not found.");
@@ -232,7 +304,12 @@ async function getWatched(db, userId){
 async function getBookmarked(db, userId){
 
     // Fetch only the necessary column
-    const userRecord = await db.get(`SELECT bookmarked FROM users WHERE id = ?`, userId);
+    const result = await db.execute({
+        sql: `SELECT bookmarked FROM users WHERE id = ?`,
+        args: [userId]
+    });
+
+    const userRecord = result.rows[0];
 
     if (!userRecord) {
         throw new Error("User not found.");
@@ -271,13 +348,18 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
         for(let i = 0; i < watchedIds.length; i++){
             
             // Get the overview of the current show
-            showRecord = await db.get(`SELECT overview FROM shows WHERE tmdb_id = ?`, watchedIds[i]);
+            const result = await db.execute({
+                sql: `SELECT overview FROM shows WHERE tmdb_id = ?`,
+                args: [watchedIds[i]]
+            });
+
+            const showRecord = result.rows[0];
 
             if (!showRecord) {
-                throw new Error("Show not found.");
+                throw new Error("User not found.");
             }
 
-            const ratingScore = ratingsMap.get(String(watchedIds[i])) || 0;
+            const ratingScore = ratingsMap.get(String(watchedIds[i])) || 5;
 
             //console.log(`Show ID: ${watchedIds[i]}, Rating Score: ${ratingScore}`);
 
@@ -348,7 +430,10 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
         // const newListString = JSON.stringify(recommendations); 
 
         // update the database
-        await db.run(`UPDATE users SET recommended = ? WHERE id = ?`, oldListString, userId);
+        await db.execute({
+            sql: 'UPDATE users SET recommended = ? WHERE id = ?',
+            args: [oldListString, userId]
+        });
 
         return newMap;  
 
@@ -369,12 +454,17 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
 
         // Iterate through each added show
         for(let i = 0; i < addedIds.length; i++){
-            
+
             // Get the overview of the current show
-            showRecord = await db.get(`SELECT overview FROM shows WHERE tmdb_id = ?`, addedIds[i]);
+            const result = await db.execute({
+                sql: `SELECT overview FROM shows WHERE tmdb_id = ?`,
+                args: [addedIds[i]]
+            });
+
+            const showRecord = result.rows[0];
 
             if (!showRecord) {
-                throw new Error("Show not found.");
+                throw new Error("User not found.");
             }
 
             // const recommendedId = hit._id;
@@ -397,7 +487,7 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
             // console.log(newMap);
 
             // for(let j = 0; j < 1; j++){
-            //     //watchedRecord = await db.get(`SELECT overview FROM shows WHERE tmdb_id = ?`, watchedIds[j]);
+            //     //watchedRecord = await db.execute(`SELECT overview FROM shows WHERE tmdb_id = ?`, watchedIds[j]);
             //     const similarityResult = await textSearchAgainstShow(showRecord.overview, 1, watchedIds[j]);
             //     console.log(similarityResult);
             // }
@@ -494,7 +584,10 @@ async function getRecommendations(db, userId, addedIds, watchedIds, isWatched = 
         //console.log(recommendations.slice(0, 10));
 
         // update the database
-        await db.run(`UPDATE users SET recommended = ? WHERE id = ?`, oldListString, userId);
+        await db.execute({
+            sql: 'UPDATE users SET recommended = ? WHERE id = ?',
+            args: [oldListString, userId]
+        });
 
         return newMap; 
     }
@@ -511,7 +604,10 @@ async function getRecommendationsBySearch(db, userId, query){
     const newListString = JSON.stringify(recommendations); 
 
     // update the database
-    await db.run(`UPDATE users SET recommended = ? WHERE id = ?`, newListString, userId);
+    await db.execute({
+        sql: 'UPDATE users SET recommended = ? WHERE id = ?',
+        args: [newListString, userId]
+    });
 
     return recommendations;
 }
@@ -522,7 +618,10 @@ async function clearRecommendations(db, userId){
     const emptyListJSON = '[]';
 
     // update the database to clear recommendations
-    await db.run(`UPDATE users SET recommended = ? WHERE id = ?`, emptyListJSON, userId);
+    await db.execute({
+        sql: 'UPDATE users SET recommended = ? WHERE id = ?',
+        args: [emptyListJSON, userId]
+    });
 }
 
 // sets a rating for a show by a user
@@ -539,24 +638,39 @@ async function setRating(db, userId, showId, rating){
         rating = excluded.rating
     `;
 
-    await db.run(sql, userId, showId, rating);
+    await db.execute({
+        sql: sql,
+        args: [userId, showId, rating]
+    });
 
 }
 
-// Gets all the ratings for a specific user
-async function getRating(db, userId){
-
-    const ratingRecords = await db.all('SELECT tmdb_id, rating FROM user_ratings WHERE user_id = ?', userId);
+async function getRating(db, userId) {
+    // FIX 1: Use object syntax for parameterized query
+    const result = await db.execute({
+        sql: 'SELECT tmdb_id, rating FROM user_ratings WHERE user_id = ?',
+        args: [userId]
+    });
 
     const ratingsMap = new Map();
+    const columns = result.columns; // Get column names: ['tmdb_id', 'rating']
+    
+    // FIX 2: Iterate over the rows array in the result object
+    // Rows are arrays [tmdb_id, rating] by default from Turso client
+    result.rows.forEach(row => {
+        // Find indices of columns to map values by name
+        const tmdbIdIndex = columns.indexOf('tmdb_id');
+        const ratingIndex = columns.indexOf('rating');
 
-    // Iterate over the array and populate the Map
-    ratingRecords.forEach(record => {
-        ratingsMap.set(String(record.tmdb_id), record.rating);
+        if (tmdbIdIndex !== -1 && ratingIndex !== -1) {
+             const tmdb_id = row[tmdbIdIndex];
+             const rating = row[ratingIndex];
+
+             ratingsMap.set(String(tmdb_id), rating);
+        }
     });
 
     return ratingsMap;
-
 }
 
 

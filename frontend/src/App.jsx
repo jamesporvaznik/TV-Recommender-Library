@@ -39,6 +39,7 @@ function App() {
     const [recommendedPopUp ,setRecommendedPopUp] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [allShows, setAllShows] = useState([]);
+    const [showsMap, setShowsMap] = useState(new Map());
     const [loading, setLoading] = useState(true);
     const [addedShowIds, setAddedShowIds] = useState([]);
     const [watchedShowIds, setWatchedShowIds] = useState([]);
@@ -87,7 +88,14 @@ function App() {
     };
 
     // Helper function to find a full show object by TMDB ID
-    const getShowById = (id) => allShows.find(show => show.tmdb_id === id);
+    // const getShowById = (id) => allShows.find(show => show.tmdb_id === id);
+
+    // Helper function to find a full show object by TMDB ID
+    const getShowById = (id) => {
+        const key = String(id);
+        
+        return showsMap.get(key);
+    };
 
     // Get shows from database
     useEffect(() => {
@@ -96,6 +104,25 @@ function App() {
                 const showsResponse = await fetch('/api/shows');
                 const { data: showsData } = await showsResponse.json();
                 setAllShows(showsData.map(show => ({ ...show })));
+                
+                if (Array.isArray(showsData)) {
+    
+                    const showsMap = showsData.reduce((map, show) => {
+
+                        const key = String(show.tmdb_id); 
+                        
+                        map.set(key, { ...show });
+                        
+                        return map;
+                    }, new Map()); 
+
+                    setShowsMap(showsMap);
+                    console.log("Shows data loaded:", showsMap);
+
+                } else {
+                    console.error("API returned non-array data:", showsData);
+                    setShowsMap(new Map());
+                }
 
             } catch (error) {
                 console.error("Failed to fetch initial data:", error);
@@ -199,6 +226,8 @@ function App() {
                 localStorage.setItem('userToken', data.token);
                 localStorage.setItem('currentUserId', data.userId);
                 localStorage.setItem('username', data.username);
+
+                console.log(localStorage.userToken, localStorage.currentUserId, localStorage.username);
                 
                 // loads the users watched and bookmarked shows upon login
                 loadData();
@@ -866,7 +895,7 @@ function App() {
             {recommendedPopUp && (
                 <SourceDetails 
                     show={recommendedPopUp}
-                    allShows={allShows}
+                    showsMap={showsMap}
                     onClose={handleCloseRecommendedPopUp}
                     watchedIds={watchedShowIds}
                     bookmarkedIds={bookmarkedShowIds}
