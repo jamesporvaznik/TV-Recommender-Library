@@ -1,0 +1,21 @@
+{
+  "functions": {
+    "backend/api/index.js": {
+      "includeFiles": [
+        "backend/db.js",
+        "backend/dbQueries.js",
+        "backend/node_modules/**"
+      ]
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/backend/api"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/dist/index.html"
+    }
+  ]
+}
