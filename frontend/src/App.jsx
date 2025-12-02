@@ -54,6 +54,7 @@ function App() {
     const [isSearhQuery, setIsSearchQuery] = useState(false);
     const [isWatched, setIsWatched] = useState(false);
     const isMobile = useScreenSize(768);
+    const API_BASE_URL = import.meta.env.VITE_API_URL || '';
     
     //Function called when you click on a mode in the sidebar
     const changeMode = async (newMode) => { 
@@ -98,7 +99,7 @@ function App() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const showsResponse = await fetch('/api/shows');
+                const showsResponse = await fetch(`${API_BASE_URL}/api/shows`);
                 const { data: showsData } = await showsResponse.json();
                 setAllShows(showsData.map(show => ({ ...show })));
                 
@@ -179,7 +180,7 @@ function App() {
     // Handles login submission
     const handleSignUp = async(user) => {
         try {
-            const response = await fetch('/api/signup', {
+            const response = await fetch(`${API_BASE_URL}/api/signup`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(user)
@@ -209,7 +210,7 @@ function App() {
     // Function that checks user credentials against database
     const checkUser = async (user) => {
         try {
-            const response = await fetch('/api/login', {
+            const response = await fetch(`${API_BASE_URL}/api/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(user)
@@ -249,7 +250,7 @@ function App() {
 
         //get watched shows
         try{
-            const response = await fetch('/api/watched', { 
+            const response = await fetch(`${API_BASE_URL}/api/watched`, { 
                 method: 'GET',
                 headers: { 
                     'Content-Type': 'application/json',
@@ -271,7 +272,7 @@ function App() {
         }
         //get bookmarked shows
         try {
-            const response = await fetch('/api/bookmarked', { 
+            const response = await fetch(`${API_BASE_URL}/api/bookmarked`, { 
                 method: 'GET',
                 headers: { 
                     'Content-Type': 'application/json',
@@ -293,7 +294,7 @@ function App() {
         }
         //get ratings of watched shows
         try{
-            const response = await fetch('/api/rating', { 
+            const response = await fetch(`${API_BASE_URL}/api/rating`, { 
                 method: 'GET',
                 headers: { 
                     'Content-Type': 'application/json',
@@ -314,7 +315,7 @@ function App() {
         }
         //get added shows of user
         try {
-            const response = await fetch('/api/added', {
+            const response = await fetch(`${API_BASE_URL}/api/added`, {
                 method: 'GET',
                 headers: { 
                     'Content-Type': 'application/json',
@@ -349,7 +350,7 @@ function App() {
         console.log(token);
 
         try {
-            const response = await fetch('/api/added', {
+            const response = await fetch(`${API_BASE_URL}/api/added`, {
                 method: 'DELETE',
                 headers: { 
                     'Content-Type': 'application/json',
@@ -425,7 +426,7 @@ function App() {
         const token = localStorage.userToken;
 
         try {
-            const response = await fetch('/api/recommendations/shows', {
+            const response = await fetch(`${API_BASE_URL}/api/recommendations/shows`, {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json', 
@@ -473,7 +474,7 @@ function App() {
         }
 
         try {
-            const response = await fetch('/api/recommendations/search', {
+            const response = await fetch(`${API_BASE_URL}/api/recommendations/search`, {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json', 
@@ -511,7 +512,7 @@ function App() {
         const token = localStorage.userToken;
 
         try {
-            const response = await fetch('/api/rating', {
+            const response = await fetch(`${API_BASE_URL}/api/rating`, {
                 method: 'POST',
                 headers: { 
                     'Content-Type': 'application/json', 
@@ -574,7 +575,7 @@ function App() {
 
         try {
             if(listName === 'watched'){
-                const response = await fetch('/api/watched', {
+                const response = await fetch(`${API_BASE_URL}/api/watched`, {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json', 
@@ -597,7 +598,7 @@ function App() {
                 }
             }
             else if(listName === 'bookmarked'){
-                const response = await fetch('/api/bookmarked', {
+                const response = await fetch(`${API_BASE_URL}/api/bookmarked`, {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json', 
@@ -622,7 +623,7 @@ function App() {
             else if(listName === 'added'){
 
                 try {
-                    const response = await fetch('/api/added', {
+                    const response = await fetch(`${API_BASE_URL}/api/added`, {
                         method: 'POST',
                         headers: { 
                             'Content-Type': 'application/json', 
