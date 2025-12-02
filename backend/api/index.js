@@ -1,16 +1,3 @@
-// const serverless = require('serverless-http');
-
-// // 1. Import your existing Express app instance.
-// // Ensure your main server file (e.g., server.js) exports the 'app' variable.
-// const app = require('../server'); 
-
-// // 2. Wrap your Express app with serverless-http.
-// const handler = serverless(app);
-
-// // 3. Export the handler. Vercel uses this function to process requests.
-// module.exports = handler;
-
-
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -23,6 +10,21 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const JWT_EXPIRY = '1h'; 
 
 app.use(cors()); 
+
+app.use(cors({
+    // CRITICAL FIX: Explicitly allow your frontend domain as the Origin
+    origin: 'https://tv-recommender-library-opb9-l17h1jqv9-james-projects-0733a820.vercel.app', 
+    
+    // Allows sending credentials like the Authorization header (for JWTs)
+    credentials: true, 
+    
+    // Ensure all methods are allowed
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+    
+    // Ensure the necessary headers (Content-Type, Authorization) are allowed
+    allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
 app.use(express.json());
 
 const initializeDatabase = require('../db.js');
