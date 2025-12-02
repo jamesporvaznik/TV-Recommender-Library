@@ -54,7 +54,34 @@ app.use(express.json());
 const initializeDatabase = require('../db.js');
 let db;
 
+app.use(async (req, res, next) => {
+    try {
+        if (!db) {
+            // Wait for the global database connection promise to resolve
+            const dbInstance = await initializeDatabase(); 
+            db = dbInstance; // Set the global variable once ready
+        }
+        next();
+    } catch (e) {
+        console.error("Database initialization failed in middleware:", e.message);
+        res.status(500).json({ success: false, message: 'Server Error: Database connection failed.' });
+    }
+});
+
 const { getAllShows, findUserByUsername, createAccount, findUserById, clearAdded, toggleWatched, toggleBookmarked, toggleAdded, getWatched, getBookmarked, getRecommendations, getRecommendationsBySearch, clearRecommendations, setRating, getRating} = require('../dbQueries.js');
+
+app.use(async (req, res, next) => {
+    try {
+        // Wait for the global database connection promise to resolve
+        db = await dbPromise; // This pauses the request until 'db' is ready
+        
+        next();
+    } catch (e) {
+        console.error("Database connection failed in middleware:", e.message);
+        // Fail the request if the database can't be reached
+        res.status(500).json({ success: false, message: 'Server Error: Database connection failed.' });
+    }
+});
 
 // checks that user is logged in
 function authenticateToken(req, res, next) {
