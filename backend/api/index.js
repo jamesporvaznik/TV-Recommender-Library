@@ -11,17 +11,41 @@ const JWT_EXPIRY = '1h';
 
 // app.use(cors());
 
+// app.use(cors({
+//     // CRITICAL FIX: Explicitly allow your frontend domain as the Origin
+//     origin: 'https://tv-recommender-library-opb9.vercel.app/', 
+    
+//     // Allows sending credentials like the Authorization header (for JWTs)
+//     credentials: true, 
+    
+//     // Ensure all methods are allowed
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+    
+//     // Ensure the necessary headers (Content-Type, Authorization) are allowed
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+// }));
+
+const PRODUCTION_DOMAIN = 'https://tv-recommender-library.vercel.app'; // <--- Get your simple, official domain
+const VERCEL_PREVIEW_REGEX = /https:\/\/tv-recommender-library-.*\.vercel\.app$/; 
+const LOCAL_DEV_URL = 'http://localhost:5173'; 
+
 app.use(cors({
-    // CRITICAL FIX: Explicitly allow your frontend domain as the Origin
-    origin: 'https://tv-recommender-library-opb9.vercel.app/', 
-    
-    // Allows sending credentials like the Authorization header (for JWTs)
-    credentials: true, 
-    
-    // Ensure all methods are allowed
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
-    
-    // Ensure the necessary headers (Content-Type, Authorization) are allowed
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        
+        // Check for static matches OR the Vercel dynamic pattern
+        const allowed = (origin === PRODUCTION_DOMAIN) || 
+                        (origin === LOCAL_DEV_URL) || 
+                        VERCEL_PREVIEW_REGEX.test(origin);
+        
+        if (allowed) {
+            return callback(null, true);
+        }
+        
+        return callback(new Error(`CORS policy violation`), false);
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
 
@@ -504,14 +528,29 @@ app.post('/api/rating', authenticateToken, async (req, res) => {
 });
 
 //handles some initializations when starting the server.
-async function startServer() {
-    // Initialize db
-    db = await initializeDatabase(); 
+// async function startServer() {
+//     // Initialize db
+//     db = await initializeDatabase(); 
     
-    // Start listening after the db is ready
-    const PORT = 5000;
-    app.listen(PORT, () => console.log(`Server running on port ${PORT} with DB ready!`));
-}
+//     // Start listening after the db is ready
+//     const PORT = 5000;
+//     app.listen(PORT, () => console.log(`Server running on port ${PORT} with DB ready!`));
+// }
 
-startServer();
+// startServer();
 // module.exports = app;
+
+initializeDatabase().then(initializedDb => {
+    // 2. Set the global 'db' variable for all routes to use once it's ready.
+    db = initializedDb;
+    console.log('Database initialized successfully for serverless.');
+}).catch(e => {
+    // Catch fatal errors during DB initialization
+    console.error('FATAL: Database initialization failed:', e.message);
+});
+
+// 3. Import the serverless wrapper
+const serverless = require('serverless-http'); 
+
+// 4. Export the app instance wrapped as the handler
+module.exports.handler = serverless(app);
