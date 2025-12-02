@@ -7,7 +7,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:5000', 
+        // target: 'http://localhost:5000', 
+        target: 'https://tv-recommender-library-backend-okat2iz1v.vercel.app',
         changeOrigin: true,
         secure: false,
       },
