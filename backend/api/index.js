@@ -11,7 +11,7 @@ const JWT_EXPIRY = '1h';
 
 app.use(cors({
     // CRITICAL FIX: Explicitly allow your frontend domain as the Origin
-    origin: 'https://tv-recommender-library-opb9-cgqksst67-james-projects-0733a820.vercel.app/', 
+    origin: 'https://tv-recommender-library-opb9-cgqksst67-james-projects-0733a820.vercel.app', 
     
     // Allows sending credentials like the Authorization header (for JWTs)
     credentials: true, 
