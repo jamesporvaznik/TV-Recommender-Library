@@ -9,31 +9,7 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET; 
 const JWT_EXPIRY = '1h'; 
 
-// Define your static production domain and the dynamic regex pattern
-const PRODUCTION_DOMAIN = 'https://tv-recommender-library-backend-okat2iz1v.vercel.app'; // Your simple, permanent domain
-const VERCEL_PREVIEW_REGEX = /https:\/\/tv-recommender-library-.*\.vercel\.app$/;
-
-app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin) return callback(null, true);
-        
-        // Check static matches OR the Vercel dynamic pattern
-        const allowed = (origin === PRODUCTION_DOMAIN) || 
-                        (origin === 'http://localhost:5173') || // For local testing
-                        VERCEL_PREVIEW_REGEX.test(origin);
-        
-        if (allowed) {
-            return callback(null, true);
-        }
-        
-        return callback(new Error(`CORS policy violation`), false);
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-}));
-
-// app.use(cors());
+app.use(cors());
 
 // app.use(cors({
 //     // CRITICAL FIX: Explicitly allow your frontend domain as the Origin
@@ -52,23 +28,7 @@ app.use(cors({
 app.use(express.json());
 
 const initializeDatabase = require('../db.js');
-
-let dbCache; 
-
-// Middleware to initialize/cache the database connection
-app.use(async (req, res, next) => {
-    try {
-        if (!dbCache) {
-            dbCache = await initializeDatabase();
-        }
-        // Expose the initialized database instance to all routes
-        req.db = dbCache; 
-        next();
-    } catch (e) {
-        console.error("Database connection failed in middleware:", e.message);
-        res.status(500).send("Server Error: Database unavailable.");
-    }
-});
+let db;
 
 const { getAllShows, findUserByUsername, createAccount, findUserById, clearAdded, toggleWatched, toggleBookmarked, toggleAdded, getWatched, getBookmarked, getRecommendations, getRecommendationsBySearch, clearRecommendations, setRating, getRating} = require('../dbQueries.js');
 
@@ -544,14 +504,14 @@ app.post('/api/rating', authenticateToken, async (req, res) => {
 });
 
 //handles some initializations when starting the server.
-// async function startServer() {
-//     // Initialize db
-//     dbCache = await initializeDatabase(); 
+async function startServer() {
+    // Initialize db
+    db = await initializeDatabase(); 
     
-//     // Start listening after the db is ready
-//     const PORT = 5000;
-//     app.listen(PORT, () => console.log(`Server running on port ${PORT} with DB ready!`));
-// }
+    // Start listening after the db is ready
+    const PORT = 5000;
+    app.listen(PORT, () => console.log(`Server running on port ${PORT} with DB ready!`));
+}
 
-// startServer();
+startServer();
 // module.exports = app;
