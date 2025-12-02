@@ -489,14 +489,14 @@ app.post('/api/rating', authenticateToken, async (req, res) => {
 });
 
 //handles some initializations when starting the server.
-// async function startServer() {
-//     // Initialize db
-//     db = await initializeDatabase(); 
+async function startServer() {
+    // Initialize db
+    db = await initializeDatabase(); 
     
-//     // Start listening after the db is ready
-//     const PORT = 5000;
-//     app.listen(PORT, () => console.log(`Server running on port ${PORT} with DB ready!`));
-// }
+    // Start listening after the db is ready
+    const PORT = 5000;
+    app.listen(PORT, () => console.log(`Server running on port ${PORT} with DB ready!`));
+}
 
-// startServer();
-module.exports = app;
+startServer();
+// module.exports = app;
