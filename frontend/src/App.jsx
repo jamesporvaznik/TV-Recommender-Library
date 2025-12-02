@@ -156,7 +156,6 @@ function App() {
         setRecommendedPopUp(null);
     };
 
-
     // Function for when the user logs out
     const handleLogout = async() => {
 
