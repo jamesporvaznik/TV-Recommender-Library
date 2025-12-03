@@ -530,44 +530,25 @@ app.post('/api/rating', authenticateToken, async (req, res) => {
 // startServer();
 
 
-// State variables to ensure the DB only initializes once per cold start
 let dbInitialized = false;
 
-// Function to initialize DB lazily (only if needed)
 async function initDb() {
     if (!dbInitialized) {
-        // This is where you connect to your remote database (e.g., LibSQL/Turso)
         db = await initializeDatabase();
         dbInitialized = true;
-        console.log('Database initialized successfully for serverless.');
     }
 }
 
-// 1. Import the serverless wrapper
 const serverless = require('serverless-http'); 
-
-// 2. Wrap the Express app instance
 const wrappedHandler = serverless(app);
 
-// 3. Export the async handler required by Vercel
+// 2. Export the handler that calls initDb() inside a try/catch
 module.exports.handler = async (event, context) => {
-    // Ensures DB is initialized and ready before any route logic runs
     try {
-        // await initDb();
-        return wrappedHandler(event, context);
+        await initDb(); // Initialization happens here, only when a request comes in
+        return wrappedHandler(event, context); // Hand off to Express
     } catch (error) {
-        // This catch handles crashes during the database connection or initialization
-        console.error('CRITICAL: Serverless handler failed during initialization:', error);
-        
-        // Return a JSON 500 response immediately to stop the Vercel HTML error page
-        return {
-            statusCode: 500,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                success: false, 
-                message: 'Internal Server Error: Application initialization failed.',
-                details: error.message
-            }),
-        };
+        // Catch and handle initialization errors gracefully
+        return { statusCode: 500, /* ...JSON error response... */ };
     }
 };
