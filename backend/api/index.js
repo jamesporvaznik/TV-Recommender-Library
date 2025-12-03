@@ -11,79 +11,22 @@ const JWT_EXPIRY = '1h';
 
 // app.use(cors());
 
-// app.use(cors({
-//     // CRITICAL FIX: Explicitly allow your frontend domain as the Origin
-//     origin: 'https://tv-recommender-library-opb9.vercel.app/', 
-    
-//     // Allows sending credentials like the Authorization header (for JWTs)
-//     credentials: true, 
-    
-//     // Ensure all methods are allowed
-//     methods: ['GET', 'POST', 'PUT', 'DELETE'], 
-    
-//     // Ensure the necessary headers (Content-Type, Authorization) are allowed
-//     allowedHeaders: ['Content-Type', 'Authorization'],
-// }));
+const corsOptions = {
+    // You can use '*' here for local development ease, or list 'http://localhost:3000', etc.
+    origin: '*', 
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Authorization', 'Content-Type'],
+    credentials: true
+};
 
-// const PRODUCTION_DOMAIN = 'https://tv-recommender-library-opb9.vercel.app'; // <--- Get your simple, official domain
-// const VERCEL_PREVIEW_REGEX = /https:\/\/tv-recommender-library-.*\.vercel\.app$/; 
-// const LOCAL_DEV_URL = 'http://localhost:5173'; 
-
-app.use(cors());
-
-// app.use(cors({
-//     origin: (origin, callback) => {
-//         if (!origin) return callback(null, true);
-        
-//         // Check for static matches OR the Vercel dynamic pattern
-//         const allowed = (origin === PRODUCTION_DOMAIN) || 
-//                         (origin === LOCAL_DEV_URL) || 
-//                         VERCEL_PREVIEW_REGEX.test(origin);
-        
-//         if (allowed) {
-//             return callback(null, true);
-//         }
-        
-//         return callback(new Error(`CORS policy violation`), false);
-//     },
-//     credentials: true,
-//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-//     allowedHeaders: ['Content-Type', 'Authorization'],
-// }));
+app.use(cors(corsOptions));
 
 app.use(express.json());
 
 const initializeDatabase = require('../db.js');
 let db;
 
-// app.use(async (req, res, next) => {
-//     try {
-//         if (!db) {
-//             // Wait for the global database connection promise to resolve
-//             const dbInstance = await initializeDatabase(); 
-//             db = dbInstance; // Set the global variable once ready
-//         }
-//         next();
-//     } catch (e) {
-//         console.error("Database initialization failed in middleware:", e.message);
-//         res.status(500).json({ success: false, message: 'Server Error: Database connection failed.' });
-//     }
-// });
-
 const { getAllShows, findUserByUsername, createAccount, findUserById, clearAdded, toggleWatched, toggleBookmarked, toggleAdded, getWatched, getBookmarked, getRecommendations, getRecommendationsBySearch, clearRecommendations, setRating, getRating} = require('../dbQueries.js');
-
-// app.use(async (req, res, next) => {
-//     try {
-//         // Wait for the global database connection promise to resolve
-//         db = await dbPromise; // This pauses the request until 'db' is ready
-        
-//         next();
-//     } catch (e) {
-//         console.error("Database connection failed in middleware:", e.message);
-//         // Fail the request if the database can't be reached
-//         res.status(500).json({ success: false, message: 'Server Error: Database connection failed.' });
-//     }
-// });
 
 // checks that user is logged in
 function authenticateToken(req, res, next) {
