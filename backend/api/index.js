@@ -25,7 +25,7 @@ const JWT_EXPIRY = '1h';
 //     allowedHeaders: ['Content-Type', 'Authorization'],
 // }));
 
-const PRODUCTION_DOMAIN = 'https://tv-recommender-library.vercel.app'; // <--- Get your simple, official domain
+const PRODUCTION_DOMAIN = 'https://tv-recommender-library-opb9.vercel.app'; // <--- Get your simple, official domain
 const VERCEL_PREVIEW_REGEX = /https:\/\/tv-recommender-library-.*\.vercel\.app$/; 
 const LOCAL_DEV_URL = 'http://localhost:5173'; 
 
@@ -54,34 +54,34 @@ app.use(express.json());
 const initializeDatabase = require('../db.js');
 let db;
 
-app.use(async (req, res, next) => {
-    try {
-        if (!db) {
-            // Wait for the global database connection promise to resolve
-            const dbInstance = await initializeDatabase(); 
-            db = dbInstance; // Set the global variable once ready
-        }
-        next();
-    } catch (e) {
-        console.error("Database initialization failed in middleware:", e.message);
-        res.status(500).json({ success: false, message: 'Server Error: Database connection failed.' });
-    }
-});
+// app.use(async (req, res, next) => {
+//     try {
+//         if (!db) {
+//             // Wait for the global database connection promise to resolve
+//             const dbInstance = await initializeDatabase(); 
+//             db = dbInstance; // Set the global variable once ready
+//         }
+//         next();
+//     } catch (e) {
+//         console.error("Database initialization failed in middleware:", e.message);
+//         res.status(500).json({ success: false, message: 'Server Error: Database connection failed.' });
+//     }
+// });
 
 const { getAllShows, findUserByUsername, createAccount, findUserById, clearAdded, toggleWatched, toggleBookmarked, toggleAdded, getWatched, getBookmarked, getRecommendations, getRecommendationsBySearch, clearRecommendations, setRating, getRating} = require('../dbQueries.js');
 
-app.use(async (req, res, next) => {
-    try {
-        // Wait for the global database connection promise to resolve
-        db = await dbPromise; // This pauses the request until 'db' is ready
+// app.use(async (req, res, next) => {
+//     try {
+//         // Wait for the global database connection promise to resolve
+//         db = await dbPromise; // This pauses the request until 'db' is ready
         
-        next();
-    } catch (e) {
-        console.error("Database connection failed in middleware:", e.message);
-        // Fail the request if the database can't be reached
-        res.status(500).json({ success: false, message: 'Server Error: Database connection failed.' });
-    }
-});
+//         next();
+//     } catch (e) {
+//         console.error("Database connection failed in middleware:", e.message);
+//         // Fail the request if the database can't be reached
+//         res.status(500).json({ success: false, message: 'Server Error: Database connection failed.' });
+//     }
+// });
 
 // checks that user is logged in
 function authenticateToken(req, res, next) {
@@ -555,29 +555,29 @@ app.post('/api/rating', authenticateToken, async (req, res) => {
 });
 
 //handles some initializations when starting the server.
-// async function startServer() {
-//     // Initialize db
-//     db = await initializeDatabase(); 
+async function startServer() {
+    // Initialize db
+    db = await initializeDatabase(); 
     
-//     // Start listening after the db is ready
-//     const PORT = 5000;
-//     app.listen(PORT, () => console.log(`Server running on port ${PORT} with DB ready!`));
-// }
+    // Start listening after the db is ready
+    const PORT = 5000;
+    app.listen(PORT, () => console.log(`Server running on port ${PORT} with DB ready!`));
+}
 
-// startServer();
+startServer();
 // module.exports = app;
 
-initializeDatabase().then(initializedDb => {
-    // 2. Set the global 'db' variable for all routes to use once it's ready.
-    db = initializedDb;
-    console.log('Database initialized successfully for serverless.');
-}).catch(e => {
-    // Catch fatal errors during DB initialization
-    console.error('FATAL: Database initialization failed:', e.message);
-});
+// initializeDatabase().then(initializedDb => {
+//     // 2. Set the global 'db' variable for all routes to use once it's ready.
+//     db = initializedDb;
+//     console.log('Database initialized successfully for serverless.');
+// }).catch(e => {
+//     // Catch fatal errors during DB initialization
+//     console.error('FATAL: Database initialization failed:', e.message);
+// });
 
-// 3. Import the serverless wrapper
-const serverless = require('serverless-http'); 
+// // 3. Import the serverless wrapper
+// const serverless = require('serverless-http'); 
 
-// 4. Export the app instance wrapped as the handler
-module.exports.handler = serverless(app);
+// // 4. Export the app instance wrapped as the handler
+// module.exports.handler = serverless(app);
