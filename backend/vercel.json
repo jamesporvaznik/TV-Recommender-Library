@@ -2,7 +2,6 @@
   "version": 2,
   "functions": {
     "api/index.js": {
-      "runtime": "@vercel/node@3.0.7",
       "includeFiles": "db.js, dbQueries.js"
     }
   },
