@@ -50,6 +50,13 @@ function authenticateToken(req, res, next) {
     });
 }
 
+app.get('/', (req, res) => {
+    res.status(200).json({ 
+        success: true, 
+        message: 'TV Recommender API is running successfully.' 
+    });
+});
+
 // return all shows to the frontend
 app.get('/api/shows', async (req, res) => {
     try {
