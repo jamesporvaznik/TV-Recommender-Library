@@ -9,11 +9,31 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET; 
 const JWT_EXPIRY = '1h'; 
 
-app.use(cors());
+// app.use(cors());
+
+const allowedOrigins = [
+    'https://tv-recommender-library-opb9.vercel.app/', // Your Vercel frontend URL
+    'http://localhost:5173' // For local development
+];
+
+const corsOptions = {
+    origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+    } else {
+        callback(new Error('Not allowed by CORS'));
+    }
+    },
+    credentials: true, // Allow sending cookies/authorization headers
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allowed HTTP methods
+    allowedHeaders: ['Content-Type', 'Authorization'] // Allowed headers
+};
+
+app.use(cors(corsOptions));
 
 // const corsOptions = {
 //     // You can use '*' here for local development ease, or list 'http://localhost:3000', etc.
-//     origin: '*', 
+//     origin: 'https://tv-recommender-library-opb9.vercel.app/', 
 //     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 //     allowedHeaders: ['Authorization', 'Content-Type'],
 //     credentials: true
