@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import ShowCard from './ShowCard'
+import { MdSearch } from 'react-icons/md';
 
 // Landing page component
 const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) => {
@@ -71,12 +72,12 @@ const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) 
         <div className="md:w-1/2">
           <div className="font-bold text-3xl md:text-6xl max-w-lg text-left">
             <p className="text-white">
-              Track and Rate Your Watchlist
+              Track and Rate Shows You've Watched
             </p>
           </div>
-          <div className="mt-5 font-semibold text-gray-400 max-w-md text-left">
+          {/* <div className="mt-5 font-semibold text-gray-400 max-w-md text-left">
             <p>This feature will allow you to keep track of all the shows you have watched and rate them so you remember and can find similar shows to your favorites.</p>
-          </div>
+          </div> */}
         </div>
         
         {/* right col */}
@@ -109,9 +110,9 @@ const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) 
                 Bookmark Shows to Watch Later
             </p>
           </div>
-          <div className="mt-5 font-semibold text-gray-400 max-w-md">
+          {/* <div className="mt-5 font-semibold text-gray-400 max-w-md">
             <p>This feature will allow you to keep track of the shows you want to watch next. Users will also be able to access information on the show like where they can watch it and key details</p>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -123,9 +124,9 @@ const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) 
               Search and Discover new Shows
             </p>
           </div>
-          <div className="mt-5 font-semibold text-gray-400 max-w-md text-left">
+          {/* <div className="mt-5 font-semibold text-gray-400 max-w-md text-left">
             <p>In this search feature you can filter by many key features to find new shows or search shows by name to find familiar shows</p>
-          </div>
+          </div> */}
         </div>
 
         <div className="md:w-1/2 flex justify-center md:justify-end items-center">
