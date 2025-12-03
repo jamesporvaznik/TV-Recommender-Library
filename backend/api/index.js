@@ -31,15 +31,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// const corsOptions = {
-//     // You can use '*' here for local development ease, or list 'http://localhost:3000', etc.
-//     origin: 'https://tv-recommender-library-opb9.vercel.app/', 
-//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-//     allowedHeaders: ['Authorization', 'Content-Type'],
-//     credentials: true
-// };
-// app.use(cors(corsOptions));
-
 app.use(express.json());
 
 const initializeDatabase = require('../db.js');
