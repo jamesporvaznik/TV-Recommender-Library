@@ -553,7 +553,7 @@ const wrappedHandler = serverless(app);
 module.exports.handler = async (event, context) => {
     // Ensures DB is initialized and ready before any route logic runs
     try {
-        await initDb();
+        // await initDb();
         return wrappedHandler(event, context);
     } catch (error) {
         // This catch handles crashes during the database connection or initialization
