@@ -9,21 +9,16 @@ const jwt = require('jsonwebtoken');
 const JWT_SECRET = process.env.JWT_SECRET; 
 const JWT_EXPIRY = '1h'; 
 
-// app.use(cors());
+app.use(cors());
 
-app.use(cors({
-    // CRITICAL FIX: Explicitly allow your frontend domain as the Origin
-    origin: 'https://tv-recommender-library-opb9.vercel.app/', 
-    
-    // Allows sending credentials like the Authorization header (for JWTs)
-    credentials: true, 
-    
-    // Ensure all methods are allowed
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
-    
-    // Ensure the necessary headers (Content-Type, Authorization) are allowed
-    allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+// const corsOptions = {
+//     // You can use '*' here for local development ease, or list 'http://localhost:3000', etc.
+//     origin: '*', 
+//     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+//     allowedHeaders: ['Authorization', 'Content-Type'],
+//     credentials: true
+// };
+// app.use(cors(corsOptions));
 
 app.use(express.json());
 
@@ -53,6 +48,13 @@ function authenticateToken(req, res, next) {
         next();
     });
 }
+
+app.get('/', (req, res) => {
+    res.status(200).json({ 
+        success: true, 
+        message: 'TV Recommender API is running successfully.' 
+    });
+});
 
 // return all shows to the frontend
 app.get('/api/shows', async (req, res) => {
@@ -515,3 +517,18 @@ async function startServer() {
 
 startServer();
 // module.exports = app;
+
+// initializeDatabase().then(initializedDb => {
+//     // 2. Set the global 'db' variable for all routes to use once it's ready.
+//     db = initializedDb;
+//     console.log('Database initialized successfully for serverless.');
+// }).catch(e => {
+//     // Catch fatal errors during DB initialization
+//     console.error('FATAL: Database initialization failed:', e.message);
+// });
+
+// // 3. Import the serverless wrapper
+// const serverless = require('serverless-http'); 
+
+// // 4. Export the app instance wrapped as the handler
+// module.exports.handler = serverless(app);
