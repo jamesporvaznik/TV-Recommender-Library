@@ -13,6 +13,7 @@ const JWT_EXPIRY = '1h';
 
 const allowedOrigins = [
     'https://tv-recommender-library-opb9.vercel.app', // Your Vercel frontend URL
+    'https://tv-recommender-library-opb9.vercel.app/',
     'http://localhost:5173' // For local development
 ];
 
