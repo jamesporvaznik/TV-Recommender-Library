@@ -12,7 +12,7 @@ async function initializeDatabase() {
     if (!url || !authToken) {
         // Log a fatal error if connection details are missing
         console.error("FATAL: Turso connection details (URL or Token) are missing from environment.");
-        process.exit(1); 
+        throw new Error("Missing Turso connection details.");
     }
     
     try {
@@ -27,7 +27,7 @@ async function initializeDatabase() {
         return dbConnection;
     } catch (e) {
         console.error("TURSO CONNECTION ERROR:", e.message);
-        process.exit(1);
+        throw e;
     }
 }
 

@@ -570,29 +570,3 @@ module.exports.handler = async (event, context) => {
         };
     }
 };
-
-
-
-
-
-
-
-
-
-
-// module.exports = app;
-
-// initializeDatabase().then(initializedDb => {
-//     // 2. Set the global 'db' variable for all routes to use once it's ready.
-//     db = initializedDb;
-//     console.log('Database initialized successfully for serverless.');
-// }).catch(e => {
-//     // Catch fatal errors during DB initialization
-//     console.error('FATAL: Database initialization failed:', e.message);
-// });
-
-// // 3. Import the serverless wrapper
-// const serverless = require('serverless-http'); 
-
-// // 4. Export the app instance wrapped as the handler
-// module.exports.handler = serverless(app);
