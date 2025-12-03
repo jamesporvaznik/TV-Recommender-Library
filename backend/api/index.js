@@ -25,29 +25,31 @@ const JWT_EXPIRY = '1h';
 //     allowedHeaders: ['Content-Type', 'Authorization'],
 // }));
 
-const PRODUCTION_DOMAIN = 'https://tv-recommender-library-opb9.vercel.app'; // <--- Get your simple, official domain
-const VERCEL_PREVIEW_REGEX = /https:\/\/tv-recommender-library-.*\.vercel\.app$/; 
-const LOCAL_DEV_URL = 'http://localhost:5173'; 
+// const PRODUCTION_DOMAIN = 'https://tv-recommender-library-opb9.vercel.app'; // <--- Get your simple, official domain
+// const VERCEL_PREVIEW_REGEX = /https:\/\/tv-recommender-library-.*\.vercel\.app$/; 
+// const LOCAL_DEV_URL = 'http://localhost:5173'; 
 
-app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin) return callback(null, true);
+app.use(cors());
+
+// app.use(cors({
+//     origin: (origin, callback) => {
+//         if (!origin) return callback(null, true);
         
-        // Check for static matches OR the Vercel dynamic pattern
-        const allowed = (origin === PRODUCTION_DOMAIN) || 
-                        (origin === LOCAL_DEV_URL) || 
-                        VERCEL_PREVIEW_REGEX.test(origin);
+//         // Check for static matches OR the Vercel dynamic pattern
+//         const allowed = (origin === PRODUCTION_DOMAIN) || 
+//                         (origin === LOCAL_DEV_URL) || 
+//                         VERCEL_PREVIEW_REGEX.test(origin);
         
-        if (allowed) {
-            return callback(null, true);
-        }
+//         if (allowed) {
+//             return callback(null, true);
+//         }
         
-        return callback(new Error(`CORS policy violation`), false);
-    },
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-}));
+//         return callback(new Error(`CORS policy violation`), false);
+//     },
+//     credentials: true,
+//     methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//     allowedHeaders: ['Content-Type', 'Authorization'],
+// }));
 
 app.use(express.json());
 
