@@ -17,29 +17,29 @@ const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) 
   
   return (
     <section className="py-20 text-center">
+
       <h1 className="text-5xl font-bold">Welcome to TV Recommender</h1>
 
       <div className="mt-10 max-w-5xl mx-auto">
-        
+      
         <div className="flex flex-col sm:flex-row items-center mb-8">
-    
-            {/* 1. Placeholder Div (Balances the Button's space) */}
-            <div className="hidden sm:block sm:w-20"></div> 
-            
-            {/* 2. The Title (Centered) */}
-            <h2 className="text-xl font-semibold text-gray-400 mx-auto">
-                Discover shows you love
-            </h2>
-            
-            {/* 3. The Button Wrapper */}
-            <div className="mt-2 sm:mt-0 sm:ml-4 sm:w-20 text-right mr-4"> 
-                <button
-                    className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300"
-                    onClick={() => setRefreshKey(k => k + 1)}
-                >
-                    Refresh
-                </button>
-            </div>
+          {/* 1. Placeholder Div (Balances the Button's space) */}
+          <div className="hidden sm:block sm:w-20"></div> 
+          
+          {/* 2. The Title (Centered) */}
+          <h2 className="text-xl font-semibold text-gray-400 mx-auto">
+              Discover shows you love
+          </h2>
+          
+          {/* 3. The Button Wrapper */}
+          <div className="mt-2 sm:mt-0 sm:ml-4 sm:w-20 text-right mr-4"> 
+              <button
+                  className="px-5 py-1 text-sm border rounded-xl bg-neutral-900 font-semibold shadow-sm hover:bg-zinc-800 border-gray-300"
+                  onClick={() => setRefreshKey(k => k + 1)}
+              >
+                  Refresh
+              </button>
+          </div>
         </div>
 
         {/* Displaying some random shows for the users to see */}
@@ -63,7 +63,60 @@ const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) 
             />
           ))}
         </div>
+      </div>
 
+      <div className="flex flex-col sm:flex-row items-center mb-8 mt-60">
+
+        {/*  */}
+        <div className="">
+          {/* 1. Icon/Image Area */}
+          <img src={icon} alt={title} className="" />
+          
+          {/* 2. Title & Description */}
+          <h3 className="">Search and Discover New Shows</h3>
+          <p className="">Easily search through thousands of shows with sorting and filtering.</p>
+          
+          {/* 3. Action Button (Optional) */}
+          {buttonText && (
+            <a href={link} className="">
+              {buttonText}
+            </a>
+          )}
+        </div>
+        
+        {/*  */}
+        <div className="">
+          {/* 1. Icon/Image Area */}
+          <img src={icon} alt={title} className="" />
+          
+          {/* 2. Title & Description */}
+          <h3 className="">Track Shows</h3>
+          <p className="">Mark and rate shows that you've watched. Then bookmark shows you wish to watch in the future!</p>
+          
+          {/* 3. Action Button (Optional) */}
+          {buttonText && (
+            <a href={link} className="">
+              {buttonText}
+            </a>
+          )}
+        </div>
+        
+        {/*  */}
+        <div className="">
+          {/* 1. Icon/Image Area */}
+          <img src={icon} alt={title} className="" />
+          
+          {/* 2. Title & Description */}
+          <h3 className="">Get Recommendations</h3>
+          <p className="">Compile lists of shows and get recommendations based on these shows.</p>
+          
+          {/* 3. Action Button (Optional) */}
+          {buttonText && (
+            <a href={link} className="">
+              {buttonText}
+            </a>
+          )}
+        </div>
       </div>
 
       {/* Two col features section: Track (left) and Placeholder image (right) */}
