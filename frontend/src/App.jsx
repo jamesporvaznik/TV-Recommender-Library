@@ -901,6 +901,7 @@ function App() {
                     onToggleList={updateShowList}
                     setRating={setRating}
                     userRating={ratedShowsMap.get(String(recommendedPopUp.tmdb_id))}
+                    currentMode={currentMode}
                 />
             )}
             
