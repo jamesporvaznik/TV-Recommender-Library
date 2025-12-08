@@ -8,7 +8,7 @@ export default defineConfig({
     proxy: {
       '/api': {
         // target: 'http://localhost:5000', 
-        target: 'https://tv-recommender-library-backend-okat2iz1v.vercel.app',
+        target: 'https://tv-recommender-library.onrender.com',
         changeOrigin: true,
         secure: false,
       },
