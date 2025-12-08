@@ -493,6 +493,7 @@ async function startServer() {
     // Initialize db
     db = await initializeDatabase(); 
     
+    console.log("SERVER_DEBUG: Database connection complete. Preparing to listen on port.");
     // Start listening after the db is ready
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => console.log(`Server running on port ${PORT} with DB ready!`));

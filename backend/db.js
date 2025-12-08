@@ -12,6 +12,8 @@ async function initializeDatabase() {
         console.error("FATAL: Turso connection details (URL or Token) are missing from environment.");
         throw new Error("Missing Turso connection details.");
     }
+
+    console.log("DB_DEBUG: Attempting to create Turso client with provided credentials.");
     
     try {
         // Establish the remote connection using the libSQL client
@@ -19,6 +21,8 @@ async function initializeDatabase() {
             url: url,
             authToken: authToken,
         });
+
+        console.log("DB_DEBUG: Turso client object created successfully.");
 
         console.log("Successfully connected to Turso database.");
         
