@@ -1,9 +1,9 @@
 import React, { useMemo, useState } from 'react';
 import ShowCard from './ShowCard'
 import { MdSearch } from 'react-icons/md';
-import SearchIcon from '../transparent-magnifying-glass-shiny-and-metallic-blue-magnifying-glass-with-1710926391202'
-import TrackIcon from '../free-green-check-mark-in-box-icon-png-701751694974629d0zcitsddw'
-import RecommendIcon from '../Illustration-of-light-bulb-icon-on-transparent-background-PNG'
+// import SearchIcon from '../transparent-magnifying-glass-shiny-and-metallic-blue-magnifying-glass-with-1710926391202'
+// import TrackIcon from '../free-green-check-mark-in-box-icon-png-701751694974629d0zcitsddw'
+// import RecommendIcon from '../Illustration-of-light-bulb-icon-on-transparent-background-PNG'
 
 // Landing page component
 const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) => {
@@ -74,54 +74,54 @@ const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick}) 
         <div className="w-full sm:w-1/3 p-4 text-center">
             {/* 1. Icon/Image Area */}
             {/* NOTE: You need to pass 'icon' and 'title' as props to the component where this is rendered */}
-            <img src={SearchIcon} alt={"Magnifying Glass"} className="w-20 h-20 mx-auto mb-4" /> 
+            <img src="/images/undraw_searching.svg" alt="Search" className="w-60 h-60 mx-auto mb-8" />
             
             {/* 2. Title & Description */}
-            <h3 className="text-xl font-semibold mb-2 text-white">Search and Discover New Shows</h3>
+            <h3 className="text-xl font-semibold mb-3 text-white">Search and Discover New Shows</h3>
             <p className="text-gray-400 mb-4">Easily search through thousands of shows with sorting and filtering.</p>
             
             {/* 3. Action Button (Optional) */}
-            {buttonText && (
+            {/* {buttonText && (
                 <a href={link} className="inline-block px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition duration-200">
                     {buttonText}
                 </a>
-            )}
+            )} */}
         </div>
         
         {/* 2. Track Shows */}
         <div className="w-full sm:w-1/3 p-4 text-center">
             {/* 1. Icon/Image Area */}
-            <img src={TrackIcon} alt={"Checkmark"} className="w-20 h-20 mx-auto mb-4" /> 
+            <img src="/images/undraw_check.svg" alt="Track" className="w-60 h-60 mx-auto mb-8" />
             
             {/* 2. Title & Description */}
-            <h3 className="text-xl font-semibold mb-2 text-white">Track Shows</h3>
+            <h3 className="text-xl font-semibold mb-3 text-white">Track Shows</h3>
             <p className="text-gray-400 mb-4">Mark and rate shows that you've watched. Then bookmark shows you wish to watch in the future!</p>
             
             {/* 3. Action Button (Optional) */}
-            {buttonText && (
+            {/* {buttonText && (
                 <a href={link} className="inline-block px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition duration-200">
                     {buttonText}
                 </a>
-            )}
+            )} */}
         </div>
         
         {/* 3. Get Recommendations */}
         <div className="w-full sm:w-1/3 p-4 text-center">
             {/* 1. Icon/Image Area */}
-            <img src={RecommendIcon} alt={"Lightbulb"} className="w-20 h-20 mx-auto mb-4" /> 
+            <img src="/images/undraw_idea.svg" alt="Track" className="w-60 h-60 mx-auto mb-8" />
             
             {/* 2. Title & Description */}
-            <h3 className="text-xl font-semibold mb-2 text-white">Get Recommendations</h3>
+            <h3 className="text-xl font-semibold mb-3 text-white">Get Recommendations</h3>
             <p className="text-gray-400 mb-4">Compile lists of shows and get recommendations based on these shows.</p>
             
             {/* 3. Action Button (Optional) */}
-            {buttonText && (
+            {/* {buttonText && (
                 <a href={link} className="inline-block px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition duration-200">
                     {buttonText}
                 </a>
-            )}
+            )} */}
         </div>
-    </div>
+      </div>
 
       {/* Two col features section: Track (left) and Placeholder image (right) */}
       <div className="mt-60 max-w-5xl mx-auto px-4 md:px-0 flex flex-col md:flex-row md:items-start md:justify-between gap-8">
