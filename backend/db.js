@@ -1,6 +1,6 @@
 // const sqlite = require('sqlite');
 // const sqlite3 = require('sqlite3');
-const { createClient } = require('@libsql/client');
+const { createClient } = require('@libsql/client/web');
 
 async function initializeDatabase() {
     
