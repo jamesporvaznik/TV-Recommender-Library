@@ -23,7 +23,7 @@ const RecommendationCard = ({ show, watchedIds, bookmarkedIds, addedIds, onToggl
             className="border rounded-lg overflow-hidden bg-zinc-800 shadow-md transition-shadow hover:shadow-lg cursor-pointer border-zinc-800"
         >
             {/* Image Section */}
-            <div className="h-40 bg-gray-200 flex items-center justify-center">
+            <div className="h-60 bg-gray-200 flex items-center justify-center">
                 <img 
                     src={`${correctUrl}`} 
                     alt={show.title} 
