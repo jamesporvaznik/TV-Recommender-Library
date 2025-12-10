@@ -3,7 +3,7 @@ const app = express();
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
 
-require('dotenv').config({ path: './.env' }); 
+// require('dotenv').config({ path: './.env' }); 
 
 const jwt = require('jsonwebtoken'); 
 const JWT_SECRET = process.env.JWT_SECRET; 
