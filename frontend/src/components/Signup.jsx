@@ -101,6 +101,21 @@ function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSu
         <div className="flex justify-center items-center px-20 mt-8">
             <button type="submit" className="px-7 py-3 mt-2 w-full text-white text-sm border rounded-md bg-zinc-800 font-semibold shadow-sm hover:bg-zinc-800 border-zinc-800">Create Account</button>
         </div>
+
+        {/* Login link */}
+        <div className='flex justify-center text-sm mt-6 px-20'> 
+            <p className='text-neutral-400'>
+                Already have an account?{' '}
+            </p>
+            <a 
+                href="#" 
+                role="button"
+                onClick={() => setCurrentPage?.('Login')}
+                className='text-blue-500 hover:text-blue-400 ml-1 font-semibold cursor-pointer transition duration-150'
+            >
+                Login
+            </a>
+        </div>
             
      </form>
   );
