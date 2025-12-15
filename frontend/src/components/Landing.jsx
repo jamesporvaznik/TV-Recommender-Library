@@ -4,7 +4,7 @@ import { MdSearch } from 'react-icons/md';
 import useScreenSize from '../hooks/useScreenSize';
 
 // Landing page component
-const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick, setCurrentPage}) => {
+const Landing = ({shows, watchedIds, bookmarkedIds, isLoggedIn, username, onToggleList, onCardClick, setCurrentPage}) => {
   const [refreshKey, setRefreshKey] = useState(0);
    const isLarge = useScreenSize(2000);
   const isMedium = useScreenSize(1100);
@@ -38,132 +38,246 @@ const Landing = ({shows, watchedIds, bookmarkedIds, onToggleList, onCardClick, s
           Stop Scrolling. Start Watching.
       </h2>
 
-      {isLarge && !isSmall && !isMedium && (
-        <div className='mb-40 text-left max-w-7xl mx-auto px-4 md:px-0 grid grid-cols-2 rounded-lg shadow-lg'>
+      {isLoggedIn ? (
+        <>
+          {isLarge && !isSmall && !isMedium && (
+            <div className='mb-40 text-left max-w-7xl mx-auto px-4 md:px-0 grid grid-cols-2 rounded-lg shadow-lg'>
+              {/* LEFT HALF (Background) */}
+              <div className='bg-neutral-800 shadow-lg justify-center flex grid grid-rows-3 rounded-l-lg'>
+                {/* Your content will go here */}
+                <h1 className='font-sans text-4xl mt-6  text-stone-400 font-thin'>Welcome Back {username}!</h1>
 
-          {/* LEFT HALF (Background) */}
-          <div className='bg-neutral-800 shadow-lg justify-center flex grid grid-rows-3 rounded-l-lg'>
-            {/* Your content will go here */}
-            <h1 className='font-sans text-4xl mt-6  text-stone-400 font-thin'>Create an Account to:</h1>
+                <ul className='list-disc list-inside space-y-4 w-full ml-6 max-w-sm mx-auto'>
+                  {/* Adjusted padding/margin on <li> tags */}
+                  <li className='font-sans font-medium text-lg text-neutral-200'>
+                      🚀 View Personalized Recommendations
+                  </li>
+                  <li className='font-sans font-medium text-lg text-neutral-200'>
+                      ✅ Check Your Watchlist
+                  </li>
+                  <li className='font-sans font-medium text-lg text-neutral-200'>
+                      🔍 Browse All Shows
+                  </li>
+                </ul>
+              </div>
 
-            <ul className='list-disc list-inside space-y-4 w-full ml-6 max-w-sm mx-auto'>
-              {/* Adjusted padding/margin on <li> tags */}
-              <li className='font-sans font-medium text-lg text-neutral-200'>
-                  Track and Rate Shows
-              </li>
-              <li className='font-sans font-medium text-lg text-neutral-200'>
-                  Bookmark Shows
-              </li>
-              <li className='font-sans font-medium text-lg text-neutral-200'>
-                  Get Personalized Recommendations
-              </li>
-            </ul>
-
-            <div className="flex items-center justify-center mt-6 mb-10">
-              <button
-                onClick={setPagetoSignUp}
-                className="px-20 py-2 text-md rounded-md bg-neutral-900 font-thin shadow-sm hover:bg-black hover:border-white border border-black"
-              >
-                  Create an Account 
-              </button>
+              {/* RIGHT HALF (Image) */}
+              <div className="flex items-center justify-center">
+                {/* The 'w-full' below will make the image take 100% of its new 1/2-width column */}
+                <img 
+                  src='/images/streaming.jpg' 
+                  alt='TV Recommender Logo' 
+                  className='w-full h-auto' 
+                />
+              </div>
             </div>
-          </div>
+          )}
+          
+          {isMedium && !isSmall && (
+            <div className='mb-40 text-left max-w-7xl mx-auto px-4 md:px-0 grid grid-cols-2 rounded-lg shadow-lg'>
+              {/* LEFT HALF (Background) */}
+              <div className='bg-neutral-800 shadow-lg justify-center flex grid grid-rows-3 rounded-l-lg'>
+                {/* Your content will go here */}
+                <h1 className='font-sans text-2xl mt-6  text-stone-400 font-thin'>Welcome Back {username}!</h1>
 
-          {/* RIGHT HALF (Image) */}
-          <div className="flex items-center justify-center">
-            {/* The 'w-full' below will make the image take 100% of its new 1/2-width column */}
-            <img 
-              src='/images/streaming.jpg' 
-              alt='TV Recommender Logo' 
-              className='w-full h-auto' 
-            />
-          </div>
-        </div>
+                <ul className='list-disc list-inside space-y-4 w-full ml-6 max-w-sm mx-auto'>
+                  {/* Adjusted padding/margin on <li> tags */}
+                  <li className='font-sans font-medium text-sm text-neutral-200'>
+                      🚀 View Personalized Recommendations
+                  </li>
+                  <li className='font-sans font-medium text-sm text-neutral-200'>
+                      ✅ Check Your Watchlist
+                  </li>
+                  <li className='font-sans font-medium text-sm text-neutral-200'>
+                      🔍 Browse All Shows
+                  </li>
+                </ul>
+              </div>
+
+              {/* RIGHT HALF (Image) */}
+              <div className="flex items-center justify-center">
+                {/* The 'w-full' below will make the image take 100% of its new 1/2-width column */}
+                <img 
+                  src='/images/streaming.jpg' 
+                  alt='TV Recommender Logo' 
+                  className='w-full h-auto' 
+                />
+              </div>
+            </div>
+          )}
+
+          {isSmall && (
+            <div className='mb-40 text-left max-w-7xl mx-auto px-4 md:px-0 grid grid-cols-1 rounded-lg shadow-lg'>
+              {/* RIGHT HALF (Image) */}
+              <div className="flex items-center justify-center">
+                {/* The 'w-full' below will make the image take 100% of its new 1/2-width column */}
+                <img 
+                  src='/images/streaming.jpg' 
+                  alt='TV Recommender Logo' 
+                  className='w-full h-auto' 
+                />
+              </div>
+
+              {/* LEFT HALF (Background) */}
+              <div className='bg-neutral-800 shadow-lg justify-center flex grid grid-rows-3 rounded-l-lg'>
+                {/* Your content will go here */}
+                <h1 className='font-sans text-4xl mt-6  text-stone-400 font-thin'>Welcome Back {username}!</h1>
+
+                <ul className='list-disc list-inside space-y-4 w-full ml-6 max-w-sm mx-auto'>
+                  {/* Adjusted padding/margin on <li> tags */}
+                  <li className='font-sans font-medium text-lg text-neutral-200'>
+                      🚀 View Personalized Recommendations
+                  </li>
+                  <li className='font-sans font-medium text-lg text-neutral-200'>
+                      ✅ Check Your Watchlist
+                  </li>
+                  <li className='font-sans font-medium text-lg text-neutral-200'>
+                      🔍 Browse All Shows
+                  </li>
+                </ul>
+              </div> 
+            </div>
+          )}   
+        </>
+      ) : (
+        <>
+          {isLarge && !isSmall && !isMedium && (
+            <div className='mb-40 text-left max-w-7xl mx-auto px-4 md:px-0 grid grid-cols-2 rounded-lg shadow-lg'>
+
+              {/* LEFT HALF (Background) */}
+              <div className='bg-neutral-800 shadow-lg justify-center flex grid grid-rows-3 rounded-l-lg'>
+                {/* Your content will go here */}
+                <h1 className='font-sans text-4xl mt-6  text-stone-400 font-thin'>Create an Account to:</h1>
+
+                <ul className='list-disc list-inside space-y-4 w-full ml-6 max-w-sm mx-auto'>
+                  {/* Adjusted padding/margin on <li> tags */}
+                  <li className='font-sans font-medium text-lg text-neutral-200'>
+                      Track and Rate Shows
+                  </li>
+                  <li className='font-sans font-medium text-lg text-neutral-200'>
+                      Bookmark Shows
+                  </li>
+                  <li className='font-sans font-medium text-lg text-neutral-200'>
+                      Get Personalized Recommendations
+                  </li>
+                </ul>
+
+                <div className="flex items-center justify-center mt-6 mb-10">
+                  <button
+                    onClick={setPagetoSignUp}
+                    className="px-20 py-2 text-md rounded-md bg-neutral-900 font-thin shadow-sm hover:bg-black hover:border-white border border-black"
+                  >
+                      Create an Account 
+                  </button>
+                </div>
+              </div>
+
+              {/* RIGHT HALF (Image) */}
+              <div className="flex items-center justify-center">
+                {/* The 'w-full' below will make the image take 100% of its new 1/2-width column */}
+                <img 
+                  src='/images/streaming.jpg' 
+                  alt='TV Recommender Logo' 
+                  className='w-full h-auto' 
+                />
+              </div>
+            </div>
+          )}
+          
+          {isMedium && !isSmall && (
+            <div className='mb-40 text-left max-w-7xl mx-auto px-4 md:px-0 grid grid-cols-2 rounded-lg shadow-lg'>
+              {/* LEFT HALF (Background) */}
+              <div className='bg-neutral-800 shadow-lg justify-center flex grid grid-rows-3 rounded-l-lg'>
+                {/* Your content will go here */}
+                <h1 className='font-sans text-2xl mt-6  text-stone-400 font-thin'>Create an Account to:</h1>
+
+                <ul className='list-disc list-inside space-y-4 w-full ml-6 max-w-sm mx-auto'>
+                  {/* Adjusted padding/margin on <li> tags */}
+                  <li className='font-sans font-medium text-sm text-neutral-200'>
+                      Track and Rate Shows
+                  </li>
+                  <li className='font-sans font-medium text-sm text-neutral-200'>
+                      Bookmark Shows
+                  </li>
+                  <li className='font-sans font-medium text-sm text-neutral-200'>
+                      Get Personalized Recommendations
+                  </li>
+                </ul>
+
+                <div className="flex items-center justify-center mt-6 mb-10">
+                  <button
+                    onClick={setPagetoSignUp}
+                    className="px-14 py-1 text- rounded-md bg-neutral-900 font-thin shadow-sm hover:bg-black hover:border-white border border-black"
+                  >
+                      Create an Account 
+                  </button>
+                </div>
+              </div>
+
+              {/* RIGHT HALF (Image) */}
+              <div className="flex items-center justify-center">
+                {/* The 'w-full' below will make the image take 100% of its new 1/2-width column */}
+                <img 
+                  src='/images/streaming.jpg' 
+                  alt='TV Recommender Logo' 
+                  className='w-full h-auto' 
+                />
+              </div>
+            </div>
+          )}
+
+          {isSmall && (
+            <div className='mb-40 text-left max-w-7xl mx-auto px-4 md:px-0 grid grid-cols-1 rounded-lg shadow-lg'>
+              {/* RIGHT HALF (Image) */}
+              <div className="flex items-center justify-center">
+                {/* The 'w-full' below will make the image take 100% of its new 1/2-width column */}
+                <img 
+                  src='/images/streaming.jpg' 
+                  alt='TV Recommender Logo' 
+                  className='w-full h-auto' 
+                />
+              </div>
+
+              {/* LEFT HALF (Background) */}
+              <div className='bg-neutral-800 shadow-lg justify-center flex grid grid-rows-3 rounded-l-lg'>
+                {/* Your content will go here */}
+                <h1 className='font-sans text-4xl mt-6  text-stone-400 font-thin'>Create an Account to:</h1>
+
+                <ul className='list-disc list-inside space-y-4 w-full ml-6 max-w-sm mx-auto'>
+                  {/* Adjusted padding/margin on <li> tags */}
+                  <li className='font-sans font-medium text-lg text-neutral-200'>
+                      Track and Rate Shows
+                  </li>
+                  <li className='font-sans font-medium text-lg text-neutral-200'>
+                      Bookmark Shows
+                  </li>
+                  <li className='font-sans font-medium text-lg text-neutral-200'>
+                      Get Personalized Recommendations
+                  </li>
+                </ul>
+
+                <div className="flex items-center justify-center mt-6 mb-10">
+                  <button
+                    onClick={setPagetoSignUp}
+                    className="px-20 py-2 text-md rounded-md bg-neutral-900 font-thin shadow-sm hover:bg-black hover:border-white border border-black"
+                  >
+                      Create an Account 
+                  </button>
+                </div>
+              </div> 
+            </div>
+          )}   
+        </>               
       )}
+
+
       
-      {isMedium && !isSmall && (
-        <div className='mb-40 text-left max-w-7xl mx-auto px-4 md:px-0 grid grid-cols-2 rounded-lg shadow-lg'>
-          {/* LEFT HALF (Background) */}
-          <div className='bg-neutral-800 shadow-lg justify-center flex grid grid-rows-3 rounded-l-lg'>
-            {/* Your content will go here */}
-            <h1 className='font-sans text-2xl mt-6  text-stone-400 font-thin'>Create an Account to:</h1>
 
-            <ul className='list-disc list-inside space-y-4 w-full ml-6 max-w-sm mx-auto'>
-              {/* Adjusted padding/margin on <li> tags */}
-              <li className='font-sans font-medium text-sm text-neutral-200'>
-                  Track and Rate Shows
-              </li>
-              <li className='font-sans font-medium text-sm text-neutral-200'>
-                  Bookmark Shows
-              </li>
-              <li className='font-sans font-medium text-sm text-neutral-200'>
-                  Get Personalized Recommendations
-              </li>
-            </ul>
 
-            <div className="flex items-center justify-center mt-6 mb-10">
-              <button
-                onClick={setPagetoSignUp}
-                className="px-14 py-1 text- rounded-md bg-neutral-900 font-thin shadow-sm hover:bg-black hover:border-white border border-black"
-              >
-                  Create an Account 
-              </button>
-            </div>
-          </div>
 
-          {/* RIGHT HALF (Image) */}
-          <div className="flex items-center justify-center">
-            {/* The 'w-full' below will make the image take 100% of its new 1/2-width column */}
-            <img 
-              src='/images/streaming.jpg' 
-              alt='TV Recommender Logo' 
-              className='w-full h-auto' 
-            />
-          </div>
-        </div>
-      )}
 
-      {isSmall && (
-        <div className='mb-40 text-left max-w-7xl mx-auto px-4 md:px-0 grid grid-cols-1 rounded-lg shadow-lg'>
-          {/* RIGHT HALF (Image) */}
-          <div className="flex items-center justify-center">
-            {/* The 'w-full' below will make the image take 100% of its new 1/2-width column */}
-            <img 
-              src='/images/streaming.jpg' 
-              alt='TV Recommender Logo' 
-              className='w-full h-auto' 
-            />
-          </div>
+      
 
-          {/* LEFT HALF (Background) */}
-          <div className='bg-neutral-800 shadow-lg justify-center flex grid grid-rows-3 rounded-l-lg'>
-            {/* Your content will go here */}
-            <h1 className='font-sans text-4xl mt-6  text-stone-400 font-thin'>Create an Account to:</h1>
-
-            <ul className='list-disc list-inside space-y-4 w-full ml-6 max-w-sm mx-auto'>
-              {/* Adjusted padding/margin on <li> tags */}
-              <li className='font-sans font-medium text-lg text-neutral-200'>
-                  Track and Rate Shows
-              </li>
-              <li className='font-sans font-medium text-lg text-neutral-200'>
-                  Bookmark Shows
-              </li>
-              <li className='font-sans font-medium text-lg text-neutral-200'>
-                  Get Personalized Recommendations
-              </li>
-            </ul>
-
-            <div className="flex items-center justify-center mt-6 mb-10">
-              <button
-                onClick={setPagetoSignUp}
-                className="px-20 py-2 text-md rounded-md bg-neutral-900 font-thin shadow-sm hover:bg-black hover:border-white border border-black"
-              >
-                  Create an Account 
-              </button>
-            </div>
-          </div> 
-        </div>
-      )}
 
       
 

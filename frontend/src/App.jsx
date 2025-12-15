@@ -683,6 +683,8 @@ function App() {
                         shows = {allShows}
                         watchedIds={watchedShowIds}
                         bookmarkedIds={bookmarkedShowIds}
+                        isLoggedIn={isLoggedIn}
+                        username={localStorage.getItem('username')}
                         onToggleList={updateShowList}
                         onCardClick={handleOpenPopUp}
                         setCurrentPage={setCurrentPage}
