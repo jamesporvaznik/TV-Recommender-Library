@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// import { Link } from 'react-router-dom';
 
 // Define the login component
 function Login({user, password, setUser, setPassword, onLoginSuccess, onLogin, setCurrentPage}) {
@@ -89,15 +88,21 @@ function Login({user, password, setUser, setPassword, onLoginSuccess, onLogin, s
         <div className="flex justify-center items-center px-20 mt-8">
             <button type="submit" className="px-7 py-3 mt-2 w-full text-white text-sm border rounded-md bg-zinc-800 font-semibold shadow-sm hover:bg-zinc-800 border-zinc-800">Login</button>
         </div>
-{/* 
-        <Link
-            to="./Signup.jsx"
-            className="inline-block px-8 py-3 text-lg rounded-full 
-                    bg-red-600 font-semibold shadow-md 
-                    hover:bg-red-700 transition duration-200 text-white"
-            role="button"
-        ></Link> */}
 
+        {/* Signup link */}
+        <div className='flex justify-center text-sm mt-6 px-20'> 
+            <p className='text-neutral-400'>
+                Don't have an account?{' '}
+            </p>
+            <a 
+                href="#" 
+                role="button"
+                onClick={() => setCurrentPage?.('Signup')}
+                className='text-blue-500 hover:text-blue-400 ml-1 font-semibold cursor-pointer transition duration-150'
+            >
+                Create one
+            </a>
+        </div>
             
      </form>
   );
