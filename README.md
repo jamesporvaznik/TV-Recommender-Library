@@ -44,6 +44,13 @@ Instructions to run locally:
         JWT: JWT_SECRET
         TMDB: Shouldn't need unless you want to upload shows to database.
 
+    In 2 different terminals:
+        cd frontend
+        npm run dev
+
+        cd backend
+        node server
+
 Public website: https://tv-recommender-library-opb9.vercel.app/
     
 
