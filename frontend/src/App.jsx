@@ -87,7 +87,7 @@ function App() {
         else if(newMode === RECOMMENDATION_MODES.ADD){
             setFilters(null);
         }
-    };
+    }; 
 
     // Helper function to find a full show object by TMDB ID
     const getShowById = (id) => {
@@ -673,7 +673,7 @@ function App() {
             {isMobile ? (
                 <MobileHeader currentPage={currentPage} setCurrentPage={setCurrentPage} isLoggedIn={isLoggedIn} onLogout={handleLogout} />
             ) : (
-                <Header currentPage={currentPage} setCurrentPage={setCurrentPage} isLoggedIn={isLoggedIn} onLogout={handleLogout} />                  
+                <Header currentPage={currentPage} setCurrentPage={setCurrentPage}/>                  
             )}
             
             
@@ -852,7 +852,7 @@ function App() {
                             )
                         )}
                         {currentPage === 'Login' && (
-                            <Login setCurrentPage={setCurrentPage} onLoginSuccess={handleLogin} onLogin={checkUser} />
+                            <Login setCurrentPage={setCurrentPage} onLoginSuccess={handleLogin} />
                         )}
                         
                         {currentPage === 'Signup' && (

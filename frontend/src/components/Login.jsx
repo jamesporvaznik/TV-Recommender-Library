@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '../context/AuthContext.jsx';
 
 // Define the login component
 function Login({user, password, setUser, setPassword, onLoginSuccess, onLogin, setCurrentPage}) {
     // The component's logic goes here (state, effects, handlers, etc.)
+
+    const { checkUser}  = useAuth();
 
     // Local state used when the parent doesn't control the search term
     const [localUser, setLocalUser] = useState(user || '');
@@ -33,9 +36,9 @@ function Login({user, password, setUser, setPassword, onLoginSuccess, onLogin, s
             password: passwordTerm,
         };
 
-        if (typeof onLogin === 'function') {
+        if (typeof checkUser === 'function') {
 
-            const loginSuccess = await onLogin(payload);
+            const loginSuccess = await checkUser(payload);
 
             if(loginSuccess === true){
                 alert("Sucessful login");

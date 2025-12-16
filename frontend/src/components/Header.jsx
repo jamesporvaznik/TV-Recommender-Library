@@ -1,9 +1,13 @@
 import React from 'react';
 import { MdTv } from 'react-icons/md';
+import { useAuth } from '../context/AuthContext';
 
 const Header = ({ 
-    currentPage, setCurrentPage, isLoggedIn, onLogout
+    currentPage, setCurrentPage
 }) => {
+
+    const { isLoggedIn, onLogout }  = useAuth();
+
     // Navigation items
     const NAVIGATION_PAGES = ['Explore', 'Watched', 'Watchlist', 'Recommendations'];
 
