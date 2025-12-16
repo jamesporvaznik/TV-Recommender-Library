@@ -1,14 +1,14 @@
 const axios = require('axios');
-const { createClient } = require('@libsql/client'); // --- CHANGE 1: Use Turso/libSQL Client
+const { createClient } = require('@libsql/client');
 require('dotenv').config({ path: './.env' }); 
 
 const TMDB_API_KEY = process.env.TMDB_API_KEY;
 const BASE_URL = "https://api.themoviedb.org/3";
 
-// --- TURSO CREDENTIALS ---
+// TURSO CREDENTIALS
 const TURSO_DATABASE_URL = process.env.TURSO_PATH;
 const TURSO_AUTH_TOKEN = process.env.TURSO_KEY;
-// -------------------------
+
 
 const TV_GENRE_MAP = {
     // ... (Genre map remains the same)
@@ -16,7 +16,7 @@ const TV_GENRE_MAP = {
     16:    "Animation",
     35:    "Comedy",
     80:    "Crime",
-    99:    "Documentary",
+    99:    "Documentary", 
     18:    "Drama",
     10751: "Family",
     10762: "Kids",
@@ -43,7 +43,6 @@ async function getDbConnection() {
         throw new Error("Turso URL or Auth Token is missing. Check .env.");
     }
     
-    // --- CHANGE 2: Connect via @libsql/client ---
     const db = createClient({
         url: TURSO_DATABASE_URL,
         authToken: TURSO_AUTH_TOKEN,
@@ -63,9 +62,6 @@ async function getDbConnection() {
             backdrop_path TEXT
         );
     `);
-    
-    // NOTE: ALTER TABLE logic is commented out/removed.
-    // Ensure the above CREATE TABLE statement already includes all necessary columns.
 
     return db;
 }
