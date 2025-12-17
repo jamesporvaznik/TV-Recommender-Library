@@ -1,5 +1,6 @@
 import React from 'react';
 import RecommendationCard from './RecommendationCard';
+import { useUser } from '../context/UserContext.jsx';
 
 
 // Function to group shows into rows of 5
@@ -13,16 +14,15 @@ const groupIntoRows = (shows, chunkSize = 4) => {
 
 // AddedShowsList component now receives the new user tracking props
 const AddedShowsList = ({ 
-    shows, 
-    watchedIds, 
-    bookmarkedIds, 
-    addedIds,
     onToggleList,
     onCardClick,
     onHide,
     onClear 
 }) => {
-    const groupedRows = groupIntoRows(shows);
+
+    const { watchedShowIds, bookmarkedShowIds, addedShowIds, addedShows } = useUser();
+
+    const groupedRows = groupIntoRows(addedShows);
 
     const hideAddedListView = () => {
         if (typeof onHide === 'function'){
@@ -47,9 +47,9 @@ const AddedShowsList = ({
                 <button onClick={clearAddList} className="px-5 py-1 text-sm border rounded-xl bg-red-800 font-semibold shadow-sm hover:bg-red-900 border-gray-300">Clear List</button>
             </div>
 
-            <h2 className="text-2xl font-bold mt-4 mb-6">Added Shows ({shows.length})</h2>
+            <h2 className="text-2xl font-bold mt-4 mb-6">Added Shows ({addedShows.length})</h2>
 
-            {shows.length === 0 && (
+            {addedShows.length === 0 && (
                 <p className="text-gray-500">You haven't added any shows to the list.</p>
             )}
 
@@ -59,9 +59,9 @@ const AddedShowsList = ({
                     {row.map((show) => (
                         <RecommendationCard
                             show={show} 
-                            watchedIds={watchedIds}
-                            bookmarkedIds={bookmarkedIds}
-                            addedIds={addedIds}
+                            watchedIds={watchedShowIds}
+                            bookmarkedIds={bookmarkedShowIds}
+                            addedIds={addedShowIds}
                             onToggleList={onToggleList}
                             onCardClick={onCardClick}
                         />

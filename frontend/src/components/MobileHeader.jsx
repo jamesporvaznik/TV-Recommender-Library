@@ -1,10 +1,13 @@
 import React from 'react';
 import { MdTv } from 'react-icons/md';
+import { useAuth } from '../context/AuthContext.jsx';
 
 const MobileHeader = ({ 
-    currentPage, setCurrentPage, isLoggedIn, onLogout
+    currentPage, setCurrentPage
 }) => {
     const NAVIGATION_PAGES = ['Explore', 'Watched', 'Watchlist', 'Recommendations'];
+
+    const { isLoggedIn, onLogout } = useAuth();
 
     return (
         // Parent Container

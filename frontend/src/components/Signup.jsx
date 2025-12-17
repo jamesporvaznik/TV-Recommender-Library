@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { use } from 'react';
+import { useAuth } from '../context/AuthContext.jsx';
 
 
 // Define the Signup component
-function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSubmit, setCurrentPage}) {
+function Signup({user, password, confirm, setUser, setPassword, setConfirm, setCurrentPage}) {
     // The component's logic goes here (state, effects, handlers, etc.)
+    const { handleSignUp }  = useAuth();
     
     // Local state used when the parent doesn't control the search term
     const [localUser, setLocalUser] = useState(user || '');
@@ -45,7 +47,7 @@ function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSu
             confirm: confirmTerm,
         };
 
-        if (typeof onSubmit === 'function') onSubmit(payload);
+        if (typeof handleSignUp === 'function') handleSignUp(payload);
         else console.log('search payload', payload);
 
         // clear fields
@@ -59,7 +61,7 @@ function Signup({user, password, confirm, setUser, setPassword, setConfirm, onSu
 
   // Render the component's UI
   return (
-     <form className="w-full max-w-2xl mx-auto p-2 mt-[11vh]" onSubmit={handleSubmit}>
+     <form className="w-full max-w-2xl mx-auto p-2 mt-[11vh]" handleSignUp={handleSubmit}>
         {/* Title/subtitle text */}
         <div className="flex justify-between items-center px-20">
             <h1 className="text-4xl font-bold mb-6 ">Welcome</h1>

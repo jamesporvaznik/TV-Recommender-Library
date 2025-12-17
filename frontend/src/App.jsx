@@ -20,6 +20,7 @@ import AddShows from './components/AddShows';
 import SourceDetails from './components/SourceDetails';
 import MobileHeader from './components/MobileHeader'
 import useScreenSize from './hooks/useScreenSize';
+import {useUser} from './context/UserContext.jsx';
 
 // Recommendation modes on the sidebar
 export const RECOMMENDATION_MODES = {
@@ -31,6 +32,8 @@ export const RECOMMENDATION_MODES = {
 
 function App() {
 
+    const {addedShowIds} = useUser();
+
     // Routing & Filtering State
     const [currentPage, setCurrentPage] = useState('Home');
     const [filters, setFilters] = useState(null);
@@ -41,7 +44,7 @@ function App() {
     const [allShows, setAllShows] = useState([]);
     const [showsMap, setShowsMap] = useState(new Map());
     const [loading, setLoading] = useState(true);
-    const [addedShowIds, setAddedShowIds] = useState([]);
+    const [addedShowIDS, setAddedShowIds] = useState([]);
     const [watchedShowIds, setWatchedShowIds] = useState([]);
     const [bookmarkedShowIds, setBookmarkedShowIds] = useState([]);
     const [recommendedShowIds, setRecommendedShowIds] = useState([]);
@@ -54,8 +57,8 @@ function App() {
     const [isSearhQuery, setIsSearchQuery] = useState(false);
     const [isWatched, setIsWatched] = useState(false);
     const isMobile = useScreenSize(768);
-    const API_BASE_URL = import.meta.env.VITE_API_URL || '';
-    // const API_BASE_URL = 'http://localhost:5173';
+    // const API_BASE_URL = import.meta.env.VITE_API_URL || '';
+    const API_BASE_URL = 'http://localhost:5000';
     
     //Function called when you click on a mode in the sidebar
     const changeMode = async (newMode) => { 
@@ -159,19 +162,19 @@ function App() {
     };
 
     // Function for when the user logs out
-    const handleLogout = async() => {
+    // const handleLogout = async() => {
 
-        localStorage.removeItem('userToken');
-        localStorage.removeItem('currentUserId');
-        localStorage.removeItem('username'); 
+    //     localStorage.removeItem('userToken');
+    //     localStorage.removeItem('currentUserId');
+    //     localStorage.removeItem('username'); 
 
-        setAddedShowIds([]);
-        setWatchedShowIds([]);
-        setBookmarkedShowIds([]);
+    //     setAddedShowIds([]);
+    //     setWatchedShowIds([]);
+    //     setBookmarkedShowIds([]);
         
-        setIsLoggedIn(false);
-        setCurrentPage('Home');
-    };
+    //     setIsLoggedIn(false);
+    //     setCurrentPage('Home');
+    // };
 
     // Function for when the user logs in
     const handleLogin = () => {
@@ -179,29 +182,29 @@ function App() {
     };
 
     // Handles login submission
-    const handleSignUp = async(user) => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/signup`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(user)
-            });
-            const data = await response.json();
+    // const handleSignUp = async(user) => {
+    //     try {
+    //         const response = await fetch(`${API_BASE_URL}/api/signup`, {
+    //             method: 'POST',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify(user)
+    //         });
+    //         const data = await response.json();
 
-            if (response.ok && data.success) {
-                console.log("Signup API success:", data.message);
-                return true; 
-            } else {
-                // Failure: Invalid credentials
-                console.error("Signup failed:", data.message);
-                return false;
-            }
-        } catch (error) {
-            console.error("Network error during login:", error);
-            alert("A network error occurred. Could not connect to the server.");
-            return false;
-        }
-    }
+    //         if (response.ok && data.success) {
+    //             console.log("Signup API success:", data.message);
+    //             return true; 
+    //         } else {
+    //             // Failure: Invalid credentials
+    //             console.error("Signup failed:", data.message);
+    //             return false;
+    //         }
+    //     } catch (error) {
+    //         console.error("Network error during login:", error);
+    //         alert("A network error occurred. Could not connect to the server.");
+    //         return false;
+    //     }
+    // }
 
     // Handler to receive the filters/search from the Filters component
     const handleSearch = (newFilters) => {
@@ -209,140 +212,140 @@ function App() {
     };
 
     // Function that checks user credentials against database
-    const checkUser = async (user) => {
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(user)
-            });
-            const data = await response.json();
+    // const checkUser = async (user) => {
+    //     try {
+    //         const response = await fetch(`${API_BASE_URL}/api/login`, {
+    //             method: 'POST',
+    //             headers: { 'Content-Type': 'application/json' },
+    //             body: JSON.stringify(user)
+    //         });
+    //         const data = await response.json();
 
-            if (response.ok && data.success) {
+    //         if (response.ok && data.success) {
 
-                // holds user credentials in localStorage
-                localStorage.setItem('userToken', data.token);
-                localStorage.setItem('currentUserId', data.userId);
-                localStorage.setItem('username', data.username);
+    //             // holds user credentials in localStorage
+    //             localStorage.setItem('userToken', data.token);
+    //             localStorage.setItem('currentUserId', data.userId);
+    //             localStorage.setItem('username', data.username);
 
-                console.log(localStorage.userToken, localStorage.currentUserId, localStorage.username);
+    //             console.log(localStorage.userToken, localStorage.currentUserId, localStorage.username);
                 
-                // loads the users watched and bookmarked shows upon login
-                loadData();
+    //             // loads the users watched and bookmarked shows upon login
+    //             loadData();
 
-                console.log("Login API success:", data.message);
-                return true; 
-            } else {
-                // Failure: Invalid credentials
-                console.error("Login failed:", data.message);
-                return false;
-            }
+    //             console.log("Login API success:", data.message);
+    //             return true; 
+    //         } else {
+    //             // Failure: Invalid credentials
+    //             console.error("Login failed:", data.message);
+    //             return false;
+    //         }
 
-        } catch (error) {
-            console.error("Network error during login:", error);
-            alert("A network error occurred. Could not connect to the server.");
-            return false;
-        }
-    }
+    //     } catch (error) {
+    //         console.error("Network error during login:", error);
+    //         alert("A network error occurred. Could not connect to the server.");
+    //         return false;
+    //     }
+    // }
     
     // Function to load the users watched,bookmarked and added shows upon login
-    const loadData = async () => {
-        const token = localStorage.userToken;
+    // const loadData = async () => {
+    //     const token = localStorage.userToken;
 
-        //get watched shows
-        try{
-            const response = await fetch(`${API_BASE_URL}/api/watched`, { 
-                method: 'GET',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` 
-                },
-            });
+    //     //get watched shows
+    //     try{
+    //         const response = await fetch(`${API_BASE_URL}/api/watched`, { 
+    //             method: 'GET',
+    //             headers: { 
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${token}` 
+    //             },
+    //         });
 
-            const data = await response.json();
+    //         const data = await response.json();
 
-            if (response.ok && data.success) {             
-                setWatchedShowIds(data.watched || []);
-            } else {
-                console.error("Failed to synchronize lists:", data.message);
-            }
-        } catch (error) {
-            console.error("Network error during retrieving watched:", error);
-            alert("A network error occurred. Could not connect to the server.");
-            return false;
-        }
-        //get bookmarked shows
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/bookmarked`, { 
-                method: 'GET',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` 
-                },
-            });
+    //         if (response.ok && data.success) {             
+    //             setWatchedShowIds(data.watched || []);
+    //         } else {
+    //             console.error("Failed to synchronize lists:", data.message);
+    //         }
+    //     } catch (error) {
+    //         console.error("Network error during retrieving watched:", error);
+    //         alert("A network error occurred. Could not connect to the server.");
+    //         return false;
+    //     }
+    //     //get bookmarked shows
+    //     try {
+    //         const response = await fetch(`${API_BASE_URL}/api/bookmarked`, { 
+    //             method: 'GET',
+    //             headers: { 
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${token}` 
+    //             },
+    //         });
 
-            const data = await response.json();
+    //         const data = await response.json();
 
-            if (response.ok && data.success) {             
-                setBookmarkedShowIds(data.bookmarked || []);
-            } else {
-                console.error("Failed to synchronize lists:", data.message);
-            }
-        } catch (error) {
-            console.error("Network error during retrieving bookmarked:", error);
-            alert("A network error occurred. Could not connect to the server.");
-            return false;
-        }
-        //get ratings of watched shows
-        try{
-            const response = await fetch(`${API_BASE_URL}/api/rating`, { 
-                method: 'GET',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` 
-                },
-            });
+    //         if (response.ok && data.success) {             
+    //             setBookmarkedShowIds(data.bookmarked || []);
+    //         } else {
+    //             console.error("Failed to synchronize lists:", data.message);
+    //         }
+    //     } catch (error) {
+    //         console.error("Network error during retrieving bookmarked:", error);
+    //         alert("A network error occurred. Could not connect to the server.");
+    //         return false;
+    //     }
+    //     //get ratings of watched shows
+    //     try{
+    //         const response = await fetch(`${API_BASE_URL}/api/rating`, { 
+    //             method: 'GET',
+    //             headers: { 
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${token}` 
+    //             },
+    //         });
 
-            const data = await response.json();
+    //         const data = await response.json();
 
-            if (response.ok && data.success) {          
-                setRatedShowsMap(new Map(Object.entries(data.ratings || {})));
-            } else {
-                console.error("Failed to synchronize lists:", data.message);
-            }
-        } catch (error) {
-            console.error("Network error during retrieving rated shows:", error);
-            return false;
-        }
-        //get added shows of user
-        try {
-            const response = await fetch(`${API_BASE_URL}/api/added`, {
-                method: 'GET',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}` 
-                },
+    //         if (response.ok && data.success) {          
+    //             setRatedShowsMap(new Map(Object.entries(data.ratings || {})));
+    //         } else {
+    //             console.error("Failed to synchronize lists:", data.message);
+    //         }
+    //     } catch (error) {
+    //         console.error("Network error during retrieving rated shows:", error);
+    //         return false;
+    //     }
+    //     //get added shows of user
+    //     try {
+    //         const response = await fetch(`${API_BASE_URL}/api/added`, {
+    //             method: 'GET',
+    //             headers: { 
+    //                 'Content-Type': 'application/json',
+    //                 'Authorization': `Bearer ${token}` 
+    //             },
 
-            });
-            const data = await response.json();
+    //         });
+    //         const data = await response.json();
 
-            if (response.ok && data.success) {
-                console.log("Added API success:", data.added);
-                setAddedShowIds(data.added);
-                console.log("Toggling added list view to visible");
-                return true; 
-            } else {
-                // Failure: Invalid credentials
-                console.error("getting added shows failed:", data.message);
-                return false;
-            }
+    //         if (response.ok && data.success) {
+    //             console.log("Added API success:", data.added);
+    //             setAddedShowIds(data.added);
+    //             console.log("Toggling added list view to visible");
+    //             return true; 
+    //         } else {
+    //             // Failure: Invalid credentials
+    //             console.error("getting added shows failed:", data.message);
+    //             return false;
+    //         }
 
-        } catch (error) {
-            console.error("Network error during login:", error);
-            alert("A network error occurred. Could not connect to the server.");
-            return false;
-        }
-    }
+    //     } catch (error) {
+    //         console.error("Network error during login:", error);
+    //         alert("A network error occurred. Could not connect to the server.");
+    //         return false;
+    //     }
+    // }
 
     // Function to clear the user's addedShows list
     const clearAddList = async () => {
@@ -380,45 +383,45 @@ function App() {
 
 
     // Sorting shows by a few different ways
-    const sortShows = (shows, mode) => {
+    // const sortShows = (shows, mode) => {
 
-        const dateToTimestamp = (dateString) => new Date(dateString).getTime();
+    //     const dateToTimestamp = (dateString) => new Date(dateString).getTime();
 
-        // Sorting
-        if(mode === 'Relevance'){
-            setSortedShowIds(recommendedShowIds);
-        }
-        else if(mode === 'By Rating (↓)'){
-            const sorted = [...shows].sort((a, b) => b.rating_avg - a.rating_avg).map(show => show.tmdb_id);
-            setSortedShowIds(sorted);
-        }
-        else if(mode === 'By Rating (↑)'){
-            const sorted = [...shows].sort((a, b) => a.rating_avg - b.rating_avg).map(show => show.tmdb_id);
-            setSortedShowIds(sorted);
-        }
-        else if (mode === 'By Reviews (↓)'){
-            const sorted = [...shows].sort((a, b) => b.vote_count - a.vote_count).map(show => show.tmdb_id);
-            setSortedShowIds(sorted);
-        }
-        else if(mode === 'By Reviews (↑)'){
-            const sorted = [...shows].sort((a, b) => a.vote_count - b.vote_count).map(show => show.tmdb_id);
-            setSortedShowIds(sorted);
-        }
-        else if (mode === 'By Date (↓)') {
-            const sorted = [...shows].sort((a, b) => 
-                dateToTimestamp(b.release_date) - dateToTimestamp(a.release_date)
-            ).map(show => show.tmdb_id);
+    //     // Sorting
+    //     if(mode === 'Relevance'){
+    //         setSortedShowIds(recommendedShowIds);
+    //     }
+    //     else if(mode === 'By Rating (↓)'){
+    //         const sorted = [...shows].sort((a, b) => b.rating_avg - a.rating_avg).map(show => show.tmdb_id);
+    //         setSortedShowIds(sorted);
+    //     }
+    //     else if(mode === 'By Rating (↑)'){
+    //         const sorted = [...shows].sort((a, b) => a.rating_avg - b.rating_avg).map(show => show.tmdb_id);
+    //         setSortedShowIds(sorted);
+    //     }
+    //     else if (mode === 'By Reviews (↓)'){
+    //         const sorted = [...shows].sort((a, b) => b.vote_count - a.vote_count).map(show => show.tmdb_id);
+    //         setSortedShowIds(sorted);
+    //     }
+    //     else if(mode === 'By Reviews (↑)'){
+    //         const sorted = [...shows].sort((a, b) => a.vote_count - b.vote_count).map(show => show.tmdb_id);
+    //         setSortedShowIds(sorted);
+    //     }
+    //     else if (mode === 'By Date (↓)') {
+    //         const sorted = [...shows].sort((a, b) => 
+    //             dateToTimestamp(b.release_date) - dateToTimestamp(a.release_date)
+    //         ).map(show => show.tmdb_id);
             
-            setSortedShowIds(sorted); 
-        }
-        else if (mode === 'By Date (↑)') {
-            const sorted = [...shows].sort((a, b) => 
-                dateToTimestamp(a.release_date) - dateToTimestamp(b.release_date)
-            ).map(show => show.tmdb_id);
+    //         setSortedShowIds(sorted); 
+    //     }
+    //     else if (mode === 'By Date (↑)') {
+    //         const sorted = [...shows].sort((a, b) => 
+    //             dateToTimestamp(a.release_date) - dateToTimestamp(b.release_date)
+    //         ).map(show => show.tmdb_id);
             
-            setSortedShowIds(sorted); 
-        }
-    }
+    //         setSortedShowIds(sorted); 
+    //     }
+    // }
 
     // Function to generate show recommendations based on the users created list
     const getRecommendationList = async (isWatched) => {
@@ -662,7 +665,7 @@ function App() {
     // Data for Watched/Watchlist/Added Pages
     const watchedShows = watchedShowIds.map(getShowById).filter(Boolean);
     const bookmarkedShows = bookmarkedShowIds.map(getShowById).filter(Boolean);
-    const addedShows = addedShowIds.map(getShowById).filter(Boolean);
+    const addedShows = addedShowIDS.map(getShowById).filter(Boolean);
     const recommendedShows = recommendedShowIds.map(getShowById).filter(Boolean);
     const sortedShows = sortedShowIds.map(getShowById).filter(Boolean);
 
@@ -671,7 +674,7 @@ function App() {
         <div className="flex flex-col min-h-screen bg-neutral-900">
 
             {isMobile ? (
-                <MobileHeader currentPage={currentPage} setCurrentPage={setCurrentPage} isLoggedIn={isLoggedIn} onLogout={handleLogout} />
+                <MobileHeader currentPage={currentPage} setCurrentPage={setCurrentPage} />
             ) : (
                 <Header currentPage={currentPage} setCurrentPage={setCurrentPage}/>                  
             )}
@@ -680,11 +683,6 @@ function App() {
             <main className="flex-grow">
                 {currentPage === 'Home' ? (
                     <Landing
-                        shows = {allShows}
-                        watchedIds={watchedShowIds}
-                        bookmarkedIds={bookmarkedShowIds}
-                        isLoggedIn={isLoggedIn}
-                        username={localStorage.getItem('username')}
                         onToggleList={updateShowList}
                         onCardClick={handleOpenPopUp}
                         setCurrentPage={setCurrentPage}
@@ -695,30 +693,20 @@ function App() {
                         {/* Page Rendering based on currentPage state */}
                         {currentPage === 'Explore' && (
                             <AllShows 
-                                allShows={allShows} 
-                                sortedShows={sortedShows}
                                 filters={filters} 
-                                watchedIds={watchedShowIds}
-                                bookmarkedIds={bookmarkedShowIds}
                                 onToggleList={updateShowList}
                                 onCardClick={handleOpenPopUp}
                                 onSearch={handleSearch}
-                                onSort={sortShows}
                             />
                         )}
 
                         {currentPage === 'Watched' && (
                             isLoggedIn ? (
                                 <Watched 
-                                    shows={watchedShows}
-                                    sortedShows={sortedShows} 
                                     filters={filters} 
-                                    watchedIds={watchedShowIds}
-                                    bookmarkedIds={bookmarkedShowIds}
                                     onToggleList={updateShowList}
                                     onCardClick={handleOpenPopUp}
                                     onSearch={handleSearch}
-                                    onSort={sortShows}
                                 /> 
                             ) : (
                                 setCurrentPage('Login')                        
@@ -728,15 +716,10 @@ function App() {
                         {currentPage === 'Watchlist' && (
                             isLoggedIn ? (
                                 <Watchlist 
-                                    shows={bookmarkedShows} 
-                                    sortedShows={sortedShows}
                                     filters={filters} 
-                                    watchedIds={watchedShowIds}
-                                    bookmarkedIds={bookmarkedShowIds}
                                     onToggleList={updateShowList}
                                     onCardClick={handleOpenPopUp}
                                     onSearch={handleSearch}
-                                    onSort={sortShows}
                                 /> 
                             ) : (
                                 setCurrentPage('Login')
@@ -756,10 +739,6 @@ function App() {
                                         <>
                                         {isAddedListVisible ? (
                                             <AddedShowsList 
-                                                shows={addedShows} 
-                                                watchedIds={watchedShowIds}
-                                                bookmarkedIds={bookmarkedShowIds}
-                                                addedIds={addedShowIds}
                                                 onToggleList={updateShowList}
                                                 onCardClick={handleOpenPopUp}
                                                 onHide={hideAddedListView}
@@ -768,16 +747,10 @@ function App() {
                                         ) : (
                                             <div className="main-content-wrapper">
                                                 <AddShows 
-                                                    shows={allShows} 
-                                                    sortedShows={sortedShows}
                                                     filters={filters} 
-                                                    watchedIds={watchedShowIds}
-                                                    bookmarkedIds={bookmarkedShowIds}
-                                                    addedIds={addedShowIds}
                                                     onToggleList={updateShowList}
                                                     onCardClick={handleOpenPopUp}
                                                     onSearch={handleSearch}
-                                                    onSort={sortShows}
                                                     onView={toggleAddedListView}
                                                 />
                                             </div>
@@ -794,16 +767,12 @@ function App() {
                                             {showRecommendations && (
                                                 <RecommendedShowsList 
                                                     shows={recommendedShows} 
-                                                    sortedShows={sortedShows}
-                                                    watchedIds={watchedShowIds}
-                                                    bookmarkedIds={bookmarkedShowIds}
                                                     filters={filters}
                                                     isSearch={isSearhQuery}
                                                     sourceIds={sourceShowIds}
                                                     onToggleList={updateShowList}
                                                     onCardClick={handleOpenRecommendedPopUp}
                                                     onSearch={handleSearch}
-                                                    onSort={sortShows}
                                                     onRefresh={hideRecommendations}
                                                 /> 
                                             )}
@@ -812,16 +781,12 @@ function App() {
                                         <>
                                             <RecommendedShowsList 
                                                 shows={recommendedShows} 
-                                                sortedShows={sortedShows}
-                                                watchedIds={watchedShowIds}
-                                                bookmarkedIds={bookmarkedShowIds}
                                                 filters={filters} 
                                                 isSearch={isSearhQuery}
                                                 sourceIds={sourceShowIds}
                                                 onToggleList={updateShowList}
                                                 onCardClick={handleOpenRecommendedPopUp}
                                                 onSearch={handleSearch}
-                                                onSort={sortShows}
                                                 onRefresh={hideRecommendations}
                                             /> 
                                         </>
@@ -829,16 +794,12 @@ function App() {
                                         <>
                                             <RecommendedShowsList 
                                                 shows={recommendedShows} 
-                                                sortedShows={sortedShows}
-                                                watchedIds={watchedShowIds}
-                                                bookmarkedIds={bookmarkedShowIds}
                                                 filters={filters} 
                                                 isSearch={isSearhQuery}
                                                 sourceIds={sourceShowIds}
                                                 onToggleList={updateShowList}
                                                 onCardClick={handleOpenRecommendedPopUp}
                                                 onSearch={handleSearch}
-                                                onSort={sortShows}
                                                 onRefresh={hideRecommendations}
                                             /> 
                                         </>
@@ -857,22 +818,7 @@ function App() {
                         
                         {currentPage === 'Signup' && (
                             <div>
-                                <Signup setCurrentPage={setCurrentPage} onSubmit={handleSignUp}/>
-                            </div>
-                        )}
-
-                        {currentPage === 'Profile' && (
-                            <div>
-                                <Profile 
-                                    user = {localStorage.username}
-                                    watchedShows = {watchedShows}
-                                    bookmarkedShows = {bookmarkedShows}
-                                    watchedIds={watchedShowIds}
-                                    bookmarkedIds={bookmarkedShowIds}
-                                    onToggleList={updateShowList}
-                                    onCardClick={handleOpenPopUp}
-                                    onLogout={handleLogout}
-                                />
+                                <Signup setCurrentPage={setCurrentPage} />
                             </div>
                         )}
                     </>

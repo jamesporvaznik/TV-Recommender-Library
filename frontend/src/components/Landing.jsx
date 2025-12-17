@@ -1,17 +1,24 @@
 import React, { useMemo, useState } from 'react';
 import TitleCard from './TitleCard'
-import { MdSearch } from 'react-icons/md';
 import useScreenSize from '../hooks/useScreenSize';
+import { useShow } from '../context/ShowContext.jsx';
+import { useUser } from '../context/UserContext.jsx';
+import { useAuth } from '../context/AuthContext.jsx';
 
 // Landing page component
-const Landing = ({shows, watchedIds, bookmarkedIds, isLoggedIn, username, onToggleList, onCardClick, setCurrentPage}) => {
+const Landing = ({onToggleList, onCardClick, setCurrentPage}) => {
+
+  const { allShows } = useShow();
+  const { watchedShowIds, bookmarkedShowIds } = useUser();
+  const { isLoggedIn, username} = useAuth();
+
   const [refreshKey, setRefreshKey] = useState(0);
-   const isLarge = useScreenSize(2000);
+  const isLarge = useScreenSize(2000);
   const isMedium = useScreenSize(1100);
   const isSmall = useScreenSize(872);
 
   // Filter shows so better shows are displayed
-  const filteredShows = shows.filter(show => {
+  const filteredShows = allShows.filter(show => {
         
         const meetsRating = show.rating_avg >= 7;
         const meetsReviewCount = show.vote_count > 500;
@@ -271,16 +278,6 @@ const Landing = ({shows, watchedIds, bookmarkedIds, isLoggedIn, username, onTogg
       )}
 
 
-      
-
-
-
-
-      
-
-
-      
-
       <div className='mb-10 max-w-5xl mx-auto px-4 md:px-0 text-center font-thin'>
         <h1 className='font-sans text-4xl mb-6 text-stone-400'> 
           What Shows Are Availble to You?
@@ -361,12 +358,12 @@ const Landing = ({shows, watchedIds, bookmarkedIds, isLoggedIn, username, onTogg
               [arr[i], arr[j]] = [arr[j], arr[i]];
             }
             return arr.slice(0, Math.min(6, arr.length));
-          }, [refreshKey]).map(show => (
+          }, [refreshKey, filteredShows]).map(show => (
             <TitleCard
               key={show.id}
               show={show}
-              watchedIds={watchedIds}
-              bookmarkedIds={bookmarkedIds}
+              watchedIds={watchedShowIds}
+              bookmarkedIds={bookmarkedShowIds}
               onToggleList={onToggleList}
               onCardClick={onCardClick} 
             />
@@ -382,72 +379,8 @@ const Landing = ({shows, watchedIds, bookmarkedIds, isLoggedIn, username, onTogg
             View All Shows 
         </button>
       </div>
-
-
-
-     
     </section>
-
   );
 };
 
 export default Landing;
-
-
-
-
-//  <div className="flex flex-col sm:flex-row items-start justify-between mb-8 mt-60 max-w-7xl mx-auto bg-neutral-800 py-10 px-10 shadow-lg">
-
-//         {/* 1. Search and Discover New Shows */}
-//         <div className="w-full sm:w-1/3 p-4 text-center">
-//           {/* 1. Icon/Image Area */}
-//           {/* NOTE: You need to pass 'icon' and 'title' as props to the component where this is rendered */}
-//           <img src="/images/undraw_searching.svg" alt="Search" className="w-60 h-60 mx-auto mb-8" />
-          
-//           {/* 2. Title & Description */}
-//           <h3 className="text-2xl font-sans font-bold mb-6 text-white">Discover New Shows</h3>
-//           <p className="text-neutral-200 mb-4 font-sans">Easily search through thousands of shows with sorting and filtering.</p>
-          
-//           {/* 3. Action Button (Optional) */}
-//           {/* {buttonText && (
-//               <a href={link} className="inline-block px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition duration-200">
-//                   {buttonText}
-//               </a>
-//           )} */}
-//         </div>
-      
-//         {/* 2. Track Shows */}
-//         <div className="w-full sm:w-1/3 p-4 text-center">
-//           {/* 1. Icon/Image Area */}
-//           <img src="/images/undraw_check.svg" alt="Track" className="w-60 h-60 mx-auto mb-8" />
-          
-//           {/* 2. Title & Description */}
-//           <h3 className="text-2xl font-sans font-bold mb-6 text-white">Track Shows</h3>
-//           <p className="text-neutral-200 font-sans">Mark and rate shows that you've watched.</p>
-//           <p className="text-neutral-200 mb-4 font-sans">Bookmark shows you wish to watch in the future!</p>
-          
-//           {/* 3. Action Button (Optional) */}
-//           {/* {buttonText && (
-//               <a href={link} className="inline-block px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition duration-200">
-//                   {buttonText}
-//               </a>
-//           )} */}
-//         </div>
-      
-//         {/* 3. Get Recommendations */}
-//         <div className="w-full sm:w-1/3 p-4 text-center">
-//           {/* 1. Icon/Image Area */}
-//           <img src="/images/undraw_idea.svg" alt="Track" className="w-60 h-60 mx-auto mb-8" />
-          
-//           {/* 2. Title & Description */}
-//           <h3 className="text-2xl font-sans font-bold mb-6 text-white">Get Recommendations</h3>
-//           <p className="text-neutral-200 mb-4 font-sans">Compile lists of shows and get recommendations based on these shows.</p>
-          
-//           {/* 3. Action Button (Optional) */}
-//           {/* {buttonText && (
-//               <a href={link} className="inline-block px-6 py-2 bg-red-600 text-white rounded-full hover:bg-red-700 transition duration-200">
-//                   {buttonText}
-//               </a>
-//           )} */}
-//         </div>
-//       </div>

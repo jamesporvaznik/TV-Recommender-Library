@@ -2,6 +2,8 @@ import React from 'react';
 import ShowCard from './ShowCard';
 import { useState, useEffect } from 'react';
 import Filters from './Filters'
+import { useShow } from '../context/ShowContext.jsx';
+import { useUser } from '../context/UserContext.jsx';
 
 const filterShows = (allShows, filters) => {
     // Filtering logic 
@@ -28,16 +30,14 @@ const groupIntoRows = (shows, chunkSize = 4) => {
 
 // AllShows component now receives the new user tracking props
 const AllShows = ({ 
-    allShows, 
-    sortedShows,
     filters,
-    watchedIds,
-    bookmarkedIds,
     onToggleList,
     onCardClick,
-    onSearch,
-    onSort
+    onSearch
 }) => {
+
+    const { allShows, sortedShows, sortShows} = useShow();
+    const { watchedShowIds, bookmarkedShowIds } = useUser();
 
     const [visibleRows, setVisibleRows] = useState(3); 
     const ROWS_TO_LOAD = 3;
@@ -70,8 +70,8 @@ const AllShows = ({
 
     //Calls the sort function
     function handleSort(mode){
-        if (typeof onSort === 'function'){
-            onSort(allShows, mode);
+        if (typeof sortShows === 'function'){
+            sortShows(allShows, mode);
         }
     }
 
@@ -95,8 +95,8 @@ const AllShows = ({
                         <ShowCard 
                             key={show.id} 
                             show={show} 
-                            watchedIds={watchedIds}
-                            bookmarkedIds={bookmarkedIds}
+                            watchedIds={watchedShowIds}
+                            bookmarkedIds={bookmarkedShowIds}
                             onToggleList={onToggleList}
                             onCardClick={onCardClick}
                         />

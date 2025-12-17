@@ -3,6 +3,8 @@ import React from 'react';
 import RecommendedCard from './RecommendedCard'; 
 import Filters from './Filters'
 import RefreshSearchQuery from './RefreshSearchQuery';
+import { useShow } from '../context/ShowContext.jsx';
+import { useUser } from '../context/UserContext.jsx';
 
 const filterShows = (allShows, filters) => {
     // Filtering logic 
@@ -31,18 +33,17 @@ const groupIntoRows = (shows, chunkSize = 4) => {
 // AddedShowsList component now receives the new user tracking props
 const RecommendedShowsList = ({ 
     shows, 
-    sortedShows,
-    watchedIds, 
-    bookmarkedIds, 
     filters,
     isSearch,
     sourceIds,
     onToggleList,
     onCardClick,
     onSearch,
-    onSort,
     onRefresh
 }) => {
+
+    const { sortedShows, sortShows } = useShow();
+    const { watchedShowIds, bookmarkedShowIds } = useUser();
 
     let filteredShows = [];
 
@@ -66,7 +67,7 @@ const RecommendedShowsList = ({
 
     function handleSort(mode){
         if (typeof onSort === 'function'){
-            onSort(shows, mode);
+            sortShows(shows, mode);
         }
     }
     function handleRefresh(){
@@ -112,8 +113,8 @@ const RecommendedShowsList = ({
                         <RecommendedCard 
                             key={show.id} 
                             show={show} 
-                            watchedIds={watchedIds}
-                            bookmarkedIds={bookmarkedIds}
+                            watchedIds={watchedShowIds}
+                            bookmarkedIds={bookmarkedShowIds}
                             sourceIds={sourceIds}
                             onToggleList={onToggleList}
                             onCardClick={onCardClick}

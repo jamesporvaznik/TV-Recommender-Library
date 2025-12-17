@@ -3,6 +3,8 @@ import ShowCard from './ShowCard';
 import { useState, useEffect } from 'react';
 import RecommendationCard from './RecommendationCard';
 import Filters from './Filters';
+import { useShow } from '../context/ShowContext.jsx';
+import { useUser } from '../context/UserContext.jsx';
 
 const filterShows = (shows, filters) => {
     // Filtering logic 
@@ -29,26 +31,23 @@ const groupIntoRows = (shows, chunkSize = 4) => {
 
 // AllShows component now receives the new user tracking props
 const AddShows = ({ 
-    shows, 
-    sortedShows,
     filters,
-    watchedIds,
-    bookmarkedIds,
-    addedIds,
     onToggleList,
     onCardClick,
     onSearch,
-    onSort,
     onView
 }) => {
+
+    const { allShows, sortedShows, sortShows} = useShow();
+    const { watchedShowIds, bookmarkedShowIds, addedShowIds } = useUser();
 
     const [visibleRows, setVisibleRows] = useState(3); 
     const ROWS_TO_LOAD = 3;
 
     let filteredShows = [];
 
-    if(sortedShows.length === 0 || sortedShows.length != shows.length){
-        filteredShows = filterShows(shows, filters);
+    if(sortedShows.length === 0 || sortedShows.length != allShows.length){
+        filteredShows = filterShows(allShows, filters);
     }
     else{
         filteredShows = filterShows(sortedShows, filters);
@@ -68,8 +67,8 @@ const AddShows = ({
 
     //Calls the sort function to sort the shows remaining from filters
     function handleSort(mode){
-        if (typeof onSort === 'function'){
-            onSort(shows, mode);
+        if (typeof sortShows === 'function'){
+            sortShows(allShows, mode);
         }
     }
 
@@ -111,9 +110,9 @@ const AddShows = ({
                         <RecommendationCard
                             key={show.id} 
                             show={show} 
-                            watchedIds={watchedIds}
-                            bookmarkedIds={bookmarkedIds}
-                            addedIds={addedIds}
+                            watchedIds={watchedShowIds}
+                            bookmarkedIds={bookmarkedShowIds}
+                            addedIds={addedShowIds}
                             onToggleList={onToggleList}
                             onCardClick={onCardClick}
                         />
