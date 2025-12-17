@@ -55,7 +55,7 @@ function App() {
     const [isWatched, setIsWatched] = useState(false);
     const isMobile = useScreenSize(768);
     const API_BASE_URL = import.meta.env.VITE_API_URL || '';
-    // const API_BASE_URL = 'http://localhost:5173';
+    // const API_BASE_URL = 'http://localhost:5000';
     
     //Function called when you click on a mode in the sidebar
     const changeMode = async (newMode) => { 
