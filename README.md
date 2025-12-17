@@ -1,59 +1,98 @@
 # tv-library-recommender
 
-Description:
+Public website: https://tv-recommender-library-opb9.vercel.app/
 
-    TV Recommender is a web application that makes discovering and tracking shows easy. 
-    The first feature is the ability to go through all the shows in the database. The shows
-    are from the TMDB API, in which I moved all the shows in to a turso database. I have a
-    search, filter and sort functionality that allows navigating to shows easily. Another
-    feature is the ability to mark watched in which you can rate and keep track of the shows
-    you've watched. Next, is the bookmark feature which is much the same as marking watched
-    without ratings. Both watched and bookmarked shows have their own page where you can view
-    only those shows. Now, the main functionality is recommendations based off a list of shows 
-    you create, your list of watched shows, or a search. The way the recommendations work is I 
-    store the shows in pinecone, a vector database. Then when a user attempts to get recommendations
-    with a list of shows, it iterates through each shows description in the list and uses pinecone to 
-    semantically search for similar shows in the entire database. If multiple shows in your list have
-    the same show, they get summed together. Also if it's based off of your watched shows, it weights
-    the semantic score based on your rating and initialized the rating to 5 if empty. After completion
-    it puts all of the shows that got any score in a list that the user can view. For recommendations
-    from search, it just compares your search to the descriptions of the shows in the database.
-    That is basically the web app, I didn't mention but I have a landing page and auth functionality.
+Project Overview:
+
+    TV Recommender is a full-stack platform for discovering and tracking shows, featuring
+    a semantic recommendation engine powered by vector search to provide highly personalized 
+    suggestions.
+
+Key Features:
+
+    1. Turso database with shows, users and user ratings
+    2. Explore and search through shows in my database
+    3. Sorting and filtering to find shows quicker
+    4. Mark shows as watched and rate them
+    5. Mark shows as bookmarked to keep track of shows you want to watch next
+    6. Recommendations
+        a. By List - Create a list of shows and get recommendations based off them
+        b. By Watched - Use your list of watched shows to get recommendations based off them with ratings to weigh them
+        c. By Search - Make a query and get recommendations based off of it
+    7. Auth functionality - Signup, Login & Logout functionality
+
+Deep Dive on Recommendations:
+
+    Stores shows in pinecone, a vector database. Pinecone not only gives the ability
+    to store the shows, but to get semantic similarity through the vector embeddings. Therefore
+    I use the show descriptions to find semantic similarities of shows. Since the user
+    has a list of shows it compares each show in the list to all shows in the database, then
+    sums up the scores to get the most relevant recommendations. For the watched list, specifically
+    it uses users ratings to weigh the score. If you haven't rated a show, it defaults to 5.
+    Recommendation by Search works much the same except it compares your search query to 
+    the show descriptions.
 
 Technologies:
 
     Frontend: React, vite, tailwind.
-    Backend: Node, express, turso, pinecone
-    Hosting: Vercel (frontend), Render (backend), Cron Job (Prevents cold starts)
+    Backend: Node, express, turso(db), pinecone(vector db)
     Packages / Dependencies: Can all be found in the package.json files in both the frontend and backend folder.
+
+Deployment / Infrastructure:
+
+    Vercel: Host the frontend of my web app through vercel
+    Render: Host the backend of my web app through render
+    Cron Job: Prevents cold starts
 
 Instructions to run locally:
 
-    Public website if you don't want to run locally: https://tv-recommender-library-opb9.vercel.app/
+    1. Clone the Repository
+        a. Press green "Code" button in the github repository
+        b. Copy the HTTPS repository url
+        c. Navigate to the directory you wish to put the repository in using cd
+        d. git clone [URL_YOU_COPIED]
+    
+    2. Install packages / dependencies
+        a. Navigate to the TV-Recommender-Library directory
+        b. cd frontend
+        c. npm install
+        d. cd ../backend
+        e. npm install
 
-    Clone repository locally
+    3. Change configuration to run locally instead of globally
+        a. App.jsx - comment line 57, uncomment line 58
+        b. vite.config.js - comment line 11, uncomment line 10
+        c. server.js - uncomment line 6
+    
+    4. Create environment variables
+        a. Create .env in backend folder
+        b. Go to pinecone and get your api key and environment.
+        c. Go to turso and get your api key and database url
+        d. Go to TMDB and get your api key and read access token
+        e. Make a JWT_SECRET which is a just a random string that noone can guess
 
-    cd frontend
-    npm install
-    cd ../backend
-    npm install
+        Names for Environment Variables:
+            Pinecone: PINECONE_API_KEY, PINECONE_ENVIRONMENT
+            Turso: TURSO_KEY, TURSO_PATH
+            JWT: JWT_SECRET
+            TMDB: TMDB_READ_ACCESS_TOKEN, TMDB_API_KEY
+        
+    5. Import data and create databases
+        a. Create a database with a shows, users and user ratings table
+        b. Import shows from the TMDB API to your pinecone and turso database
 
-    Environment Variables:
-        Pinecone: PINECONE_API_KEY, PINECONE_ENVIRONMENT
-        Turso: TURSO_KEY, TURSO_PATH
-        JWT: JWT_SECRET
-        TMDB: Shouldn't need unless you want to upload shows to database.
+    6. Start the frontend and backend
+        Start 
+        In terminal 1:
+            a. Start from TV-Recommender-Library directory
+            b. cd frontend
+            c. npm install
+            d. npm run dev
 
-    In 2 different terminals:
-        cd frontend
-        npm run dev
-
-        cd backend
-        node server
+        In terminal 2:
+            a. a. Start from TV-Recommender-Library directory
+            b. cd backend
+            c. npm install
+            d. node server
 
 Public website: https://tv-recommender-library-opb9.vercel.app/
-    
-
-
-
-
